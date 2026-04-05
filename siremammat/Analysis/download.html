@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Download — SireMammat Analysis Files</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0E0A04;color:#F5EDD8;font-family:'Courier New',monospace;padding:40px 20px;min-height:100vh}
+h1{font-size:28px;letter-spacing:0.06em;text-align:center;margin-bottom:8px}
+h1 span{color:#B87333}
+.sub{text-align:center;font-size:10px;letter-spacing:0.14em;color:#8C7355;text-transform:uppercase;margin-bottom:40px}
+.file-card{background:#16100A;border:1px solid #2C2010;border-radius:10px;max-width:700px;margin:0 auto 16px;overflow:hidden}
+.file-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2C2010}
+.file-name{font-size:14px;font-weight:700}
+.file-size{font-size:10px;color:#8C7355}
+.file-desc{font-size:9px;color:#5C4A35;margin-top:2px}
+.dl-btn{display:inline-block;background:#6B4420;border:1px solid rgba(184,115,51,0.3);color:#E8C46A;font-family:inherit;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:8px 16px;border-radius:5px;cursor:pointer;text-decoration:none;transition:all 0.15s}
+.dl-btn:hover{background:rgba(184,115,51,0.2);color:#E8C46A}
+.status{text-align:center;padding:30px 20px;font-size:11px;color:#3A7A50}
+.instructions{max-width:700px;margin:0 auto 30px;background:#16100A;border:1px solid #2C2010;border-radius:10px;padding:20px}
+.instructions h3{font-size:12px;letter-spacing:0.1em;color:#B87333;margin-bottom:12px;text-transform:uppercase}
+.instructions ol{padding-left:20px;font-size:11px;line-height:2;color:#8C7355}
+.instructions li strong{color:#F5EDD8}
+.upload-structure{font-size:11px;color:#8C7355;background:#0E0A04;border:1px solid #2C2010;border-radius:6px;padding:12px 16px;margin-top:12px;line-height:1.8}
+</style>
+</head>
+<body>
+<h1>Sire<span>Mammat</span> Analysis Files</h1>
+<div class="sub">3 files ready for upload to Neocities</div>
+
+<div class="instructions">
+  <h3>📁 Upload Structure</h3>
+  <div class="upload-structure">
+    /Analysis/<br>
+    ├── index.html &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← <strong>Landing page</strong> (upload here)<br>
+    ├── tradecard_editor.html &nbsp;&nbsp;← <strong>Editor</strong> (upload or use locally)<br>
+    └── cards/<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── index.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← <strong>Manifest</strong> (upload here)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;└── YYYY-MM-DD.html &nbsp;&nbsp;&nbsp;← your daily cards
+  </div>
+  <ol style="margin-top:16px">
+    <li><strong>Download all 3 files</strong> using the buttons below</li>
+    <li><strong>Upload to Neocities</strong> matching the folder structure above</li>
+    <li><strong>Daily:</strong> Open the editor → fill out your EOD → click <strong>⬇ Save Card</strong> → click <strong>📋 Copy Manifest</strong></li>
+    <li><strong>Upload:</strong> Save the card HTML to <code>/Analysis/cards/</code>, paste the manifest entry into <code>index.json</code>, upload both</li>
+  </ol>
+</div>
+
+<div id="files"></div>
+<div class="status" id="status">Click any download button to save the file</div>
+
+<script>
+const files = [
+  {name: 'index.html', path: 'index.html', desc: 'Landing page — auto-reads cards/index.json for stats and feed'},
+  {name: 'tradecard_editor.html', path: 'tradecard_editor.html', desc: 'Enhanced editor with Copy Manifest button'},
+  {name: 'index.json', path: 'cards/index.json', desc: 'Manifest — session metadata for landing page stats'}
+];
+
+const el = document.getElementById('files');
+
+async function loadFile(path) {
+  try {
+    const r = await fetch(path);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.text();
+  } catch(e) {
+    return null;
+  }
+}
+
+async function init() {
+  for (const f of files) {
+    const content = await loadFile(f.path);
+    const size = content ? (content.length / 1024).toFixed(1) + 'KB' : 'Error loading';
+    const preview = content ? content.substring(0, 600).replace(/</g,'&lt;').replace(/>/g,'&gt;') : 'Failed to load — make sure the files are in the same directory as this page';
+    const div = document.createElement('div');
+    div.className = 'file-card';
+    div.innerHTML = `
+      <div class="file-head">
+        <div>
+          <div class="file-name">${f.name}</div>
+          <div class="file-size">${size}</div>
+          <div class="file-desc">${f.desc}</div>
+        </div>
+        <button class="dl-btn" onclick="dl('${f.name}')">⬇ Download</button>
+      </div>`;
+    el.appendChild(div);
+    f._content = content;
+  }
+}
+
+function dl(name) {
+  const f = files.find(x => x.name === name);
+  if (!f || !f._content) { alert('File not loaded'); return; }
+  const mime = name.endsWith('.json') ? 'application/json' : 'text/html';
+  const blob = new Blob([f._content], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  document.getElementById('status').textContent = '✓ Downloaded ' + name;
+}
+
+init();
+</script>
+</body>
+</html>

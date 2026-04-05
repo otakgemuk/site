@@ -1,0 +1,38 @@
+[
+  {
+    "date": "2025-03-12",
+    "title": "NQ Opening Drive — 40-Point Swing",
+    "instrument": "NQ Futures",
+    "strategy": "TREND FROM OPEN",
+    "trades": 3,
+    "netPts": 40,
+    "winRate": 100,
+    "bias": "TREND DAY",
+    "result": "WIN",
+    "url": "https://siremammat.neocities.org/casestudies/index.html"
+  },
+  {
+    "date": "2025-03-11",
+    "title": "ES Range Day — Mean Reversion",
+    "instrument": "ES Futures",
+    "strategy": "MEAN REVERSION",
+    "trades": 2,
+    "netPts": 12,
+    "winRate": 50,
+    "bias": "RANGE",
+    "result": "MIXED",
+    "url": ""
+  },
+  {
+    "date": "2025-03-10",
+    "title": "MNQ Bearish Open — ABC Reversal",
+    "instrument": "MNQ Futures",
+    "strategy": "ABC REVERSAL",
+    "trades": 3,
+    "netPts": -8,
+    "winRate": 33,
+    "bias": "BEARISH",
+    "result": "LOSS",
+    "url": ""
+  }
+]

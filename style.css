@@ -1,0 +1,8 @@
+body{font-family:system-ui;max-width:900px;margin:0 auto;padding:2rem;background:#f8f9fa;line-height:1.7}
+h1{color:#1e293b;font-size:2.5rem;border-bottom:3px solid #3b82f6;padding-bottom:1rem}
+blockquote{font-style:italic;border-left:4px solid #3b82f6;padding-left:1rem;margin:2rem 0;background:#eff6ff}
+table{border-collapse:collapse;width:100%;background:white}
+th,td{border:1px solid #d1d5db;padding:1rem;text-align:left}
+iframe{border:none;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1)}
+nav{background:#1e293b;color:white;padding:1rem;text-align:center}
+nav a{color:white;text-decoration:none}

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES Expected Move — ♛ SireMammat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg:      #080909;
+  --bg2:     #0f1114;
+  --bg3:     #141619;
+  --bg4:     #1a1d22;
+  --gold:    #f5c842;
+  --gold2:   #e8b830;
+  --gold-lo: rgba(245,200,66,0.07);
+  --gold-md: rgba(245,200,66,0.14);
+  --green:   #22c87a;
+  --green-lo:rgba(34,200,122,0.09);
+  --red:     #e8394a;
+  --red-lo:  rgba(232,57,74,0.09);
+  --blue:    #3b82f6;
+  --border:  rgba(245,200,66,0.07);
+  --border2: rgba(245,200,66,0.16);
+  --text:    #ede8d8;
+  --muted:   #7a7264;
+  --dim:     #38332e;
+  --mono:    'Space Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --body:    'DM Sans', sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:14px;
+  line-height:1.6;
+  min-height:100vh;
+}
+
+/* grain */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:180px;
+  pointer-events:none;z-index:9999;opacity:0.3;
+}
+
+/* HEADER */
+.site-header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(8,9,9,0.95);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border2);
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;padding:0 2rem;
+  height:56px;display:flex;align-items:center;
+  justify-content:space-between;gap:1rem;
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.brand-logo{width:34px;height:34px;flex-shrink:0;}
+.brand-wordmark{display:flex;flex-direction:column;line-height:1;gap:2px;}
+.brand-wordmark .top{font-family:var(--display);font-size:19px;letter-spacing:3px;color:var(--text);}
+.brand-wordmark .top span{color:var(--gold);}
+.brand-wordmark .btm{font-family:var(--mono);font-size:14px;letter-spacing:2px;color:#efe7d5;text-transform:uppercase;}
+.header-nav{display:flex;align-items:center;gap:1.75rem;}
+.header-nav a{font-family:var(--mono);font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:#efe7d5;text-decoration:none;transition:color .18s;}
+.header-nav a:hover{color:var(--gold);}
+.live-pill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(245,200,66,0.30);padding:4px 10px;color:var(--gold);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2.2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+/* HERO */
+.hero{
+  max-width:1200px;margin:0 auto;
+  padding:3rem 2rem 2rem;
+  border-bottom:1px solid rgba(245,200,66,0.16);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'♛';
+  position:absolute;right:1.5rem;top:50%;
+  transform:translateY(-50%);
+  font-size:240px;color:var(--gold);
+  opacity:0.08;pointer-events:none;line-height:1;
+}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:11.5px;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.7rem;
+  display:flex;align-items:center;gap:8px;
+}
+.hero-eyebrow::before{content:'';display:inline-block;width:18px;height:1px;background:var(--gold);opacity:0.45;}
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(42px,7vw,80px);
+  letter-spacing:4px;line-height:0.94;
+  color:var(--text);margin-bottom:1rem;
+}
+.hero h1 .acc{color:var(--gold);}
+.hero-sub{font-family:var(--mono);font-size:14px;color:#efe7d5;letter-spacing:1px;margin-bottom:1.5rem;}
+.formula-bar{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold-lo);border:1px solid rgba(245,200,66,0.30);
+  border-left:3px solid var(--gold);
+  padding:10px 18px;
+  font-family:var(--mono);font-size:14px;
+  color:var(--gold);letter-spacing:0.5px;
+}
+
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:1.5rem 2rem 5rem;position:relative;z-index:1;}
+
+/* SECTION LABEL */
+.sec-label{
+  font-family:var(--mono);font-size:11px;
+  letter-spacing:3px;text-transform:uppercase;
+  color:#d8cfbf;margin-bottom:0.6rem;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.sec-label .ca{color:var(--gold);opacity:0.35;margin-right:2px;}
+
+/* STATUS BAR */
+.status-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;background:#13161a;border:1px solid rgba(245,200,66,0.20);
+  margin-bottom:1.25rem;flex-wrap:wrap;gap:8px;
+}
+.si-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.si{font-family:var(--mono);font-size:11.5px;color:#efe7d5;display:flex;align-items:baseline;gap:4px;}
+.si .v{color:var(--text);font-weight:700;}
+.si .v.up{color:var(--green);}
+.si .v.dn{color:var(--red);}
+.si .v.gd{color:var(--gold);}
+.refresh-btn{
+  font-family:var(--mono);font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:#efe7d5;
+  background:transparent;border:1px solid rgba(245,200,66,0.30);
+  padding:5px 12px;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:4px;
+}
+.refresh-btn:hover{border-color:var(--gold);color:var(--gold);}
+.refresh-btn.loading{opacity:0.35;pointer-events:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{animation:spin 1s linear infinite;display:inline-block;}
+
+/* INPUTS */
+.inp-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.25rem;}
+@media(max-width:640px){.inp-row{grid-template-columns:1fr 1fr;}.header-nav{display:none;}.hero::before{display:none;}}
+.inp-box{background:#13161a;border:1px solid rgba(245,200,66,0.20);padding:10px 12px 8px;transition:border-color .2s;}
+.inp-box:focus-within{border-color:var(--gold2);}
+.inp-box label{display:block;font-family:var(--mono);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#d8cfbf;margin-bottom:5px;}
+.inp-box input{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:17px;font-weight:700;padding:0;caret-color:var(--gold);}
+.inp-box .note{font-family:var(--mono);font-size:14px;color:#d8cfbf;margin-top:3px;}
+
+/* METRIC CARDS */
+.cards-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.25rem;}
+@media(max-width:640px){.cards-row{grid-template-columns:1fr 1fr;}}
+.mcard{
+  background:#13161a;border:1px solid rgba(245,200,66,0.20);
+  padding:14px;position:relative;overflow:hidden;
+  transition:border-color .2s,background .2s;
+}
+.mcard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.mcard.c-gold::after{background:var(--gold);}
+.mcard.c-green::after{background:var(--green);}
+.mcard.c-red::after{background:var(--red);}
+.mcard.c-blue::after{background:var(--blue);}
+.mcard:hover{background:#171a1f;border-color:var(--border2);}
+.mcard .lbl{font-family:var(--mono);font-size:14px;letter-spacing:2.5px;text-transform:uppercase;color:#efe7d5;margin-bottom:7px;}
+.mcard .val{font-family:var(--display);font-size:32px;letter-spacing:1px;line-height:1;margin-bottom:5px;}
+.mcard .val.gold{color:var(--gold);}
+.mcard .val.green{color:var(--green);}
+.mcard .val.red{color:var(--red);}
+.mcard .val.white{color:var(--text);}
+.mcard .sub{font-family:var(--mono);font-size:11px;color:#efe7d5;}
+.regime-badge{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;padding:2px 7px;margin-top:6px;}
+.rb-low{background:var(--green-lo);color:var(--green);}
+.rb-elev{background:var(--gold-lo);color:var(--gold);}
+.rb-high{background:var(--red-lo);color:var(--red);}
+
+/* SIGMA PANEL */
+.sigma-panel{background:#13161a;border:1px solid rgba(245,200,66,0.20);padding:1.25rem;margin-bottom:1.25rem;}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.panel-title{font-family:var(--display);font-size:17px;letter-spacing:2.5px;color:var(--text);display:flex;align-items:center;gap:8px;}
+.panel-title .crown{color:var(--gold);font-size:14px;}
+.sigma-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+@media(max-width:600px){.sigma-grid{grid-template-columns:1fr 1fr;}}
+.szone{background:#171a1f;border:1px solid rgba(245,200,66,0.20);padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;}
+.szone .sz-lbl{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.szone .sz-es{font-family:var(--mono);font-size:11px;color:#d8cfbf;}
+.szone .sz-val{font-family:var(--display);font-size:22px;letter-spacing:1px;text-align:right;}
+
+/* CHART */
+.chart-panel{background:#13161a;border:1px solid rgba(245,200,66,0.20);padding:1.25rem;margin-bottom:1.25rem;}
+.legend-row{display:flex;gap:14px;flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:#efe7d5;}
+.leg-line{width:20px;height:0;}
+.chart-wrap{position:relative;width:100%;height:280px;}
+
+/* TABLE */
+.table-panel{background:#13161a;border:1px solid rgba(245,200,66,0.20);overflow-x:auto;margin-bottom:1.25rem;}
+.table-hdr{padding:1rem 1.25rem;border-bottom:1px solid rgba(245,200,66,0.16);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-family:var(--mono);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#d8cfbf;padding:8px 14px;text-align:left;border-bottom:1px solid rgba(245,200,66,0.16);white-space:nowrap;}
+tbody td{font-family:var(--mono);font-size:14px;color:#efe7d5;padding:9px 14px;border-bottom:1px solid rgba(245,200,66,0.16);white-space:nowrap;transition:color .15s;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:#171a1f;color:var(--text);}
+tbody tr.today td{color:var(--text);}
+tbody tr.today td:first-child{color:var(--gold);}
+td.up{color:var(--green)!important;}
+td.dn{color:var(--red)!important;}
+.rb{font-family:var(--mono);font-size:14px;letter-spacing:1px;text-transform:uppercase;font-weight:700;padding:2px 6px;}
+
+/* BARCHART */
+.bc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+@media(max-width:768px){.bc-grid{grid-template-columns:1fr;}}
+.bc-panel{background:#13161a;border:1px solid rgba(245,200,66,0.20);padding:1rem;}
+.bc-img{width:100%;display:block;border:none;}
+.bc-links-bar{background:#13161a;border:1px solid rgba(245,200,66,0.20);padding:10px 16px;display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center;}
+.bc-link{font-family:var(--mono);font-size:11.5px;color:#efe7d5;text-decoration:none;transition:color .18s;}
+.bc-link:hover{color:var(--gold);}
+.bc-src{font-family:var(--mono);font-size:14px;color:#d8cfbf;margin-top:6px;}
+.bc-src a{color:#d8cfbf;text-decoration:none;}
+.bc-src a:hover{color:#efe7d5;}
+
+/* METHODOLOGY */
+.method-note{background:#13161a;border:1px solid rgba(245,200,66,0.20);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:1.25rem;}
+.method-note .mn-label{font-family:var(--mono);font-size:14px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.method-note p{font-family:var(--body);font-size:14px;color:#efe7d5;line-height:1.8;}
+.method-note p code{font-family:var(--mono);font-size:14px;color:var(--gold);background:var(--gold-lo);padding:1px 5px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{animation:fadeUp 0.35s ease forwards;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="https://siremammat.neocities.org">
+      <!-- Crowned Candle: rectangle + vertical wick + 3-point crown — per brand spec -->
+      <svg class="brand-logo" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SireMammat crowned candle logo">
+        <rect x="13" y="19" width="10" height="13" fill="#f5c842" opacity="0.88"/>
+        <line x1="18" y1="10" x2="18" y2="19" stroke="#f5c842" stroke-width="1.4"/>
+        <polyline points="13,19 13,13 15.5,16 18,10 20.5,16 23,13 23,19" fill="none" stroke="#f5c842" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="13" cy="19" r="1.4" fill="#f5c842"/>
+        <circle cx="23" cy="19" r="1.4" fill="#f5c842"/>
+      </svg>
+      <div class="brand-wordmark">
+        <div class="top">SIRE<span>MAMMAT</span></div>
+        <div class="btm">Free futures education · Al Brooks PA</div>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="https://siremammat.neocities.org">Home</a>
+      <a href="https://siremammat.neocities.org/journal">Journal</a>
+      <a href="https://siremammat.neocities.org/tradesharp">TradeSharp</a>
+      <div class="live-pill"><div class="live-dot"></div><span id="mktStatus">LOADING</span></div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">TradeSharp Tools · ESM26 · Reading the market's own range</div>
+  <h1>ES <span class="acc">EXPECTED</span><br>MOVE TRACKER</h1>
+  <p class="hero-sub">♛ SM · VIX-derived daily sigma envelope · Price action context, not signals</p>
+  <div class="formula-bar">
+    Daily EM = SPX × (VIX ÷ 100) × √(1÷252) &nbsp;&nbsp;·&nbsp;&nbsp; ±1σ ≈ 68% containment &nbsp;&nbsp;·&nbsp;&nbsp; ±2σ ≈ 95%
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <div class="status-bar">
+    <div class="si-row">
+      <div class="si">$SPX <span class="v" id="sb-spx">—</span></div>
+      <div class="si">$VIX <span class="v gd" id="sb-vix">—</span></div>
+      <div class="si">ESM26 <span class="v" id="sb-es">—</span></div>
+      <div class="si">Updated <span class="v" id="sb-time">—</span></div>
+    </div>
+    <button class="refresh-btn" id="refreshBtn" onclick="fetchData()">
+      <span id="refIcon">↻</span>&nbsp;Refresh
+    </button>
+  </div>
+
+  <div id="fetchMsg" style="font-family:var(--mono);font-size:11px;color:var(--gold);min-height:16px;margin-bottom:10px;"></div>
+
+  <div class="sec-label"><span class="ca">♛</span> Manual override · auto-populates from Barchart on load</div>
+  <div class="inp-row">
+    <div class="inp-box">
+      <label>SPX Close</label>
+      <input type="number" id="spxI" value="6886" step="0.01" oninput="recalc()">
+      <div class="note">S&P 500 Index</div>
+    </div>
+    <div class="inp-box">
+      <label>VIX</label>
+      <input type="number" id="vixI" value="19.12" step="0.01" oninput="recalc()">
+      <div class="note">CBOE Vol Index</div>
+    </div>
+    <div class="inp-box">
+      <label>ES Basis Offset</label>
+      <input type="number" id="offI" value="-4" step="1" oninput="recalc()">
+      <div class="note">ES vs SPX fair-value gap</div>
+    </div>
+    <div class="inp-box">
+      <label>Trading Days / Yr</label>
+      <input type="number" id="tdI" value="252" step="1" oninput="recalc()">
+      <div class="note">Standard = 252</div>
+    </div>
+  </div>
+
+  <div class="sec-label"><span class="ca">♛</span> Daily implied move</div>
+  <div class="cards-row" id="cardsRow"></div>
+
+  <div class="sigma-panel">
+    <div class="panel-hdr">
+      <div class="panel-title"><span class="crown">♛</span> SPX / ES SIGMA LEVELS</div>
+      <div id="sigmaDate" style="font-family:var(--mono);font-size:11px;color:#d8cfbf;">—</div>
+    </div>
+    <div class="sigma-grid" id="sigmaGrid"></div>
+  </div>
+
+  <div class="chart-panel">
+    <div class="panel-hdr">
+      <div class="panel-title">ENVELOPE · LAST 8 SESSIONS</div>
+      <div class="legend-row">
+        <div class="leg-item">
+          <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="#3b82f6" stroke-width="2.5"/></svg>
+          SPX close
+        </div>
+        <div class="leg-item">
+          <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="rgba(232,57,74,0.7)" stroke-width="1.5" stroke-dasharray="3,3"/></svg>
+          +σ bands
+        </div>
+        <div class="leg-item">
+          <svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="rgba(34,200,122,0.7)" stroke-width="1.5" stroke-dasharray="3,3"/></svg>
+          −σ bands
+        </div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="emChart" role="img" aria-label="Expected move envelope — SPX close with 1-sigma and 2-sigma bands over recent sessions"></canvas>
+    </div>
+  </div>
+
+  <div class="sec-label"><span class="ca">♛</span> Session history</div>
+  <div class="table-panel">
+    <div class="table-hdr">
+      <div class="panel-title" style="font-size:15px;">RECENT SESSIONS</div>
+      <div style="font-family:var(--mono);font-size:11px;color:#d8cfbf;">ES $50/pt · MES $5/pt · Barchart 15-min delay</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>SPX Close</th><th>VIX</th><th>Chg</th>
+          <th>±1σ pts</th><th>±2σ pts</th><th>ES ±1σ $</th><th>MES ±1σ $</th><th>Regime</th>
+        </tr>
+      </thead>
+      <tbody id="histBody"></tbody>
+    </table>
+  </div>
+
+  <div class="sec-label"><span class="ca">♛</span> Live charts · Barchart.com</div>
+  <div class="bc-grid">
+    <div class="bc-panel">
+      <div class="panel-title" style="font-size:14px;margin-bottom:10px;">$VIX · CBOE VOLATILITY INDEX</div>
+      <a href="https://www.barchart.com/stocks/quotes/%24VIX/interactive-chart" target="_blank" rel="noopener">
+        <img class="bc-img"
+          src="https://widget.barchart.com/chart?symbol=%24VIX&type=candle&period=5&width=600&height=200&theme=dark&volume=0&gridlines=1&showLastBar=1&watermark=0"
+          alt="VIX live chart — Barchart"
+          onerror="this.style.display='none';document.getElementById('vixFb').style.display='flex';">
+      </a>
+      <div id="vixFb" style="display:none;height:150px;align-items:center;justify-content:center;flex-direction:column;gap:8px;">
+        <div style="font-family:var(--mono);font-size:11.5px;color:#d8cfbf;">Barchart API key required for direct embed</div>
+        <a href="https://www.barchart.com/stocks/quotes/%24VIX/interactive-chart" target="_blank" style="font-family:var(--mono);font-size:14px;color:var(--gold);text-decoration:none;">Open live chart on Barchart ↗</a>
+      </div>
+      <div class="bc-src">Source: <a href="https://www.barchart.com/stocks/quotes/%24VIX" target="_blank">barchart.com/stocks/quotes/$VIX</a></div>
+    </div>
+    <div class="bc-panel">
+      <div class="panel-title" style="font-size:14px;margin-bottom:10px;">ESM26 · E-MINI S&amp;P 500 JUNE FUTURES</div>
+      <a href="https://www.barchart.com/futures/quotes/ESM26/interactive-chart" target="_blank" rel="noopener">
+        <img class="bc-img"
+          src="https://widget.barchart.com/chart?symbol=ESM26&type=candle&period=5&width=600&height=200&theme=dark&volume=0&gridlines=1&showLastBar=1&watermark=0"
+          alt="ESM26 live chart — Barchart"
+          onerror="this.style.display='none';document.getElementById('esFb').style.display='flex';">
+      </a>
+      <div id="esFb" style="display:none;height:150px;align-items:center;justify-content:center;flex-direction:column;gap:8px;">
+        <div style="font-family:var(--mono);font-size:11.5px;color:#d8cfbf;">Barchart API key required for direct embed</div>
+        <a href="https://www.barchart.com/futures/quotes/ESM26/interactive-chart" target="_blank" style="font-family:var(--mono);font-size:14px;color:var(--gold);text-decoration:none;">Open live chart on Barchart ↗</a>
+      </div>
+      <div class="bc-src">Source: <a href="https://www.barchart.com/futures/quotes/ESM26" target="_blank">barchart.com/futures/quotes/ESM26</a></div>
+    </div>
+  </div>
+
+  <div class="bc-links-bar">
+    <div style="font-family:var(--mono);font-size:14px;color:#d8cfbf;letter-spacing:2px;text-transform:uppercase;">Quick links</div>
+    <a class="bc-link" href="https://www.barchart.com/stocks/quotes/%24VIX" target="_blank">$VIX Quote ↗</a>
+    <a class="bc-link" href="https://www.barchart.com/futures/quotes/ESM26/overview" target="_blank">ESM26 Overview ↗</a>
+    <a class="bc-link" href="https://www.barchart.com/stocks/quotes/%24SPX/interactive-chart" target="_blank">$SPX Chart ↗</a>
+    <a class="bc-link" href="https://www.barchart.com/futures/quotes/VI*0/futures-prices" target="_blank">VIX Futures ↗</a>
+    <a class="bc-link" href="https://www.barchart.com/futures/quotes/ES*0/options" target="_blank">ES Options ↗</a>
+  </div>
+
+  <div style="margin-top:1.25rem;"></div>
+  <div class="method-note">
+    <div class="mn-label">♛ SM · Methodology — Reading price itself</div>
+    <p>
+      The daily expected move is derived directly from VIX: <code>EM = SPX × (VIX÷100) × √(1÷252)</code>.
+      VIX represents the 30-day annualised implied volatility priced into SPX options — dividing by √252 converts this to a
+      single-session 1-standard-deviation range. The ±1σ band captures ~68% of expected closes; ±2σ captures ~95%.
+      ES dollar value uses the standard $50/point multiplier (MES $5/pt).
+      This is not a signal — it is the market's own read of range. Use it as context for Al Brooks
+      structure setups: BO trades need to exceed the expected move; fades set up near sigma extremes.
+      Data from <a href="https://www.barchart.com" target="_blank" style="color:#efe7d5;">Barchart.com</a> (15-min delayed).
+    </p>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid var(--border);padding:1.75rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <div style="display:flex;align-items:center;gap:9px;">
+        <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+          <rect x="13" y="19" width="10" height="13" fill="#f5c842" opacity="0.7"/>
+          <line x1="18" y1="10" x2="18" y2="19" stroke="#f5c842" stroke-width="1.4"/>
+          <polyline points="13,19 13,13 15.5,16 18,10 20.5,16 23,13 23,19" fill="none" stroke="#f5c842" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="13" cy="19" r="1.3" fill="#f5c842"/>
+          <circle cx="23" cy="19" r="1.3" fill="#f5c842"/>
+        </svg>
+        <div style="font-family:var(--display);font-size:17px;letter-spacing:3px;color:#efe7d5;">SIRE<span style="color:var(--gold);">MAMMAT</span></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:14px;color:#d8cfbf;margin-top:5px;letter-spacing:1px;">Free futures trading education, built on Al Brooks methodology.</div>
+      <div style="font-family:var(--mono);font-size:14px;color:#d8cfbf;margin-top:2px;letter-spacing:0.5px;">♛ SM · tradingview prefix · siremammat.neocities.org</div>
+    </div>
+    <div style="font-family:var(--mono);font-size:14px;color:#d8cfbf;text-align:right;max-width:400px;line-height:1.9;">
+      For educational purposes only. Not financial advice.<br>
+      ES and MES futures involve substantial risk of loss and are not suitable for all investors.<br>
+      Data from Barchart.com (15-min delayed). Verify all levels with your broker before trading.
+    </div>
+  </div>
+</footer>
+
+<script>
+const HISTORY = [
+  { date:'Apr 03', spx:6796, vix:21.65 },
+  { date:'Apr 04', spx:6642, vix:28.10 },
+  { date:'Apr 07', spx:6580, vix:32.40 },
+  { date:'Apr 08', spx:6450, vix:35.75 },
+  { date:'Apr 09', spx:6710, vix:27.90 },
+  { date:'Apr 10', spx:6817, vix:19.23 },
+  { date:'Apr 11', spx:6830, vix:20.80 },
+  { date:'Apr 14', spx:null, vix:null }
+];
+
+let chartInst = null;
+const em1 = (s,v,t) => s*(v/100)*Math.sqrt(1/t);
+const fmt  = (n,d=2) => n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+function regime(v) {
+  if (v>=30) return ['HIGH VOL','rb-high'];
+  if (v>=20) return ['ELEVATED','rb-elev'];
+  return ['LOW VOL','rb-low'];
+}
+
+function mktStatus() {
+  const et = new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const h=et.getHours(), m=et.getMinutes(), d=et.getDay();
+  const live = d>=1&&d<=5&&(h>9||(h===9&&m>=30))&&h<16;
+  const el = document.getElementById('mktStatus');
+  el.textContent = live ? 'RTH LIVE' : 'CLOSED';
+  el.style.color  = live ? 'var(--green)' : 'var(--red)';
+  document.querySelector('.live-dot').style.background = live ? 'var(--green)' : 'var(--red)';
+}
+
+async function fetchData() {
+  const btn  = document.getElementById('refreshBtn');
+  const icon = document.getElementById('refIcon');
+  const msg  = document.getElementById('fetchMsg');
+  btn.classList.add('loading'); icon.classList.add('spin'); msg.textContent='';
+
+  const proxy = 'https://api.allorigins.win/get?url=';
+  const patterns = [
+    /lastPrice["\s:]+([0-9,]+\.?[0-9]*)/i,
+    /"price"\s*:\s*"?([0-9,]+\.?[0-9]*)"?/i,
+    /data-last-price="([0-9,]+\.?[0-9]*)"/i,
+    /class="[^"]*price[^"]*"[^>]*>\s*([0-9,]+\.?[0-9]*)\s*</i
+  ];
+
+  async function getQ(sym) {
+    const url = `https://www.barchart.com/stocks/quotes/${encodeURIComponent(sym)}`;
+    const r = await fetch(proxy+encodeURIComponent(url),{signal:AbortSignal.timeout(9000)});
+    if (!r.ok) throw new Error('fail');
+    const j = await r.json();
+    for (const p of patterns) {
+      const m = (j.contents||'').match(p);
+      if (m) return parseFloat(m[1].replace(/,/g,''));
+    }
+    return null;
+  }
+
+  try {
+    const [vixVal,spxVal] = await Promise.all([getQ('%24VIX'),getQ('%24SPX')]);
+    let ok=false;
+    if (vixVal&&vixVal>5&&vixVal<100){
+      document.getElementById('vixI').value=vixVal.toFixed(2);
+      document.getElementById('sb-vix').textContent=vixVal.toFixed(2);
+      ok=true;
+    }
+    if (spxVal&&spxVal>3000){
+      document.getElementById('spxI').value=spxVal.toFixed(2);
+      document.getElementById('sb-spx').textContent=fmt(spxVal);
+      ok=true;
+    }
+    try {
+      const esUrl='https://www.barchart.com/futures/quotes/ESM26/overview';
+      const r2=await fetch(proxy+encodeURIComponent(esUrl),{signal:AbortSignal.timeout(7000)});
+      const j2=await r2.json();
+      for (const p of patterns) {
+        const m=(j2.contents||'').match(p);
+        if (m) {
+          const ev=parseFloat(m[1].replace(/,/g,''));
+          if (ev>3000) {
+            document.getElementById('sb-es').textContent=fmt(ev);
+            document.getElementById('offI').value=(ev-parseFloat(document.getElementById('spxI').value)).toFixed(0);
+          }
+          break;
+        }
+      }
+    } catch(e){}
+    const now=new Date();
+    document.getElementById('sb-time').textContent=
+      now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'America/New_York'})+' ET';
+    msg.textContent = ok ? '♛ SM · Live data loaded from Barchart.com' : '⚠ Data unavailable — update fields manually';
+    msg.style.color = ok ? 'var(--green)' : 'var(--gold)';
+    recalc();
+  } catch(e) {
+    msg.style.color='var(--gold)';
+    msg.textContent='⚠ Barchart unreachable — using manual inputs';
+  } finally {
+    btn.classList.remove('loading'); icon.classList.remove('spin');
+    setTimeout(()=>{ msg.textContent=''; },7000);
+  }
+}
+
+function recalc() {
+  const spx = parseFloat(document.getElementById('spxI').value)||6886;
+  const vix = parseFloat(document.getElementById('vixI').value)||19.12;
+  const off = parseFloat(document.getElementById('offI').value)||-4;
+  const td  = parseFloat(document.getElementById('tdI').value)||252;
+
+  const em=em1(spx,vix,td), em2=em*2;
+  const pct=(em/spx)*100;
+  const esBase=spx+off;
+  const esDollar=em*50, mesDollar=em*5;
+  const reg=regime(vix);
+
+  document.getElementById('sb-vix').textContent=vix.toFixed(2);
+  document.getElementById('sb-spx').textContent=fmt(spx);
+
+  /* Cards */
+  const cards=[
+    {lbl:'VIX',val:vix.toFixed(2),vc:vix>=30?'red':vix>=20?'gold':'green',sub:'30-day annualised implied vol',s:vix>=30?'c-red':vix>=20?'c-gold':'c-green',badge:`<span class="regime-badge ${reg[1]}">${reg[0]}</span>`},
+    {lbl:'Daily ±1σ',val:'±'+em.toFixed(1),vc:'gold',sub:pct.toFixed(2)+'% of SPX · 68% prob',s:'c-gold',badge:''},
+    {lbl:'ES ±1σ Value',val:'$'+Math.round(esDollar).toLocaleString(),vc:'green',sub:'MES: $'+Math.round(mesDollar).toLocaleString()+' per contract',s:'c-green',badge:''},
+    {lbl:'Full ±2σ Range',val:(em2*2).toFixed(0)+' pts',vc:'white',sub:fmt(spx-em2,0)+' — '+fmt(spx+em2,0),s:'c-blue',badge:''}
+  ];
+  document.getElementById('cardsRow').innerHTML=cards.map(c=>`
+    <div class="mcard ${c.s} fade-in">
+      <div class="lbl">${c.lbl}</div>
+      <div class="val ${c.vc}">${c.val}</div>
+      <div class="sub">${c.sub}</div>${c.badge}
+    </div>`).join('');
+
+  /* Sigma grid */
+  document.getElementById('sigmaDate').textContent=
+    new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const zones=[
+    {lbl:'+2σ Upper',col:'var(--red)',spxV:spx+em2,esV:esBase+em2,isW:false},
+    {lbl:'+1σ Upper',col:'rgba(232,57,74,0.75)',spxV:spx+em,esV:esBase+em,isW:false},
+    {lbl:'Anchor / Close',col:'var(--muted)',spxV:spx,esV:esBase,isW:false},
+    {lbl:'-1σ Lower',col:'rgba(34,200,122,0.75)',spxV:spx-em,esV:esBase-em,isW:false},
+    {lbl:'-2σ Lower',col:'var(--green)',spxV:spx-em2,esV:esBase-em2,isW:false},
+    {lbl:'±1σ Width',col:'var(--gold)',spxV:null,esV:null,isW:true}
+  ];
+  document.getElementById('sigmaGrid').innerHTML=zones.map(z=>`
+    <div class="szone">
+      <div>
+        <div class="sz-lbl" style="color:${z.col}">${z.lbl}</div>
+        <div class="sz-es">${z.isW?'ES span: '+(em*2).toFixed(0)+' pts':'ES '+z.esV.toFixed(0)}</div>
+      </div>
+      <div class="sz-val" style="color:${z.col}">${z.isW?(em*2).toFixed(1):z.spxV.toFixed(0)}</div>
+    </div>`).join('');
+
+  /* History */
+  document.getElementById('histBody').innerHTML=HISTORY.map((h,i)=>{
+    const isLive=h.spx===null;
+    const s=isLive?spx:h.spx, v=isLive?vix:h.vix;
+    const e1=em1(s,v,td), e2=e1*2;
+    const r2=regime(v);
+    const prev=HISTORY[i-1];
+    const chg=prev&&prev.spx?s-prev.spx:null;
+    return `<tr class="${isLive?'today':''}">
+      <td>${isLive?'Apr 14 ♛':h.date}</td>
+      <td>${fmt(s)}</td>
+      <td>${v.toFixed(2)}</td>
+      <td class="${chg===null?'':chg>=0?'up':'dn'}">${chg===null?'—':(chg>=0?'+':'')+chg.toFixed(0)}</td>
+      <td>±${e1.toFixed(1)}</td>
+      <td>±${e2.toFixed(1)}</td>
+      <td class="up">$${Math.round(e1*50).toLocaleString()}</td>
+      <td>$${Math.round(e1*5).toLocaleString()}</td>
+      <td><span class="rb ${r2[1]}">${r2[0]}</span></td>
+    </tr>`;
+  }).join('');
+
+  buildChart(spx,vix,td);
+}
+
+function buildChart(spx,vix,td) {
+  const all=HISTORY.map(h=>({date:h.date,spx:h.spx||spx,vix:h.vix||vix}));
+  const cfg={
+    type:'line',
+    data:{
+      labels:all.map(h=>h.date),
+      datasets:[
+        {label:'SPX',data:all.map(h=>+h.spx.toFixed(2)),borderColor:'#3b82f6',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#3b82f6',pointBorderColor:'#080909',pointBorderWidth:2,tension:0.3,fill:false},
+        {label:'+2σ',data:all.map(h=>+(h.spx+em1(h.spx,h.vix,td)*2).toFixed(2)),borderColor:'rgba(232,57,74,0.22)',borderWidth:1,borderDash:[7,5],pointRadius:0,fill:false},
+        {label:'+1σ',data:all.map(h=>+(h.spx+em1(h.spx,h.vix,td)).toFixed(2)),borderColor:'rgba(232,57,74,0.65)',borderWidth:1.5,borderDash:[3,3],pointRadius:0,fill:false},
+        {label:'-1σ',data:all.map(h=>+(h.spx-em1(h.spx,h.vix,td)).toFixed(2)),borderColor:'rgba(34,200,122,0.65)',borderWidth:1.5,borderDash:[3,3],pointRadius:0,fill:false},
+        {label:'-2σ',data:all.map(h=>+(h.spx-em1(h.spx,h.vix,td)*2).toFixed(2)),borderColor:'rgba(34,200,122,0.22)',borderWidth:1,borderDash:[7,5],pointRadius:0,fill:false},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#0f1114',borderColor:'rgba(245,200,66,0.18)',borderWidth:1,
+          titleColor:'#7a7264',bodyColor:'#ede8d8',
+          titleFont:{family:'Space Mono',size:8},bodyFont:{family:'Space Mono',size:9},
+          callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString(undefined,{minimumFractionDigits:1,maximumFractionDigits:1})}`}
+        }
+      },
+      scales:{
+        x:{ticks:{color:'#38332e',font:{family:'Space Mono',size:9},maxRotation:0},grid:{color:'rgba(245,200,66,0.03)'}},
+        y:{ticks:{color:'#38332e',font:{family:'Space Mono',size:9},callback:v=>v.toLocaleString()},grid:{color:'rgba(245,200,66,0.03)'}}
+      }
+    }
+  };
+  if (chartInst) chartInst.destroy();
+  chartInst=new Chart(document.getElementById('emChart'),cfg);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  mktStatus(); recalc(); fetchData();
+  setInterval(mktStatus,60000);
+});
+</script>
+</body>
+</html>

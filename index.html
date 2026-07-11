@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SireMammat — Futures Day Trader · Price Action · Al Brooks</title>
+<meta name="description" content="Free futures trading education built on Al Brooks methodology. ES, NQ, MES, MNQ price action — playbooks, strategies, and real performance data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:     #0E0A04;
+  --dark2:    #16100A;
+  --dark3:    #1E1508;
+  --dark4:    #2C2010;
+  --gold:     #B87333;
+  --gold-lt:  #E8C46A;
+  --gold-dim: #6B4420;
+  --cream:    #F5EDD8;
+  --cream2:   #EDE0C4;
+  --muted:    #8C7355;
+  --muted2:   #5C4A35;
+  --white:    #FFFFFF;
+  --red:      #C04030;
+  --green:    #3A7A50;
+  --font-display: 'EB Garamond', Georgia, serif;
+  --font-body:    'Libre Baskerville', Georgia, serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
+  --radius:   4px;
+  --radius-lg:10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--dark);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+a { color: var(--gold-lt); text-decoration: none; }
+a:hover { color: var(--gold); }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+.ticker-bar {
+  background: var(--dark2);
+  border-bottom: 1px solid var(--gold-dim);
+  overflow: hidden;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+.ticker-track {
+  display: flex;
+  gap: 0;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+.ticker-item {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  padding: 0 28px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  border-right: 1px solid var(--dark4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+}
+.ticker-item .sym { color: var(--cream2); font-weight: 500; }
+.ticker-item .up  { color: var(--green); }
+.ticker-item .dn  { color: var(--red); }
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  transition: background 0.3s ease;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(14,10,4,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--dark4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  height: 64px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+.nav-logo svg { flex-shrink: 0; }
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.nav-logo-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold-lt); }
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dark) !important;
+  background: var(--gold);
+  padding: 8px 18px;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: var(--gold-lt) !important; color: var(--dark) !important; }
+
+.hero {
+  min-height: 92vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 70% 50%, rgba(184,115,51,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(184,115,51,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(184,115,51,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,115,51,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at 70% 50%, black 30%, transparent 70%);
+}
+.hero-left {
+  padding: 8rem 3rem 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  color: var(--cream);
+  margin-bottom: 1.5rem;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-lt);
+}
+.hero-sub {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 480px;
+  margin-bottom: 2.5rem;
+}
+.hero-quote {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--gold-lt);
+  border-left: 2px solid var(--gold);
+  padding-left: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+}
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dark);
+  background: var(--gold);
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  transition: background 0.2s, transform 0.15s;
+  display: inline-block;
+}
+.btn-primary:hover { background: var(--gold-lt); color: var(--dark); transform: translateY(-1px); }
+.btn-ghost {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+  border: 1px solid var(--gold-dim);
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  transition: border-color 0.2s, color 0.2s;
+  display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+.hero-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 4rem;
+}
+.hero-symbol {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+.hero-symbol svg.big-candle {
+  filter: drop-shadow(0 0 60px rgba(184,115,51,0.25));
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+}
+.stat-card {
+  background: var(--dark2);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.2rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--gold-dim); }
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--gold-lt);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+section { padding: 6rem 4rem; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 1rem;
+  line-height: 1.15;
+}
+.section-sub {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.divider-line { flex: 1; height: 1px; background: var(--dark4); }
+
+.hub { background: var(--dark); }
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5px;
+  background: var(--dark4);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.hub-card {
+  background: var(--dark);
+  padding: 2rem 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+.hub-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.hub-card:hover { background: var(--dark3); }
+.hub-card:hover::before { transform: scaleX(1); }
+.hub-card-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+}
+.hub-card-icon { font-size: 1.8rem; line-height: 1; }
+.hub-card-category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hub-card-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--cream);
+  line-height: 1.2;
+}
+.hub-card-body {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.7;
+  flex: 1;
+}
+.hub-card-arrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-top: 0.5rem;
+  transition: letter-spacing 0.2s;
+}
+.hub-card:hover .hub-card-arrow { letter-spacing: 0.12em; }
+
+.hierarchy { background: var(--dark2); border-bottom: 1px solid var(--dark4); }
+.hierarchy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.hierarchy-card {
+  background: var(--dark);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  transition: transform 0.2s ease;
+}
+.hierarchy-card:hover { border-color: var(--gold-dim); }
+.hierarchy-card h3 {
+  font-family: var(--font-display);
+  color: var(--gold-lt);
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+.hierarchy-card .scope {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  display: block;
+}
+.hierarchy-card p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.about { background: var(--dark); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.about-symbol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem;
+  background: var(--dark2);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+.about-symbol::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(184,115,51,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.about-symbol-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-align: center;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1rem;
+}
+.tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border: 1px solid var(--dark4);
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.about-content { padding-top: 1rem; }
+.about-content p {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+}
+.about-content p strong { color: var(--cream2); font-weight: 700; }
+
+.philosophy {
+  background: var(--dark3);
+  border-top: 1px solid var(--dark4);
+  border-bottom: 1px solid var(--dark4);
+  padding: 5rem 4rem;
+  text-align: center;
+}
+.philosophy blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--cream);
+  line-height: 1.5;
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+}
+.philosophy blockquote em { color: var(--gold-lt); font-style: normal; }
+.philosophy cite {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.tools { background: var(--dark3); }
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.tool-card {
+  background: var(--dark2);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s;
+}
+.tool-card:hover { border-color: var(--gold-dim); }
+.tool-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--cream);
+}
+.tool-cat {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.tool-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.6;
+  flex: 1;
+}
+.tool-rating { display: flex; gap: 3px; }
+.star { color: var(--gold-lt); font-size: 12px; }
+.star.off { color: var(--dark4); }
+
+.contact { background: var(--dark); padding: 6rem 4rem; }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--dark2);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+  color: var(--cream);
+}
+.contact-link:hover { border-color: var(--gold-dim); background: var(--dark3); color: var(--cream); }
+.contact-link-icon {
+  width: 36px; height: 36px;
+  background: var(--dark4);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.contact-link-text { font-family: var(--font-body); font-size: 0.9rem; }
+.contact-link-handle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold);
+  margin-top: 2px;
+}
+.contact-form { display: flex; flex-direction: column; gap: 1rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background: var(--dark2);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cream);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: var(--muted2); }
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--gold-dim); }
+.form-field select option { background: var(--dark2); }
+.form-field textarea { resize: vertical; min-height: 120px; }
+.response-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 1rem 1.25rem;
+  background: var(--dark2);
+  border: 1px solid var(--dark4);
+  border-radius: var(--radius);
+  border-left: 2px solid var(--gold);
+}
+
+footer {
+  background: var(--dark2);
+  border-top: 1px solid var(--dark4);
+  padding: 3rem 4rem 2rem;
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--dark4);
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 1rem;
+}
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--cream);
+}
+.footer-tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  max-width: 300px;
+  line-height: 1.6;
+}
+.footer-links {
+  display: flex;
+  gap: 3rem;
+}
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.footer-col-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.footer-col-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.footer-col-links a:hover { color: var(--gold-lt); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted2);
+  letter-spacing: 0.04em;
+}
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted2);
+  max-width: 400px;
+  text-align: right;
+  line-height: 1.6;
+}
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-right { display: none; }
+  .hero-left { padding: 5rem 1.5rem 4rem; }
+  section { padding: 4rem 1.5rem; }
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-top { flex-direction: column; gap: 2rem; }
+  .footer-links { flex-wrap: wrap; gap: 2rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-disclaimer { text-align: center; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track" id="ticker">
+    <div class="ticker-item"><span class="sym">ES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">NQ</span> 20,934.00 <span class="up">+67.25</span></div>
+    <div class="ticker-item"><span class="sym">MES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">MNQ</span> 20,934.00 <span class="dn">−18.75</span></div>
+    <div class="ticker-item"><span class="sym">VIX</span> 18.24 <span class="dn">−0.84</span></div>
+    <div class="ticker-item"><span class="sym">DXY</span> 104.32 <span class="up">+0.21</span></div>
+    <div class="ticker-item"><span class="sym">GOLD</span> 2,341.40 <span class="up">+8.60</span></div>
+    <div class="ticker-item"><span class="sym">10Y</span> 4.328% <span class="dn">−0.012</span></div>
+  </div>
+</div>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="28" height="36" viewBox="0 0 56 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/>
+      <line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="8" cy="20" r="3" fill="#B87333"/>
+      <circle cx="28" cy="22" r="3" fill="#B87333"/>
+      <circle cx="48" cy="20" r="3" fill="#B87333"/>
+    </svg>
+    <div>
+      <div class="nav-logo-text">SireMammat</div>
+      <div class="nav-logo-sub">Free Futures Education</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hub">Hub</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="/indicators/index.html">Indicators</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://youtube.com/@SireMammat" class="nav-cta">Subscribe →</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Al Brooks Methodology · Free Education</div>
+    <h1 class="hero-title">
+      Trade the market.<br>
+      Not the <em>noise.</em>
+    </h1>
+    <p class="hero-sub">
+      Documenting the real work behind consistent futures trading — price action, execution frameworks, and the discipline it takes to show up every day. No noise. Just process. All free.
+    </p>
+    <blockquote class="hero-quote">
+      "The market rewards patience, punishes impulse, and respects only those who respect process above profit."
+    </blockquote>
+    <div class="hero-btns">
+      <a href="#hub" class="btn-primary">Explore the Hub →</a>
+      <a href="#about" class="btn-ghost">About Me</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-symbol">
+      <svg class="big-candle" width="180" height="240" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="72" width="60" height="78" rx="4" stroke="#E8C46A" stroke-width="4" fill="none"/>
+        <line x1="30" y1="108" x2="90" y2="108" stroke="#E8C46A" stroke-width="2" opacity="0.3"/>
+        <line x1="60" y1="72" x2="60" y2="54" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="16" y1="54" x2="28" y2="64" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="28" y1="64" x2="46" y2="40" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="46" y1="40" x2="60" y2="56" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="60" y1="56" x2="74" y2="40" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="74" y1="40" x2="92" y2="64" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="92" y1="64" x2="104" y2="54" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="16" cy="54" r="5" fill="#E8C46A"/>
+        <circle cx="60" cy="56" r="5" fill="#E8C46A"/>
+        <circle cx="104" cy="54" r="5" fill="#E8C46A"/>
+      </svg>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-num">20<span style="font-size:1.1rem">pts</span></div>
+          <div class="stat-lbl">Daily target</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">58%</div>
+          <div class="stat-lbl">Win rate YTD</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">1.8</div>
+          <div class="stat-lbl">Profit factor</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">4</div>
+          <div class="stat-lbl">Instruments</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hierarchy">
+  <div class="section-inner">
+    <div class="section-eyebrow">The Business Hierarchy</div>
+    <h2 class="section-title">The Trader's Core Pillars</h2>
+    <p class="section-sub">Defining the distinction between your business rules, your statistical edge, and your historical proof.</p>
+    
+    <div class="hierarchy-grid">
+      <div class="hierarchy-card">
+        <span class="scope">Foundation</span>
+        <h3>Trading Plan</h3>
+        <p>The logistics and rules governing your entire business. Covers risk management (daily loss limits), routines, platform settings, and psychological guardrails.</p>
+      </div>
+      <div class="hierarchy-card">
+        <span class="scope">Logic</span>
+        <h3>Strategies</h3>
+        <p>Your specific "if-then" engines for identifying a statistical edge. Defined entry triggers, stop-loss logic, and target placement for specific setups like M2B or H2.</p>
+      </div>
+      <div class="hierarchy-card">
+        <span class="scope">Execution</span>
+        <h3>Playbook</h3>
+        <p>A curated manual of your best-performing setups. While a strategy is a set of rules, a playbook is a visual gallery of those rules working perfectly in real market conditions.</p>
+      </div>
+      <div class="hierarchy-card">
+        <span class="scope">Forensics</span>
+        <h3>Case Studies</h3>
+        <p>Deep-dive reviews of past sessions or specific trades. Historical proof that extracts lessons from mistakes and reinforces confidence in your playbook logic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+  <div class="divider-line"></div>
+</div>
+
+<section class="hub" id="hub">
+  <div class="section-inner">
+    <div class="section-eyebrow">Content Hub</div>
+    <h2 class="section-title">Everything In One Place</h2>
+    <p class="section-sub">Every resource, strategy, and piece of analysis organised so you can find exactly what you need, when you need it.</p>
+
+    <div class="hub-grid">
+      <a class="hub-card" href="https://siremammat.neocities.org/Learn/">
+        <div class="hub-card-icon">🎓</div>
+        <div class="hub-card-category">Education</div>
+        <div class="hub-card-title">Learn Price Action</div>
+        <div class="hub-card-body">Structured curriculum covering price action, Al Brooks methodology, market structure, entry and exit criteria, and everything you need to build a foundation as a futures trader.</div>
+        <div class="hub-card-arrow">Start Learning →</div>
+      </a>
+
+      <a class="hub-card" href="https://siremammat.neocities.org/TradePlan/trading-plan">
+        <div class="hub-card-icon">🎯</div>
+        <div class="hub-card-category">Execution</div>
+        <div class="hub-card-title">Trading Plan</div>
+        <div class="hub-card-body">The complete 20-point futures day trading plan — market filters, entry rules, stop placement, partial exits, position sizing, kill switch, and performance tracking. Fully editable.</div>
+        <div class="hub-card-arrow">View Trading Plan →</div>
+      </a>
+
+      <a class="hub-card" href="https://siremammat.neocities.org/Strategies/">
+        <div class="hub-card-icon">⚙</div>
+        <div class="hub-card-category">Frameworks</div>
+        <div class="hub-card-title">Strategies</div>
+        <div class="hub-card-body">Documented trading strategies with clear entry rules, stop placement, target logic, and market condition filters. M2B, M2S, Inside Bar, Failure Patterns — all with annotated chart setups.</div>
+        <div class="hub-card-arrow">View Strategies →</div>
+      </a>
+
+      <a class="hub-card" href="https://siremammat.neocities.org/Playbooks/">
+        <div class="hub-card-icon">📗</div>
+        <div class="hub-card-category">Playbooks</div>
+        <div class="hub-card-title">Trading Playbooks</div>
+        <div class="hub-card-body">Complete trading systems broken into individual slides — context, rules, setups, risk management, and reference sheets. Playbook 01: 20-Point Objective across 10 fully documented slides.</div>
+        <div class="hub-card-arrow">Open Playbook →</div>
+      </a>
+
+      <a class="hub-card" href="https://siremammat.neocities.org/casestudies/">
+        <div class="hub-card-icon">🔬</div>
+        <div class="hub-card-category">Analysis</div>
+        <div class="hub-card-title">Case Studies</div>
+        <div class="hub-card-body">Deep-dive breakdowns of real trades — what I saw, why I entered, how I managed it, and what I learned. Every case study is annotated with charts and bar-by-bar commentary.</div>
+        <div class="hub-card-arrow">View Case Studies →</div>
+      </a>
+
+      <!-- FIX 1: Changed /Analysis/ to /analysis/ (lowercase) -->
+      <a class="hub-card" href="https://siremammat.neocities.org/analysis/">
+        <div class="hub-card-icon">📈</div>
+        <div class="hub-card-category">Market Analysis</div>
+        <div class="hub-card-title">Analysis</div>
+        <div class="hub-card-body">Daily and multi-timeframe reads on ES and NQ futures — daily chart bias, 5-min setups, key levels, and what to watch each session. Published a few times a week.</div>
+        <div class="hub-card-arrow">Read Analysis →</div>
+      </a>
+
+      <a class="hub-card" href="https://siremammat.neocities.org/Tools/tools">
+        <div class="hub-card-icon">🔧</div>
+        <div class="hub-card-category">Recommended</div>
+        <div class="hub-card-title">Tools &amp; Brokers</div>
+        <div class="hub-card-body">The platforms, tools, and services I actually use — charting, execution, journaling, brokers, and prop firms. Honest reviews with pros, cons, and ratings. No paid promotions.</div>
+        <div class="hub-card-arrow">View Tools →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="philosophy">
+  <blockquote>
+    "The market rewards <em>patience</em>, punishes <em>impulse</em>, and respects only those who respect <em>process</em> above profit."
+  </blockquote>
+  <cite>— Sire Mammat · Trading Philosophy</cite>
+</div>
+
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div>
+        <div class="section-eyebrow">About</div>
+        <h2 class="section-title">Sire Mammat</h2>
+        <div class="about-content">
+          <p>I trade futures — primarily <strong>ES, NQ, MES, and MNQ</strong> — using a price action approach built on years of study, screen time, and the kind of losses that teach more than wins ever could.</p>
+          <p>My approach is rooted in <strong>Al Brooks' price action methodology</strong> combined with volume profile analysis and disciplined session-based execution. I document everything — not to look good, but because the discipline of logging forces honesty.</p>
+          <p>This site is my public trading journal, education hub, and resource library. If you're serious about learning to trade futures properly, <strong>everything here is built to help you cut years off the learning curve</strong> — and it's free, always.</p>
+        </div>
+        <div class="tags">
+          <span class="tag">Price Action</span>
+          <span class="tag">Al Brooks</span>
+          <span class="tag">ES Futures</span>
+          <span class="tag">Volume Profile</span>
+          <span class="tag">VWAP</span>
+          <span class="tag">Day Trading</span>
+          <span class="tag">Risk Management</span>
+          <span class="tag">20-Point Objective</span>
+        </div>
+      </div>
+      <div class="about-symbol">
+        <svg width="160" height="210" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="72" width="60" height="78" rx="4" stroke="#B87333" stroke-width="3.5" fill="none"/>
+          <line x1="30" y1="108" x2="90" y2="108" stroke="#B87333" stroke-width="1.5" opacity="0.3"/>
+          <line x1="60" y1="72" x2="60" y2="54" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="16" y1="54" x2="28" y2="64" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="28" y1="64" x2="46" y2="40" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="46" y1="40" x2="60" y2="56" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="60" y1="56" x2="74" y2="40" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="74" y1="40" x2="92" y2="64" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="92" y1="64" x2="104" y2="54" stroke="#B87333" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="16" cy="54" r="4.5" fill="#B87333"/>
+          <circle cx="60" cy="56" r="4.5" fill="#B87333"/>
+          <circle cx="104" cy="54" r="4.5" fill="#B87333"/>
+        </svg>
+        <div class="about-symbol-label">The Crowned Candle<br>SireMammat Brand Symbol</div>
+        <p style="font-family:var(--font-mono);font-size:10px;color:var(--muted2);text-align:center;line-height:1.6;">"A trading candle wearing a crown —<br>because mastery of price is royalty."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+  <div class="divider-line"></div>
+</div>
+
+<section class="tools" id="tools">
+  <div class="section-inner">
+    <div class="section-eyebrow">Recommended</div>
+    <h2 class="section-title">Tools &amp; Brokers</h2>
+    <p class="section-sub">The platforms, tools, and services I actually use. No paid promotions — only what I've found genuinely useful in my own trading.</p>
+
+    <div class="tools-grid" id="home-tools-grid"></div>
+
+    <div style="margin-top:2rem;text-align:center;">
+      <a href="https://siremammat.neocities.org/Tools/tools" class="btn-ghost">View All Tools &amp; Full Reviews →</a>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="section-inner">
+    <div class="section-eyebrow">Get In Touch</div>
+    <h2 class="section-title">Contact &amp; Bookings</h2>
+
+    <div class="contact-grid">
+      <div>
+        <p class="section-sub" style="margin-bottom:2rem;">For collaboration, mentoring inquiries, or content partnerships — reach out directly.</p>
+        <div class="contact-links">
+          <a class="contact-link" href="mailto:siremammat@gmail.com">
+            <div class="contact-link-icon">✉</div>
+            <div>
+              <div class="contact-link-text">Email</div>
+              <div class="contact-link-handle">siremammat@gmail.com</div>
+            </div>
+          </a>
+          <a class="contact-link" href="https://x.com/SireMammat" target="_blank" rel="noopener">
+            <div class="contact-link-icon">𝕏</div>
+            <div>
+              <div class="contact-link-text">X (Twitter)</div>
+              <div class="contact-link-handle">@SireMammat</div>
+            </div>
+          </a>
+          <a class="contact-link" href="https://youtube.com/@SireMammat" target="_blank" rel="noopener">
+            <div class="contact-link-icon">▶</div>
+            <div>
+              <div class="contact-link-text">YouTube</div>
+              <div class="contact-link-handle">@SireMammat</div>
+            </div>
+          </a>
+          <a class="contact-link" href="https://instagram.com/SireMammat" target="_blank" rel="noopener">
+            <div class="contact-link-icon">◎</div>
+            <div>
+              <div class="contact-link-text">Instagram</div>
+              <div class="contact-link-handle">@SireMammat</div>
+            </div>
+          </a>
+        </div>
+        <div class="response-note">I respond to all genuine messages within <strong>48 hours</strong>. For collaboration or mentoring requests, please include a short description of what you're looking for.</div>
+      </div>
+
+      <form class="contact-form" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Type of Enquiry</label>
+          <select>
+            <option value="">Select…</option>
+            <option>General question</option>
+            <option>Mentoring / coaching</option>
+            <option>Content collaboration</option>
+            <option>Media / press</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea placeholder="What's on your mind?"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="align-self:flex-start;">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">
+        <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+        <div class="footer-brand-name">SireMammat</div>
+      </div>
+      <div class="footer-tagline">Free futures trading education built on Al Brooks price action methodology. ES · NQ · MES · MNQ</div>
+    </div>
+    <div class="footer-links">
+      <div>
+        <div class="footer-col-title">Education</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/Learn/">Learn Price Action</a></li>
+          <li><a href="https://siremammat.neocities.org/Playbooks/">Playbooks</a></li>
+          <li><a href="https://siremammat.neocities.org/Strategies/">Strategies</a></li>
+          <li><a href="https://siremammat.neocities.org/TradePlan/trading-plan">Trading Plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Analysis</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/casestudies/">Case Studies</a></li>
+          <li><a href="https://siremammat.neocities.org/analysis/">Market Analysis</a></li>
+          <li><a href="https://siremammat.neocities.org/Tools/tools">Tools &amp; Brokers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Connect</div>
+        <ul class="footer-col-links">
+          <li><a href="https://youtube.com/@SireMammat">YouTube</a></li>
+          <li><a href="https://x.com/SireMammat">X / Twitter</a></li>
+          <li><a href="https://instagram.com/SireMammat">Instagram</a></li>
+          <li><a href="mailto:siremammat@gmail.com">Email</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Sire Mammat · All rights reserved</div>
+    <div class="footer-disclaimer">Trading involves substantial risk of loss. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => {
+    if (el.isIntersecting) { el.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.hub-card, .tool-card, .stat-card, .hierarchy-card').forEach(el => {
+  el.classList.add('fade-up');
+  observer.observe(el);
+});
+
+document.querySelectorAll('.hub-grid, .hero-stats, .hierarchy-grid').forEach(grid => {
+  Array.from(grid.children).forEach((child, i) => {
+    child.style.transitionDelay = (i * 0.07) + 's';
+  });
+});
+
+const TOOLS = [
+  { name:"Brooks Trading Course", cat:"Education", rating:5, desc:"Al Brooks' comprehensive price action course. The foundation of my entire trading framework — bar-by-bar market logic without lagging indicators.", url:"https://siremammat.neocities.org/Tools/tools" },
+  { name:"TradingView", cat:"Charting", rating:5, desc:"Primary charting platform for all price action analysis, indicator development, and strategy scripts. Pine Script environment for custom indicators.", url:"https://siremammat.neocities.org/Tools/tools#tool-tradingview" },
+  { name:"NinjaTrader", cat:"Execution", rating:5, desc:"Execution platform for futures. SuperDOM, advanced order types, and deep market depth. Free sim trading available indefinitely.", url:"https://siremammat.neocities.org/Tools/tools#tool-ninjatrader" },
+  { name:"QuantTower", cat:"Charting", rating:4, desc:"Multi-asset platform with volume profiles, footprint charts, and multiple feed connectivity — CQG, Rithmic, IB.", url:"https://siremammat.neocities.org/Tools/tools" },
+  { name:"TraderVue", cat:"Journaling", rating:5, desc:"Trade journaling and analytics. Auto-imports from brokers. Weekly stats breakdown essential for identifying execution patterns.", url:"https://siremammat.neocities.org/Tools/tools#tool-tradervue" },
+  { name:"BarChart.com", cat:"Market Overview", rating:5, desc:"Daily market overview, expected move numbers, and COT data. Clean, fast, and covers everything.", url:"https://siremammat.neocities.org/Tools/tools" },
+  { name:"Finviz", cat:"Market Overview", rating:3, desc:"Quick visual snapshot of the broad market each morning via heat maps and sector scanning.", url:"https://siremammat.neocities.org/Tools/tools" },
+  { name:"Tradovate", cat:"Broker", rating:4, desc:"Low commission futures broker with a clean browser-based platform. Excellent for Micro contract traders.", url:"https://siremammat.neocities.org/Tools/tools" },
+  { name:"TradeDay", cat:"Prop Firm", rating:4, desc:"Static trailing drawdown, no activation fees. Cleanest eval structure in the industry.", url:"https://siremammat.neocities.org/Tools/tools#tool-tradeday" },
+  { name:"Lucid Trading", cat:"Prop Firm", rating:4, desc:"15-minute payouts via LucidFlex — fastest in the industry. Regular reset promotions.", url:"https://siremammat.neocities.org/Tools/tools#tool-lucid" },
+  { name:"MyFundedFutures", cat:"Prop Firm", rating:4, desc:"Established prop firm with rapid eval path, wide range of account sizes, and transparent payout history.", url:"https://siremammat.neocities.org/Tools/tools#tool-mffu" }
+];
+
+(function() {
+  const grid = document.getElementById('home-tools-grid');
+  if (!grid) return;
+  grid.innerHTML = TOOLS.map(t => {
+    const stars = '★'.repeat(t.rating) + '☆'.repeat(5 - t.rating);
+    const nameHtml = t.url ? `<a href="${t.url}" style="color:var(--gold-lt);text-decoration:underline;text-underline-offset:3px">${t.name} →</a>` : t.name;
+    return `<div class="tool-card fade-up">
+      <div class="tool-cat">${t.cat}</div>
+      <div class="tool-name">${nameHtml}</div>
+      <div class="tool-desc">${t.desc}</div>
+      <div class="tool-rating" style="color:var(--gold-lt);font-size:12px;letter-spacing:2px;">${stars}</div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.tool-card').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.06) + 's';
+  });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  grid.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+})();
+
+(function() {
+  const SYMBOL_MAP = {
+    'ES':  'ES=F',
+    'NQ':  'NQ=F',
+    'MES': 'MES=F',
+    'MNQ': 'MNQ=F',
+    'VIX': '^VIX',
+    'DXY': 'DX-Y.NYB',
+    'GOLD':'GC=F',
+    '10Y': '^TNX'
+  };
+
+  const yfSymbols = Object.values(SYMBOL_MAP).join(',');
+  const PROXIES = [
+    (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  ];
+
+  let currentProxyIndex = 0;
+
+  async function fetchWithProxy(url) {
+    for (let i = 0; i < PROXIES.length; i++) {
+      const idx = (currentProxyIndex + i) % PROXIES.length;
+      try {
+        const res = await fetch(PROXIES[idx](url), { signal: AbortSignal.timeout(8000) });
+        if (res.ok) {
+          currentProxyIndex = idx;
+          return await res.json();
+        }
+      } catch(e) { }
+    }
+    throw new Error('All proxies failed');
+  }
+
+  async function fetchPrices() {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yfSymbols)}?range=1d&interval=1d`;
+    try {
+      const data = await fetchWithProxy(url);
+      return parseYahooChart(data);
+    } catch(e) {
+      return await fetchIndividual();
+    }
+  }
+
+  async function fetchIndividual() {
+    const results = {};
+    const entries = Object.entries(SYMBOL_MAP);
+    for (const [label, yfSym] of entries) {
+      try {
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yfSym)}?range=1d&interval=1d`;
+        const data = await fetchWithProxy(url);
+        const result = data.chart?.result?.[0];
+        if (result) {
+          const meta = result.meta;
+          const price = meta.regularMarketPrice;
+          const prevClose = meta.chartPreviousClose ?? meta.previousClose;
+          const change = price - prevClose;
+          const pct = (change / prevClose) * 100;
+          results[label] = { price, change, pct };
+        }
+      } catch(e) { }
+    }
+    return results;
+  }
+
+  function parseYahooChart(data) {
+    const results = {};
+    const chartResults = data.chart?.result;
+    if (!chartResults) throw new Error('No data');
+    for (const r of chartResults) {
+      const meta = r.meta;
+      const yfSym = meta.symbol;
+      const price = meta.regularMarketPrice;
+      const prevClose = meta.chartPreviousClose ?? meta.previousClose;
+      const change = price - prevClose;
+      const pct = (change / prevClose) * 100;
+      for (const [label, sym] of Object.entries(SYMBOL_MAP)) {
+        if (sym === yfSym) {
+          results[label] = { price, change, pct };
+          break;
+        }
+      }
+    }
+    return results;
+  }
+
+  function formatPrice(label, price) {
+    if (label === '10Y') return price.toFixed(3) + '%';
+    if (label === 'VIX') return price.toFixed(2);
+    if (label === 'DXY') return price.toFixed(2);
+    if (label === 'GOLD') return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function formatChange(label, change) {
+    const sign = change >= 0 ? '+' : '';
+    if (label === '10Y') return sign + change.toFixed(3);
+    return sign + change.toFixed(2);
+  }
+
+  function updateTickerItems(data) {
+    const items = document.querySelectorAll('.ticker-item');
+    items.forEach(item => {
+      const symEl = item.querySelector('.sym');
+      if (!symEl) return;
+      const label = symEl.textContent.trim();
+      const info = data[label];
+      if (!info) return;
+
+      const priceSpan = item.childNodes[1];
+      const changeEl = item.querySelector('.up, .dn');
+      if (!changeEl) return;
+
+      const newPrice = formatPrice(label, info.price);
+      const newChange = formatChange(label, info.change);
+      const isUp = info.change >= 0;
+
+      const oldPrice = priceSpan.textContent.trim();
+      if (oldPrice !== newPrice) {
+        item.style.transition = 'background 0.15s';
+        item.style.background = isUp ? 'rgba(58,122,80,0.18)' : 'rgba(192,64,48,0.18)';
+        setTimeout(() => { item.style.background = 'transparent'; }, 600);
+      }
+
+      priceSpan.textContent = ' ' + newPrice + ' ';
+      changeEl.textContent = newChange;
+      changeEl.className = isUp ? 'up' : 'dn';
+    });
+  }
+
+  function duplicateTickerTrack() {
+    const track = document.getElementById('ticker');
+    if (!track || track.dataset.duplicated) return;
+    track.innerHTML += track.innerHTML;
+    track.dataset.duplicated = '1';
+  }
+  duplicateTickerTrack();
+
+  let updateCount = 0;
+
+  async function tick() {
+    try {
+      const data = await fetchPrices();
+      if (Object.keys(data).length > 0) {
+        updateTickerItems(data);
+        updateCount++;
+        console.log(`[Ticker] Updated #${updateCount}`, data);
+      }
+    } catch(e) {
+      console.warn('[Ticker] Update failed:', e.message);
+    }
+  }
+
+  setTimeout(tick, 2000);
+  setInterval(tick, 30000);
+})();
+</script>
+</body>
+</html>

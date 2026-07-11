@@ -1,0 +1,28 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "pages"
+    label: "Pages"
+    folder: "content/pages"
+    create: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Body", name: "body", widget: "markdown"}
+      - label: "Trading"
+        name: "trading"
+        widget: "object"
+        fields:
+          - {label: "Playbooks", name: "playbooks", widget: "markdown"}
+          - {label: "Prop Embed", name: "prop", widget: "string"}
+  - name: "rules"
+    label: "Business Rules"
+    folder: "content/rules"
+    fields:
+      - {label: "Name", name: "name", widget: "string"}
+      - {label: "Risk %", name: "risk", widget: "number"}
+      - {label: "Desc", name: "desc", widget: "markdown"}

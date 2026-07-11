@@ -1,0 +1,44 @@
+Description
+This strategy is a comprehensive technical implementation of Linda Raschke’s "12 Rules of Trading," specifically optimized for the volatility of the Futures markets (MES/ES/MNQ).
+
+At its core, this script is built on the principle that momentum precedes price. By identifying where momentum has climaxed and where the "Smart Money" is positioning, this tool provides a structured framework for entering high-probability pullbacks and managing trend exhaustion.
+
+Methodology & Key Features
+1. The Rule 1 Pullback (Momentum Foundation)
+The strategy monitors for a fresh 20-period high or low. Once identified, it tracks the first touch of the 20-period Exponential Moving Average (EMA). In Raschke's methodology, this "Home Base" touch is the most reliable entry point for a trend continuation.
+
+2. Last Hour Truth (Rule 7)
+The final hour of the trading session often reveals the true intent of institutional players. The integrated dashboard tracks whether the session is closing with "Smart Money" strength or weakness, providing a directional bias for the following morning's open.
+
+3. Volatility Climax Exit (Rule 11/12)
+To protect capital, the script utilizes a volatility-based exhaustion filter. Using an ATR-multiplier, it identifies "Climax" bars—candlesticks that represent extreme emotional extension. These signals serve as automated exit points to capture profit before a mean-reversion event occurs.
+
+4. Interactive Technical Dashboard
+A fully customizable UI allows you to monitor the internal health of the market without cluttering your workspace:
+
+Morning Reversal Tracking: Alerts when the opening range is retracing (Rule 3).
+
+Current Status: Tracks price interaction with Previous Day High/Low (Rules 5 & 6).
+
+Dynamic Positioning: Choose from 9 anchor points to fit your specific chart layout.
+
+Resources & Access
+For a detailed breakdown of the logic, technical documentation, and setup guides for this and other tools, please visit:
+👉 siremammat.neocities.org/indicators
+
+How to Use
+Long Entry: Triggered when price is trading above the Previous Day High and touches the 20 EMA after a recent bullish momentum peak.
+
+Short Entry: Triggered when price is trading below the Previous Day Low and rallies back to touch the 20 EMA after a recent bearish momentum peak.
+
+Exit: The strategy will automatically close positions upon a Climax Signal or a reversal in technical trend health.
+
+Technical Specifications
+Lookahead Notice: This script utilizes the lookahead parameter specifically to fetch Previous Day High/Low data for historical context. It does not look ahead for current-bar signals or entry logic.
+
+Calculation: calc_on_every_tick is enabled to ensure the dashboard reflects the exact moment price touches a pivot or the 20 EMA.
+
+Timeframes: Optimized for the 5-minute and 15-minute charts.
+
+Disclaimer
+Trading futures involves substantial risk. This script is a technical tool designed for educational and execution assistance. It is not financial advice. Based on the public works of Linda Raschke.

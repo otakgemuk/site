@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOD Trade Card — 24 April</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b10;
+    --surface: #0f141b;
+    --surface-2: #151c26;
+    --surface-3: #1a2230;
+    --border: #1e2a3a;
+    --border-light: #253040;
+    --accent: #00e5a0;
+    --accent-dim: rgba(0,229,160,0.08);
+    --accent-border: rgba(0,229,160,0.18);
+    --red: #ff4d6a;
+    --red-dim: rgba(255,77,106,0.08);
+    --yellow: #f0c040;
+    --yellow-dim: rgba(240,192,64,0.08);
+    --blue: #6b9eff;
+    --blue-dim: rgba(107,158,255,0.08);
+    --text: #e4e9f0;
+    --text-secondary: #8a96a8;
+    --text-muted: #505e70;
+    --text-dim: #333f50;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 32px 16px 64px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 1040px;
+    animation: enter 0.5s ease both;
+  }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Top Header ── */
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .top-header .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .top-header .session {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  /* ── Hero Row ── */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hero-left .date {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-left .date em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-left .subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  .hero-right {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .metric {
+    text-align: right;
+  }
+
+  .metric .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .metric .val.positive { color: var(--accent); }
+  .metric .val.neutral { color: var(--yellow); }
+
+  .metric .lbl {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .sep {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  /* ── Context Panel ── */
+  .context-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .context-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 32px;
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .context-toggle:hover { background: var(--surface-3); }
+
+  .context-toggle .arrow {
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+
+  .context-toggle.open .arrow { transform: rotate(90deg); }
+
+  .context-toggle span {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .context-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+
+  .context-body.open {
+    max-height: 600px;
+  }
+
+  .context-inner {
+    padding: 20px 32px 24px;
+  }
+
+  .context-section {
+    margin-bottom: 18px;
+  }
+
+  .context-section:last-child { margin-bottom: 0; }
+
+  .context-section .cs-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cs-label .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .cs-label .dot.yellow { background: var(--yellow); }
+  .cs-label .dot.blue { background: var(--blue); }
+
+  .context-section p {
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .context-section p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .context-section p .hl-green {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .context-section p .hl-yellow {
+    color: var(--yellow);
+    font-weight: 500;
+  }
+
+  .context-section p .hl-blue {
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  .context-section p .hl-red {
+    color: var(--red);
+    font-weight: 500;
+  }
+
+  .context-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .ctag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  .ctag.tr { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240,192,64,0.15); }
+  .ctag.bo { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+  .ctag.lo { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(107,158,255,0.15); }
+  .ctag.mm { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+  .ctag.disc { background: rgba(255,255,255,0.03); color: var(--text-muted); border: 1px solid var(--border); }
+
+  /* ── Chart ── */
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .chart-header .ch-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .chart-header .ch-legend {
+    display: flex;
+    gap: 14px;
+  }
+
+  .ch-legend .li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+
+  .ch-legend .li .swatch {
+    width: 10px;
+    height: 3px;
+    border-radius: 1px;
+  }
+
+  .swatch.s-green { background: var(--accent); }
+  .swatch.s-red { background: var(--red); }
+  .swatch.s-yellow { background: var(--yellow); }
+  .swatch.s-blue { background: var(--blue); }
+  .swatch.s-dim { background: var(--text-dim); }
+
+  canvas#chart {
+    width: 100%;
+    display: block;
+    border-radius: 6px;
+  }
+
+  /* ── Trades ── */
+  .trades-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+
+  .trades-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .trade-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trade-row:hover {
+    border-color: var(--border-light);
+    background: var(--surface-3);
+  }
+
+  .trade-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+
+  .trade-row.t-buy::before { background: var(--accent); }
+  .trade-row.t-sell::before { background: var(--red); }
+  .trade-row.featured::before { background: var(--accent); width: 3px; }
+  .trade-row.featured { border-color: var(--accent-border); background: rgba(0,229,160,0.03); }
+
+  .tr-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .tr-id .dir {
+    display: inline-block;
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+    font-weight: 600;
+    vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+
+  .dir.buy { background: var(--accent-dim); color: var(--accent); }
+  .dir.sell { background: var(--red-dim); color: var(--red); }
+
+  .tr-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .tr-details .tr-context {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .tr-details .tr-context .em { color: var(--text); font-weight: 600; }
+  .tr-details .tr-context .em-g { color: var(--accent); font-weight: 500; }
+  .tr-details .tr-context .em-y { color: var(--yellow); font-weight: 500; }
+  .tr-details .tr-context .em-b { color: var(--blue); font-weight: 500; }
+
+  .tr-details .tr-bars {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  .tr-pnl {
+    text-align: right;
+  }
+
+  .tr-pnl .amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .tr-pnl .amount.positive { color: var(--accent); }
+  .tr-pnl .amount.neutral { color: var(--text-dim); }
+
+  .tr-pnl .rr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* ── Takeaway ── */
+  .takeaway {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 28px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .takeaway .tk-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .takeaway .tk-text {
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .takeaway .tk-text strong { color: var(--text); }
+  .takeaway .tk-text .em-g { color: var(--accent); font-weight: 500; }
+  .takeaway .tk-text .em-y { color: var(--yellow); font-weight: 500; }
+
+  @media (max-width: 640px) {
+    .hero { flex-direction: column; align-items: flex-start; gap: 20px; padding: 20px; }
+    .hero-right { gap: 20px; }
+    .metric .val { font-size: 22px; }
+    .hero-left .date { font-size: 32px; }
+    .context-inner { padding: 16px 20px 20px; }
+    .chart-wrap { padding: 14px 12px; }
+    .trades-wrap { padding: 16px 14px; }
+    .trade-row { grid-template-columns: 48px 1fr; }
+    .tr-pnl { grid-column: 1 / -1; text-align: left; padding-top: 4px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .takeaway { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="brand">End of Day Review</div>
+    <div class="session">Session 24 April</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="date">24 <em>/ 04</em></div>
+      <div class="subtitle">Trading Range Day · Breakout → MFR Oscillation</div>
+    </div>
+    <div class="hero-right">
+      <div class="metric">
+        <div class="val positive">+67</div>
+        <div class="lbl">Points (5 trades)</div>
+      </div>
+      <div class="sep"></div>
+      <div class="metric">
+        <div class="val positive">100%</div>
+        <div class="lbl">Win Rate</div>
+      </div>
+      <div class="sep"></div>
+      <div class="metric">
+        <div class="val neutral">1 : 7</div>
+        <div class="lbl">Best R:R</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context Panel -->
+  <div class="context-panel">
+    <div class="context-toggle" onclick="toggleContext()">
+      <div class="arrow">▸</div>
+      <span>Market Context &amp; Narrative</span>
+    </div>
+    <div class="context-body" id="contextBody">
+      <div class="context-inner">
+
+        <div class="context-section">
+          <div class="cs-label"><div class="dot yellow"></div>Open &amp; Structure</div>
+          <p>
+            The day started with a <strong>gap up</strong> and <strong>overlapping bars from Bar 1 to Bar 12</strong>.
+            The <span class="hl-yellow">Low of Bar 1</span> was a few ticks above the <span class="hl-yellow">Green TD9</span> —
+            Demark's indication of <strong>price exhaustion from the previous day</strong> — which also served as a
+            good indication of <strong>where support is for the day</strong>.
+          </p>
+        </div>
+
+        <div class="context-section">
+          <div class="cs-label"><div class="dot"></div>Setup &amp; Breakout</div>
+          <p>
+            Market was in a <strong>trading range behavior</strong> until a breakout occurs, making it a
+            <span class="hl-blue">limit order market</span>.
+            <span class="hl-green">Bar 8/9 formed a High 1</span> and <span class="hl-green">Bar 13/14 formed an H2</span> —
+            a good indication of markets moving higher.
+            <strong>Bar 15 closes at its high and above the close of Bar 1</strong>, which some consider a
+            <span class="hl-green">breakout point</span>.
+          </p>
+          <div class="context-tags">
+            <span class="ctag tr">Trading Range</span>
+            <span class="ctag bo">Breakout Bar 15</span>
+            <span class="ctag lo">Limit Order Market</span>
+            <span class="ctag mm">High 1 (B8/9) → H2 (B13/14)</span>
+          </div>
+        </div>
+
+        <div class="context-section">
+          <div class="cs-label"><div class="dot yellow"></div>T01 Execution Context</div>
+          <p>
+            Entry was a <strong>Buy 1 tick above Bar 14</strong>, filled at <strong>Bar 16</strong>.
+            Using <span class="hl-green">Bar 13/14 for a Measured Move up</span>.
+            Exit at <strong>Bar 28</strong> — <span class="hl-green">1:7 R:R, +30 points</span>.
+            From Bar 28 onwards, bars started overlapping again — an indication of
+            <strong>market moving sideways</strong>, a trading range market behavior.
+            <strong>Bar 28 can be considered a Mother Bar</strong> encapsulating the bars moving up and down,
+            so it was good to <span class="hl-yellow">walk away with 30 points secured</span>.
+          </p>
+        </div>
+
+        <div class="context-section">
+          <div class="cs-label"><div class="dot blue"></div>T02–T05: MFR Oscillation</div>
+          <p>
+            Four subsequent trades were taken using <span class="hl-blue">Modified Fib Retracement (MFR)</span>
+            levels at <strong>.21</strong> and <strong>.79</strong>, alternating buy and sell limit orders within the range.
+            Each captured <strong>9 points</strong>. No trades got filled at .21 MFR after Bar 59 —
+            a good indication that <span class="hl-yellow">TR behavior either paused or price was moving higher</span>.
+            Best to walk away after <strong>4 good trades</strong>.
+          </p>
+          <div class="context-tags">
+            <span class="ctag lo">MFR .21 / .79 Levels</span>
+            <span class="ctag disc">Walk Away Discipline</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-wrap">
+    <div class="chart-header">
+      <div class="ch-title">Intraday Price Action</div>
+      <div class="ch-legend">
+        <div class="li"><div class="swatch s-yellow"></div>TD9 Support</div>
+        <div class="li"><div class="swatch s-blue"></div>MFR Levels</div>
+        <div class="li"><div class="swatch s-green"></div>Buy Entry</div>
+        <div class="li"><div class="swatch s-red"></div>Exit</div>
+      </div>
+    </div>
+    <canvas id="chart" height="340"></canvas>
+  </div>
+
+  <!-- Trades -->
+  <div class="trades-wrap">
+    <div class="trades-title">Trade Log</div>
+
+    <!-- T01 -->
+    <div class="trade-row featured t-buy">
+      <div class="tr-id">T01 <span class="dir buy">BUY</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry 1 tick above <span class="em">Bar 14</span>, filled at <span class="em">Bar 16</span>.
+          Measured Move up using <span class="em-g">Bar 13/14</span>.
+          Exit at <span class="em">Bar 28</span> — bars started overlapping again,
+          <span class="em-y">Mother Bar</span> formed. Walked away with profit secured.
+        </div>
+        <div class="tr-bars">B14 → B16 (entry) → B28 (exit) · Measured Move</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+30 pts</div>
+        <div class="rr">1 : 7 R:R</div>
+      </div>
+    </div>
+
+    <!-- T02 -->
+    <div class="trade-row t-buy">
+      <div class="tr-id">T02 <span class="dir buy">BUY</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 34</span>.
+          Exit Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 37</span>.
+        </div>
+        <div class="tr-bars">B34 → B37 · MFR Range Trade</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.21 → .79 MFR</div>
+      </div>
+    </div>
+
+    <!-- T03 -->
+    <div class="trade-row t-sell">
+      <div class="tr-id">T03 <span class="dir sell">SELL</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 42</span>.
+          Exit Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 47</span>.
+        </div>
+        <div class="tr-bars">B42 → B47 · MFR Range Trade</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.79 → .21 MFR</div>
+      </div>
+    </div>
+
+    <!-- T04 -->
+    <div class="trade-row t-buy">
+      <div class="tr-id">T04 <span class="dir buy">BUY</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 49</span>.
+          Exit Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 53</span>.
+        </div>
+        <div class="tr-bars">B49 → B53 · MFR Range Trade</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.21 → .79 MFR</div>
+      </div>
+    </div>
+
+    <!-- T05 -->
+    <div class="trade-row t-sell">
+      <div class="tr-id">T05 <span class="dir sell">SELL</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 54</span>.
+          Exit Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 59</span>.
+          No trades got filled at .21 MFR after Bar 59 — <span class="em-y">TR behavior paused or price moving higher</span>.
+        </div>
+        <div class="tr-bars">B54 → B59 · MFR Range Trade · Final fill</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.79 → .21 MFR</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Takeaway -->
+  <div class="takeaway">
+    <div class="takeaway">
+      <div class="tk-icon">◆</div>
+      <div class="tk-text">
+        <strong>Discipline takeaway:</strong> After the <span class="em-g">+30 point T01 measured move</span>,
+        the market returned to a trading range (Mother Bar at B28). Four clean MFR oscillation trades
+        each delivered <span class="em-g">+9 points</span>. When no fills occurred at .21 MFR after Bar 59,
+        it signaled <span class="em-y">TR exhaustion</span> — best to walk away after
+        <strong>4 good trades</strong> with <strong>67 points secured</strong>.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Context Toggle ──
+function toggleContext() {
+  const body = document.getElementById('contextBody');
+  const toggle = body.previousElementSibling;
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+// Open by default
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('contextBody').classList.add('open');
+  document.querySelector('.context-toggle').classList.add('open');
+});
+
+// ── Chart ──
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 340 * dpr;
+  ctx.scale(dpr, dpr);
+  draw(rect.width, 340);
+}
+
+function draw(W, H) {
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { top: 24, right: 18, bottom: 34, left: 52 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  const hi = 7212, lo = 7155;
+  const pxPerPt = ch / (hi - lo);
+
+  function yOf(p) { return pad.top + (hi - p) * pxPerPt; }
+  function xOf(i, n) { return pad.left + (i / (n - 1)) * cw; }
+
+  // ── Bar data (OHLC approximations matching review narrative) ──
+  const bars = [
+    // B1-B12: Gap up, overlapping, trading range
+    {o:7172,h:7180,l:7165,c:7175},
+    {o:7175,h:7183,l:7170,c:7178},
+    {o:7178,h:7186,l:7172,c:7182},
+    {o:7182,h:7187,l:7174,c:7178},
+    {o:7178,h:7184,l:7172,c:7177},
+    {o:7177,h:7185,l:7173,c:7181},
+    {o:7181,h:7188,l:7176,c:7184},
+    {o:7184,h:7192,l:7180,c:7188},  // B8 High 1
+    {o:7188,h:7194,l:7182,c:7190},  // B9 High 1
+    {o:7190,h:7192,l:7181,c:7185},
+    {o:7185,h:7190,l:7179,c:7184},
+    {o:7184,h:7191,l:7180,c:7186},
+    // B13-14: H2 setup
+    {o:7186,h:7197,l:7184,c:7194},  // B13 H2
+    {o:7194,h:7200,l:7190,c:7198},  // B14 H2
+    // B15: Breakout — closes at high, above B1 close
+    {o:7198,h:7208,l:7196,c:7207},  // B15 breakout
+    // B16: Entry bar (buy 1 tick above B14)
+    {o:7200,h:7210,l:7198,c:7208},  // B16
+    // B17-B27: Measured move up
+    {o:7208,h:7212,l:7204,c:7210},
+    {o:7210,h:7212,l:7206,c:7211},
+    {o:7211,h:7212,l:7205,c:7208},
+    {o:7208,h:7212,l:7204,c:7207},
+    {o:7207,h:7210,l:7202,c:7205},
+    {o:7205,h:7209,l:7201,c:7204},
+    {o:7204,h:7208,l:7200,c:7206},
+    {o:7206,h:7212,l:7204,c:7210},
+    {o:7210,h:7212,l:7206,c:7208},
+    {o:7208,h:7211,l:7205,c:7209},
+    {o:7209,h:7212,l:7207,c:7211},
+    // B28: Mother Bar — exit, overlapping resumes
+    {o:7211,h:7212,l:7200,c:7203},  // B28
+    // B29-B33: Sideways drift down
+    {o:7203,h:7202,l:7190,c:7194},
+    {o:7194,h:7198,l:7188,c:7192},
+    {o:7192,h:7196,l:7186,c:7190},
+    {o:7190,h:7194,l:7184,c:7188},
+    {o:7188,h:7192,l:7182,c:7185},
+    // B34: T02 entry at .21 MFR
+    {o:7185,h:7190,l:7182,c:7184},  // B34
+    {o:7184,h:7194,l:7182,c:7192},
+    {o:7192,h:7200,l:7190,c:7198},
+    // B37: T02 exit at .79 MFR
+    {o:7198,h:7200,l:7190,c:7194},  // B37
+    {o:7194,h:7198,l:7190,c:7196},
+    {o:7196,h:7200,l:7192,c:7198},
+    {o:7198,h:7200,l:7194,c:7197},
+    {o:7197,h:7200,l:7192,c:7196},
+    // B42: T03 entry at .79 MFR
+    {o:7196,h:7200,l:7192,c:7198},  // B42
+    {o:7198,h:7200,l:7190,c:7194},
+    {o:7194,h:7198,l:7188,c:7192},
+    {o:7192,h:7196,l:7186,c:7190},
+    {o:7190,h:7194,l:7184,c:7188},
+    // B47: T03 exit at .21 MFR
+    {o:7188,h:7192,l:7182,c:7185},  // B47
+    {o:7185,h:7190,l:7180,c:7184},
+    // B49: T04 entry at .21 MFR
+    {o:7184,h:7188,l:7180,c:7183},  // B49
+    {o:7183,h:7192,l:7182,c:7190},
+    {o:7190,h:7198,l:7188,c:7196},
+    {o:7196,h:7200,l:7194,c:7198},
+    // B53: T04 exit at .79 MFR
+    {o:7198,h:7200,l:7194,c:7196},  // B53
+    // B54: T05 entry at .79 MFR
+    {o:7196,h:7200,l:7194,c:7198},  // B54
+    {o:7198,h:7200,l:7190,c:7194},
+    {o:7194,h:7198,l:7188,c:7192},
+    {o:7192,h:7196,l:7186,c:7190},
+    {o:7190,h:7194,l:7184,c:7188},
+    // B59: T05 exit at .21 MFR
+    {o:7188,h:7192,l:7182,c:7185},  // B59
+    // B60-61: No more fills
+    {o:7185,h:7192,l:7184,c:7190},
+    {o:7190,h:7196,l:7188,c:7194},
+  ];
+
+  const total = bars.length;
+  const barW = Math.max(2, (cw / total) * 0.5);
+
+  // ── Grid ──
+  const priceSteps = [7160, 7170, 7180, 7190, 7200, 7210];
+  priceSteps.forEach(p => {
+    const y = yOf(p);
+    ctx.strokeStyle = 'rgba(30,42,56,0.5)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+
+    ctx.fillStyle = '#3a4a5a';
+    ctx.font = '9px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(p.toString(), pad.left - 8, y + 3);
+  });
+
+  // ── TD9 Support (Low of Bar 1) ──
+  const td9Y = yOf(7165);
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = 'rgba(240,192,64,0.35)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, td9Y);
+  ctx.lineTo(xOf(14, total), td9Y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = 'rgba(240,192,64,0.55)';
+  ctx.font = '8px JetBrains Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText('TD9 Support (B1 Low)', pad.left + 4, td9Y - 6);
+
+  // ── MFR Levels ──
+  const mfrLo = 7183, mfrHi = 7197;
+  [mfrLo, mfrHi].forEach((p, idx) => {
+    const y = yOf(p);
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(107,158,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(xOf(27, total), y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = 'rgba(107,158,255,0.5)';
+    ctx.font = '8px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(idx === 0 ? 'MFR .21' : 'MFR .79', W - pad.right - 2, y - 5);
+  });
+
+  // ── Breakout zone highlight ──
+  const b15x = xOf(14, total);
+  const gap = cw / total;
+  ctx.fillStyle = 'rgba(0,229,160,0.03)';
+  ctx.fillRect(b15x - gap * 1.5, pad.top, gap * 3, ch);
+
+  // ── Draw candles ──
+  bars.forEach((b, i) => {
+    const x = xOf(i, total);
+    const isUp = b.c >= b.o;
+    const col = isUp ? '#00e5a0' : '#ff4d6a';
+
+    // Wick
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, yOf(b.h));
+    ctx.lineTo(x, yOf(b.l));
+    ctx.stroke();
+
+    // Body
+    const bt = yOf(Math.max(b.o, b.c));
+    const bb = yOf(Math.min(b.o, b.c));
+    const bh = Math.max(1, bb - bt);
+
+    ctx.fillStyle = isUp ? 'rgba(0,229,160,0.2)' : 'rgba(255,77,106,0.2)';
+    ctx.fillRect(x - barW / 2, bt, barW, bh);
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 0.7;
+    ctx.strokeRect(x - barW / 2, bt, barW, bh);
+  });
+
+  // ── Bar labels ──
+  const labels = [
+    {i:0,l:'B1'},{i:7,l:'B8/9'},{i:12,l:'B13/14'},{i:14,l:'B15'},
+    {i:15,l:'B16'},{i:27,l:'B28'},{i:33,l:'B34'},{i:36,l:'B37'},
+    {i:41,l:'B42'},{i:46,l:'B47'},{i:48,l:'B49'},{i:52,l:'B53'},
+    {i:53,l:'B54'},{i:58,l:'B59'},
+  ];
+  labels.forEach(({i, l}) => {
+    ctx.fillStyle = '#3a4a5a';
+    ctx.font = '7px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(l, xOf(i, total), H - pad.bottom + 12);
+  });
+
+  // ── Trade markers ──
+  // T01 Entry
+  const e01x = xOf(15, total);
+  const e01y = yOf(7208);
+  ctx.fillStyle = '#00e5a0';
+  ctx.beginPath();
+  ctx.moveTo(e01x, e01y + 12);
+  ctx.lineTo(e01x - 5, e01y + 20);
+  ctx.lineTo(e01x + 5, e01y + 20);
+  ctx.closePath();
+  ctx.fill();
+  ctx.font = 'bold 8px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText('T01 BUY', e01x, e01y + 30);
+
+  // T01 Exit
+  const x01x = xOf(27, total);
+  const x01y = yOf(7203);
+  ctx.fillStyle = '#ff4d6a';
+  ctx.beginPath();
+  ctx.moveTo(x01x, x01y - 12);
+  ctx.lineTo(x01x - 5, x01y - 20);
+  ctx.lineTo(x01x + 5, x01y - 20);
+  ctx.closePath();
+  ctx.fill();
+  ctx.font = 'bold 8px JetBrains Mono';
+  ctx.fillText('+30', x01x, x01y - 24);
+
+  // Mother bar bracket
+  ctx.strokeStyle = 'rgba(240,192,64,0.25)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.strokeRect(x01x - gap * 0.7, yOf(7212) - 3, gap * 1.4, yOf(7200) - yOf(7212) + 6);
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(240,192,64,0.4)';
+  ctx.font = '7px JetBrains Mono';
+  ctx.fillText('MOTHER BAR', x01x, yOf(7212) - 7);
+
+  // T02-T05 small markers
+  const mfrMarkers = [
+    {i:33, d:'buy', l:'T02'},
+    {i:41, d:'sell', l:'T03'},
+    {i:48, d:'buy', l:'T04'},
+    {i:53, d:'sell', l:'T05'},
+  ];
+  mfrMarkers.forEach(m => {
+    const x = xOf(m.i, total);
+    const col = m.d === 'buy' ? '#00e5a0' : '#ff4d6a';
+    const yb = m.d === 'buy' ? yOf(bars[m.i].l) + 10 : yOf(bars[m.i].h) - 10;
+    const yt = m.d === 'buy' ? yb + 6 : yb - 6;
+
+    ctx.globalAlpha = 0.7;
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(x, yb);
+    ctx.lineTo(x - 3, yt);
+    ctx.lineTo(x + 3, yt);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+
+  // ── Zone annotations ──
+  ctx.save();
+  ctx.translate(b15x, pad.top + 14);
+  ctx.fillStyle = 'rgba(0,229,160,0.3)';
+  ctx.font = '7px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText('BREAKOUT', 0, 0);
+  ctx.restore();
+
+  // Time axis
+  [{i:0,l:'11:00'},{i:14,l:'12:00'},{i:30,l:'13:00'},{i:45,l:'14:00'},{i:58,l:'15:00'}].forEach(({i,l}) => {
+    ctx.fillStyle = '#3a4a5a';
+    ctx.font = '8px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(l, xOf(i, total), H - pad.bottom + 24);
+  });
+}
+
+window.addEventListener('resize', resize);
+resize();
+</script>
+
+</body>
+</html>

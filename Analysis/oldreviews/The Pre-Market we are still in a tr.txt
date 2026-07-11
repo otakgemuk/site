@@ -1,0 +1,36 @@
+The Pre-Market we are still in a trading range and likely market continues 
+to be choppy for rest of the day
+I like to use the VWAP standard deviation in ranging days
+Price Action bounced off VWAP and STD-DEV levels all day pre-market
+Despite that we can see clear legs established.
+
+
+Bar 54 to Bar 71 pre-market 2 major legs up 
+1st leg touches the 2.0 Std Dev then pullback creating 1 leg down
+then reverses back to create 2nd leg also touched 2.0 Std Dev
+Meanwhile VWAP was flat.
+Bar 71 is a doji, high probability of a reversal.
+
+Trade01
+Entry Sell STOP 1 tick below bar 71 and STOP 1 tick above
+Exit at Bar 73. Gives 409 ticks Using Bar 70 as Measured Move down.
+Ideally you would want to target move back to VWAP based on the price action pre-market.
+
+Trade02
+Bar 7 is a good Buy signal bar after the doji at Bar 6.
+Buy STOP 1 tick above Bar 7 stop 1 tick below
+Exit at bar 12 gives 362 ticks
+Took this on 3 confluence, STD-Dev bounced, Positive Cumulative Delta trending up 
+it is also an ABC pattern reversal
+
+Trade 03
+Bar 16 established as GreenTD9 and quite close to 2.5 StdDev
+I was expecting a bounce back down with CVD is bearish
+Bar 15 and Bar 16 is a Low 3
+Bar 18 follow-through Bear Bar to confirm a high probability of reversal.
+Entry Sell STOP 1 tick below Bar 15, fille at Bar 20
+Exit at bar 22 gives 595 ticks. Thats a 1:2.5R 
+
+
+
+

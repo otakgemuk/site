@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --bg: #05070A; --card: #0A0D14; --border: #1B2129;
+  --accent: #4F8EF7; --orange: #FB923C; --red: #F05252;
+  --text: #C9D1D9; --dim: #484F58;
+}
+body { 
+    background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; 
+    padding: 40px; text-transform: uppercase;
+}
+
+.case-card {
+    max-width: 900px; margin: 0 auto; border: 1px solid var(--border);
+    background: var(--card); position: relative;
+}
+
+/* TOP DATA BAR */
+.case-header {
+    display: flex; justify-content: space-between; padding: 20px;
+    border-bottom: 1px solid var(--border); background: #0D1117;
+}
+.case-id { color: var(--dim); font-size: 11px; }
+.case-pnl { color: var(--red); font-weight: 800; }
+
+/* DENSITY GRID */
+.data-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
+.data-item { padding: 20px; border-right: 1px solid var(--border); }
+.label { font-size: 9px; color: var(--dim); margin-bottom: 8px; }
+.val { font-size: 18px; font-weight: 700; }
+
+/* THE NARRATIVE */
+.narrative { padding: 30px; border-bottom: 1px solid var(--border); }
+.narrative h3 { font-size: 12px; color: var(--accent); margin-bottom: 15px; }
+.narrative p { font-size: 13px; line-height: 1.8; color: #8B949E; text-transform: none; }
+
+/* ERROR TRACKER */
+.error-log { padding: 20px; background: rgba(240, 82, 82, 0.03); }
+.error-item { display: flex; gap: 15px; margin-bottom: 10px; font-size: 11px; color: var(--orange); }
+</style>
+</head>
+<body>
+
+<div class="case-card">
+    <div class="case-header">
+        <div class="case-id">IDENT: TPT_EVAL_CD01 // 2026-04-01</div>
+        <div class="case-pnl">NET P/L: -$3,642.50</div>
+    </div>
+
+    <div class="data-grid">
+        <div class="data-item">
+            <div class="label">VOL (EXECUTIONS)</div>
+            <div class="val">1,188</div>
+        </div>
+        <div class="data-item">
+            <div class="label">AVG LOSS</div>
+            <div class="val">$21.28</div>
+        </div>
+        <div class="data-item" style="border:none;">
+            <div class="label">TOTAL FEES</div>
+            <div class="val">$294.00</div>
+        </div>
+    </div>
+
+    <div class="narrative">
+        <h3>SESSION POST-MORTEM</h3>
+        <p>
+            Entry logic was abandoned early in the session. After the initial stop-out on a 20P setup, the strategy shifted from "Wait for M2B" to "Revenge Scalping." High frequency of micro-contracts led to rapid commission bleed and psychological fatigue. Total drawdown exceeded daily risk caps due to manual override of the plan.
+        </p>
+    </div>
+
+    <div class="error-log">
+        <div class="error-item"><span>[!]</span> REVENGE TRADING: CHASING GAPS WITHOUT CONTEXT.</div>
+        <div class="error-item"><span>[!]</span> OVER-LEVERAGE: CONTRACT COUNT EXCEEDED RECOVERY CAP.</div>
+        <div class="error-item"><span>[!]</span> COMMISSION BLEED: 1,000+ EXECUTIONS DESTROYED MARGIN.</div>
+    </div>
+</div>
+
+</body>
+</html>

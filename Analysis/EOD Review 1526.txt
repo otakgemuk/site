@@ -1,0 +1,48 @@
+EOD Review 01/05/26
+
+Market started gapping up from the EMA from Pre-Market since Bar 61-Pre
+A strong indication of a continuation higher as price closes above the EMA
+Market moves sideways since bar 61Pre which also serves as the Motherbar
+Using a Fib Retracement to do a BLSH would have worked gives 29 ticks one way
+
+Bar 1 was a Breakout Bar breaking the range from Bar 61 (Pre) to Bar 76 (Pre)
+Placing a Buy STOP 1 tick above Bar 61 expecting range breakout gives high probability of win
+
+T01
+Entry Buy STOP 1 tick above Bar 61 (Pre) and STOP below Bar 68 lowest point of the range
+Using the Range from Pre-Market as MM up taking high of Bar 64 (Pre) as exhaustion point
+Exit at Bar 7 for a 1:2 RR gives 101 ticks
+
+Bar 5 to Bar 7 is Leg 1 and Bar 9 to Bar 11 is Leg 2
+Bar 8/9 is Low 1 and Bar 10/11 is Low 2
+After spike move up, market tends to reverse after 2 legs and L2 is a good Entry for Short
+
+T02
+Entry Sell STOP 1 tick Below Bar 10 after Bar 12 close at its low
+Using Bar 10/11 as MM down expecting 1:2.5 RR move
+Exit at Bar 14 for 1:2.5 RR gives 71 ticks
+
+Markets move 2 legs down as expected Bar 12 to Bar 14 as Leg 1 and Bar 17 to Bar 19 as Leg 2
+Bar 15/16 is a High 1 and Bar 20/21 is High 2
+After 2 legs down, high probability of markets reverses direction
+while Price closes above the EMA at Bar 21 - at H2 signal
+
+T03
+Entry Buy STOP 1 tick above Bar 21 and STOP 1 tick below Bar 20
+Using Bar 20/21 as MM up expecting another 2 legs up
+Exit at Bar 30 gives 27 ticks
+note: The target as 1:2.5 however Bar 29 reached price exhaustion signal as TD9
+Price did not hit the STOP during the Bar 29 pullback and price reverses back up 
+and move exit to 1:1 RR filled at Bar 30.
+The trade was invalidated for the expected target, and managed to secure profit 
+on the pullback.
+
+Sticking to the process is very important although in reality after 1:1 target is reached
+STOP should be moved while aiming for 1:2.5 RR target.
+In this case, I did move the stop as market was performing as expected until Bar 29 
+noise move.
+
+After the noise, it was not worthed to continue trading as market becomes very 
+difficult as surprising headlines continue to enter the market and its Friday.
+It was best to walk away after securing profits.
+and on top of that CVD starts to move lower after the noise.

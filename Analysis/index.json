@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-04-08",
+    "file": "2026-04-08.html",
+    "title": "Pre-Market Range → Trend Down → Reversal",
+    "instrument": "MESM6",
+    "strategy": "Trend Reversal",
+    "bias": "Bearish",
+    "trades": 4,
+    "winRate": 75,
+    "netPts": 119,
+    "result": "WIN"
+  },
+  {
+    "date": "2026-04-07",
+    "file": "2026-04-07.html",
+    "title": "Morning Breakout with Afternoon Fade",
+    "instrument": "NQ",
+    "strategy": "Breakout",
+    "bias": "Bullish",
+    "trades": 3,
+    "winRate": 66,
+    "netPts": 85,
+    "result": "WIN"
+  }
+]

@@ -1,0 +1,43 @@
+The market open with a big bearish breakout bar.
+Bar 3 and 4 created a Low 2. 
+Bar 5 is another big bearish bar and never retrace back 
+to the low of Bar 3 for an entry.
+Price moves further down and remains closing below the 20EMA
+Bar 7 is a good buy signal but followed by a bearish inside bar and CVD was still negative 
+this invalidate a bullish move. Bar 9 indicates a price exhaustion marked as Red TD9.
+Bar 11 too Bar 14 established as 2 legs down,  but bars were overlapping
+since Bar 6 and this is strong indication of trading range behaviour.
+A Limit order market and Buy Low Sell High or Sell high Buy Low mode.
+Bar 15 is a bullish inside bar, a good indication for bulls to buy low with a limit order
+
+Trade 01
+Buy Limit 1 tick above Bar 15. Filled at Bar 22.
+Exit at Bar 23 for a 1:2.5 MM up using Bar 15. Give 331 ticks.
+This was a high risk entry using the low Bar 16 to place STOP. 
+CVD was negative at entry, Price closes below VWAP and 20EMA
+meaning that price could just continue the move down however
+the overlapping bars and the price exhaustion level helps to 
+expect a move up.
+Bar 23 is a Bullish Breakout Bar and CVD moves above the trend line 
+validate the bullish trade.
+
+Bar 16 to Bar 25 created an ABC pattern and Bar 25 and Bar 26 is a Low 2.
+Good signals for a Short entry but price did not move below 20 EMA.
+Bar 28 and Bar 29 is a Low 3 and followed by a Bear Bar.
+CVD turns negative and trending down.
+
+Trade02 
+Sell STOP 1 tick under Bar 28 filled at Bar 31.
+Exit at Bar 39 for 1:2.5 gives 379 ticks.
+Took this trade after the Bar 27 bear bar confirmation with CVD turns negative and trending down.
+
+Bar 45 is a bearish inside bar and Price closes below 20EMA.
+Bar 44 and Bar 45 is also a L2 signal and CVD crosses below EMA
+
+Trade 03
+Sell STOP 1 tick below Bar 45.
+Exit at Bar 46 for a 1:1 MM down using Bar 45. Gives 138 ticks.
+Why didn't I aim for 1:2.5, its because price touches the negative 2.0 Std Dev 
+price might reverse back up to VWAP, so do not wish to add risk to the trade.
+Although price did not retrace back up, but it was a safe trade.
+

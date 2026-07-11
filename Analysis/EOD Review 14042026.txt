@@ -1,0 +1,62 @@
+Pre-Market presents 2 legs down from Bar E187 to E194 (leg1) and Baar E197 to E198 (2nd leg)
+Bar 1 is a big breakout bar closing above the premarket range and closes above the range
+and above the 20EMA.
+Strong indication of a bullish move.
+3 Strong BO Bull Bars Bar 1 to Bar 3. and Bar1/2 is a high 2.
+
+T01
+Entry 1 tick above Bar 2 and stop 1 tick below Bar 1
+Use B1/B2 as to measure moves up.
+Exit at Bar 14 for 1:1 RR. Gives 17 points
+
+The 18Bars range closes at its high, Bar 18 - Bar 20 is a 2nd leg leg pullback.
+Price still gapping higher from 20EMA, the market is still bullish and in Always In Mode.
+
+T021
+Entry 1 tick above Bar 22 and Stop 1 tick below Bar 21.
+Using B21/22 to MM up.
+Exit at Bar 25 gives 9 points.
+
+Bar 30 counted as a green TD9, demonstrate price exhaustion with a High Volume.
+Price never moves below Bar 30, this shows Bulls are still strong and volume peaked.
+Bar 34/35 is a High 2.
+
+T03
+Entry 1 tick above Bar 35 and Stop at 1 tick below Bar 34.
+Using B34/35 to MM up.
+Exit Bar 42, the trade STOPPED out. Gives -6.25 points
+
+Lessons: The trade is valid however price start to consolidate between Bar 34 to Bar 40
+The range shows a TBTL (TenBars TwoLeg). TBTL indicates probability becomes 50/50.
+Price could move higher or lower, while the 20#MA gap was broken by Bar 42
+touching the 20EMA for the first time since the open. Risk is managed and it was the expected loss
+based on the measurement. Stick to the process, a loss is a loss without moving the STOP.
+
+
+Price actions reverses back higher, however price was not moving beyond the POC.
+With TBTL and bars starts to consolidate and overlapped and not moving much higher than POC
+a potential reversal could be seen happening.
+Bar 54/55 is a H22 but Bar 57 invalidate a bullish move thus becomes a L2.
+
+T04
+Entry Sell Limit 1 tick below Bar 54 filled at Bar 58
+Using B54/55 as MM down
+Exit at Bar 58 for 1:1 RR gives 3.75 points.
+
+Price action continues down and price start to close below 20EMA from Bar 57.
+This changes the prespective from Always in Long to Always in Short.
+Bar 60/61 is a H1, but its the first pullback from 1st leg down from bar 57.
+Then Bar 63/64 creates 2nd leg. Bar 64 and Bar 65 is a double doji, a good indication
+for a reversal, it is also a 2bar reversal pattern.
+Bar 64/65 is a H2.
+
+T05
+Entry Buy STOP 1 tick above Bar 65. Front-Running this trade, and place STOP 1 tick below Bar 65.
+Using Bar 65 to measure move up.
+Exit at Bar 67 gives 4.5 points.
+
+
+Bar 72 to Bar E2 overlapping and price is at Top of the Range from Bar 57.
+Sessions becomes choppy, just Walk Away no more trade.
+
+

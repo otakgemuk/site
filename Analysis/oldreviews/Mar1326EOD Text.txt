@@ -1,0 +1,60 @@
+Mar1326
+
+Premarket Bars were overlapping from Bar 52 to Bar 1
+Bar 60/61/62 is IOI - Inside Outside Inside Bars indicating high probability of reversal
+Bar 1 and Bar 2 is Outside Outside Bars - a high probability of Breakout 
+Bar 2 was a Breakout Bar with a long down wick shows buyers were in control
+Bar 1 and 2 is also a High 2
+Buying 1 tick above Bar 1 makes sense expecting a 1:1 move up after Bar 2 confirmation
+
+Trade 01
+Buy STOP 1 tick above Bar 1 and STOP 1 tick below Bar 2
+Entry filled at Bar 3
+Exit at Bar 3 using Bar 1 an Outside bar to Measure Move up  for 1:1
+gives 50 ticks
+Took this trade because of its a breakout from a trading range from premarket
+
+Bar 11 is an inside bar
+Buying 1 tick above Bar 11 makes sense after 2 leg down
+
+Trade 02
+Entry 1 tick above Bar 11 filled at Bar13 - STOP 1 tick Below Bar 11
+Exit at bar 13 using Bar 11 as MM up
+gives 39 ticks
+Took this trade because of the bullish inside bar for a quick scalp in a minor pullback
+Risk was limited to about 40 ticks
+
+After 2 legs down Bar 11-Bar13 is a minor Pullback Trend
+Bar 14 closes below the 20EMA
+Bar 12/13 is a Low 1
+Bear Flag is formed between Bar 10 to Bar 14
+Good indication of another leg down
+
+No follow-through after bar 13 — bulls couldn't sustain the push, momentum was fake
+The wick on bar 14 — sellers actively rejecting the highs, not passive — strong hands still present
+Price closes below EMA — bear trend context maintained, EMA acting as resistance not support
+Bar 13 barely closing above EMA — that "breakout" above EMA was weak, no conviction, essentially a false break
+
+Trade03
+Entry sell 1 tick below Bar 12 filled at Bar 15 - STOP 1 tick above Bar 13
+Exit at bar 18 using Bar 12/13 to MM down gives 80 ticks
+Took this trade because of the Bear Flag and expecting a 2nd leg down
+
+Trade04
+Bar 22 is a bearish Inside Bar  and Price is below 20EMA with a gap
+Bar 21/22 is a Low2
+Entry Sold 1 tick below Bar 22
+Exit at Bar 24 using Bar 22 as MM down
+gives 49 ticks
+Took this trade because of the Bearish Inside bar and Price is below 20EMA in a downtrend
+
+Bars start to overlap from Bar 23 onwards a strong indication Price Action is in a Trading Range
+Bar 52 is a strong Breakout Bar to the downside
+Bar 53 is a weak buy signal bar because no follow-up bear bar after Bar 52
+After Bar 42 BO Bar with no follow-up bear bar, there is a good probability price action repeats the same action
+
+Trade05
+Entry 1 tick above Bar 53 and STOP at 1 tick below
+Exit at Bar 58 for a 1:1 move using Bar 53 as MM up gives 30 ticks
+Took this trade hoping that PA repeats what it did at Bar 42
+Risk was only about 30 ticks if the trade failed risk is very small

@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategies — Sire Mammat</title>
+<style>
+:root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--dark);
+  color:var(--cream);
+  font-family:var(--font-body),sans-serif;
+  overflow-x:hidden;
+}
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(184,115,51,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(184,115,51,0.02) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none; z-index:0;
+}
+
+/* ── PROGRESS ── */
+#pbar { position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--green),var(--gold)); width:0%; z-index:2000; }
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(14,10,4,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--dark4);height:64px;display:flex;align-items:center;padding:0 3rem;justify-content:space-between;}
+.nav-back{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;white-space:nowrap;}
+.nav-back:hover{color:var(--gold-lt);}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-brand-name{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--cream);letter-spacing:0.02em;}
+.nav-brand-sub{font-family:var(--font-mono);font-size:0.55rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;}
+.nav-tag{font-family:var(--font-mono);font-size:0.6rem;background:rgba(184,115,51,0.1);color:var(--gold);border:1px solid rgba(184,115,51,0.25);border-radius:4px;padding:0.25rem 0.7rem;letter-spacing:1px;}
+/* ── HERO ── */
+.page-hero {
+  position:relative; z-index:1;
+  padding:110px 3rem 4rem;
+  overflow:hidden;
+}
+.page-hero::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 50% 70% at 80% 40%, rgba(251,146,60,0.04), transparent),
+    radial-gradient(ellipse 30% 50% at 10% 60%, rgba(184,115,51,0.03), transparent);
+}
+.hero-label {
+  font-family:var(--font-mono);
+  font-size:0.6rem; color:var(--orange);
+  letter-spacing:4px; text-transform:uppercase;
+  margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem;
+  opacity:0; animation:suUp 0.7s ease 0.1s forwards;
+}
+.hero-label::before { content:''; width:20px; height:1px; background:var(--orange); }
+.page-title {
+  font-family:var(--font-display);
+  font-size:clamp(3.5rem,8vw,7rem);
+  letter-spacing:3px; line-height:0.9; margin-bottom:1.2rem;
+  opacity:0; animation:suUp 0.7s ease 0.25s forwards;
+}
+.page-title span { color:var(--orange); }
+.page-desc {
+  font-size:1rem; color:var(--muted);
+  max-width:600px; line-height:1.8; margin-bottom:2.5rem;
+  font-weight:300;
+  opacity:0; animation:suUp 0.7s ease 0.4s forwards;
+}
+@keyframes suUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  position:relative; z-index:1;
+  max-width:1300px; margin:0 auto;
+  padding:0 3rem 2rem;
+  display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;
+}
+.chip {
+  font-family:var(--font-mono);
+  font-size:0.62rem; letter-spacing:1px;
+  border:1px solid rgba(184,115,51,0.2); border-radius:20px;
+  padding:0.4rem 1rem; background:none;
+  color:var(--muted); cursor:pointer; transition:all 0.2s;
+}
+.chip:hover, .chip.active {
+  border-color:var(--orange); color:var(--orange);
+  background:rgba(251,146,60,0.06);
+}
+.chip.all.active { border-color:var(--green); color:var(--green); background:rgba(184,115,51,0.06); }
+.strat-count {
+  font-family:var(--font-mono);
+  font-size:0.62rem; color:var(--muted2);
+  letter-spacing:1px; margin-left:auto;
+}
+
+/* ── WRAP ── */
+.wrap {
+  position:relative; z-index:1;
+  max-width:1300px; margin:0 auto;
+  padding:0 3rem 6rem;
+}
+
+/* ── STRATEGY CARD ── */
+.strat-card {
+  background:var(--dark2);
+  border:1px solid var(--dark4);
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:2rem;
+  transition:border-color 0.2s;
+}
+.strat-card:hover { border-color:rgba(184,115,51,0.2); }
+
+/* Card header */
+.strat-head {
+  display:flex; align-items:stretch;
+  border-bottom:1px solid var(--dark4);
+}
+.strat-accent {
+  width:4px; flex-shrink:0;
+}
+.strat-head-inner {
+  flex:1; padding:1.8rem 2rem;
+  display:flex; align-items:center;
+  justify-content:space-between; gap:2rem;
+  cursor:pointer; user-select:none;
+}
+.strat-head-left { display:flex; align-items:center; gap:1.5rem; }
+.strat-icon {
+  width:52px; height:52px;
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display);
+  font-size:1rem; letter-spacing:1px;
+  flex-shrink:0;
+}
+.strat-meta { }
+.strat-code {
+  font-family:var(--font-mono);
+  font-size:0.58rem; color:var(--muted2);
+  letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:0.3rem;
+}
+.strat-name {
+  font-family:var(--font-display);
+  font-size:1.6rem; letter-spacing:1px;
+  line-height:1;
+}
+.strat-tagline {
+  font-size:0.82rem; color:var(--muted);
+  margin-top:0.3rem;
+}
+.strat-pills { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem; }
+.pill {
+  font-family:var(--font-mono);
+  font-size:0.58rem; letter-spacing:1px;
+  border-radius:20px; padding:0.2rem 0.6rem;
+  border:1px solid;
+}
+.strat-head-right { display:flex; gap:1.5rem; align-items:center; flex-shrink:0; }
+.strat-stat { text-align:center; }
+.strat-stat-val {
+  font-family:var(--font-display);
+  font-size:1.5rem; letter-spacing:1px; line-height:1;
+}
+.strat-stat-label {
+  font-family:var(--font-mono);
+  font-size:0.55rem; color:var(--muted2);
+  letter-spacing:1px; text-transform:uppercase;
+  margin-top:0.2rem;
+}
+.strat-chevron {
+  font-size:0.7rem; color:var(--muted2);
+  transition:transform 0.3s;
+}
+.strat-card.open .strat-chevron { transform:rotate(180deg); }
+
+/* Card body */
+.strat-body { display:none; }
+.strat-card.open .strat-body { display:block; }
+
+/* OVERVIEW ROW */
+.overview-row {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:1px; background:var(--dark4);
+  border-bottom:1px solid var(--dark4);
+}
+.ov-cell { background:var(--dark2); padding:1.4rem 2rem; }
+.ov-label {
+  font-family:var(--font-mono);
+  font-size:0.58rem; color:var(--muted2);
+  letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:0.5rem;
+}
+.ov-val { font-size:0.88rem; color:var(--cream); line-height:1.55; }
+.ov-val strong { font-weight:600; }
+
+/* DETAIL GRID */
+.detail-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:1.5rem;
+  padding:2rem;
+  border-bottom:1px solid var(--dark4);
+}
+.detail-card {
+  background:var(--dark3);
+  border:1px solid var(--dark4);
+  border-radius:10px;
+  overflow:hidden;
+}
+.detail-head {
+  padding:0.8rem 1.2rem;
+  border-bottom:1px solid var(--dark4);
+  display:flex; align-items:center; gap:0.6rem;
+}
+.detail-dot {
+  width:8px; height:8px;
+  border-radius:50%; flex-shrink:0;
+}
+.detail-title {
+  font-family:var(--font-mono);
+  font-size:0.62rem; letter-spacing:2px;
+  text-transform:uppercase;
+}
+.detail-body { padding:1rem 1.2rem; }
+.detail-item {
+  display:flex; align-items:flex-start;
+  gap:0.6rem; margin-bottom:0.6rem;
+  font-size:0.83rem; color:var(--muted); line-height:1.55;
+}
+.detail-item:last-child { margin-bottom:0; }
+.detail-item::before {
+  content:'';
+  width:5px; height:5px;
+  border-radius:50%;
+  background:var(--muted2);
+  flex-shrink:0; margin-top:6px;
+}
+.detail-item strong { color:var(--cream); font-weight:500; }
+
+/* CHART VISUAL */
+.chart-section {
+  padding:2rem;
+  border-bottom:1px solid var(--dark4);
+}
+.chart-label {
+  font-family:var(--font-mono);
+  font-size:0.6rem; color:var(--muted2);
+  letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.chart-wrap {
+  background:var(--dark3);
+  border:1px solid var(--dark4);
+  border-radius:10px;
+  overflow:hidden;
+}
+.chart-wrap svg { display:block; width:100%; }
+
+/* RULES TABLE */
+.rules-section { padding:2rem; border-bottom:1px solid var(--dark4); }
+.rules-title {
+  font-family:var(--font-mono);
+  font-size:0.6rem; color:var(--muted2);
+  letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.rules-table { width:100%; border-collapse:collapse; font-size:0.83rem; }
+.rules-table th {
+  font-family:var(--font-mono);
+  font-size:0.58rem; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted2);
+  padding:0.7rem 1rem; text-align:left;
+  border-bottom:1px solid var(--dark4);
+  white-space:nowrap;
+}
+.rules-table td {
+  padding:0.85rem 1rem;
+  border-bottom:1px solid var(--dark4);
+  color:var(--muted); vertical-align:top;
+  line-height:1.55;
+}
+.rules-table tr:last-child td { border-bottom:none; }
+.rules-table tr:hover td { background:rgba(255,255,255,0.015); }
+.rules-table td:first-child { color:var(--cream); font-weight:500; white-space:nowrap; }
+.td-green { color:var(--green) !important; font-family:var(--font-mono); }
+.td-red   { color:var(--red)   !important; font-family:var(--font-mono); }
+.td-gold  { color:var(--gold)  !important; }
+
+/* CHECKLIST */
+.checklist-section {
+  padding:1.5rem 2rem 2rem;
+  display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
+}
+.checklist-col { }
+.checklist-head {
+  font-family:var(--font-mono);
+  font-size:0.6rem; letter-spacing:2px;
+  text-transform:uppercase; margin-bottom:0.8rem;
+}
+.check-item {
+  display:flex; align-items:flex-start;
+  gap:0.75rem; padding:0.65rem 0.9rem;
+  background:var(--dark3); border:1px solid var(--dark4);
+  border-radius:7px; margin-bottom:0.5rem;
+  font-size:0.82rem; color:var(--muted); line-height:1.5;
+  cursor:pointer; transition:border-color 0.15s;
+}
+.check-item:hover { border-color:rgba(184,115,51,0.2); }
+.check-item.checked { opacity:0.5; }
+.check-box {
+  width:16px; height:16px;
+  border:1.5px solid rgba(184,115,51,0.2);
+  border-radius:4px; flex-shrink:0; margin-top:1px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; transition:all 0.15s;
+}
+.check-item.checked .check-box {
+  background:var(--green); border-color:var(--green); color:var(--dark);
+}
+
+/* COMING SOON CARD */
+.coming-soon {
+  border:1px dashed rgba(184,115,51,0.2);
+  border-radius:16px;
+  padding:3rem 2rem;
+  text-align:center;
+  margin-bottom:2rem;
+  opacity:0.5;
+}
+.cs-icon { font-size:2rem; margin-bottom:0.8rem; }
+.cs-label {
+  font-family:var(--font-mono);
+  font-size:0.65rem; color:var(--muted2);
+  letter-spacing:2px; text-transform:uppercase;
+}
+
+/* REVEAL */
+.rev { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease,transform 0.6s ease; }
+.rev.in { opacity:1; transform:translateY(0); }
+.d1 { transition-delay:0.1s; }
+.d2 { transition-delay:0.2s; }
+
+/* FOOTER */
+footer {
+  position:relative; z-index:1;
+  border-top:1px solid var(--dark4);
+  padding:2rem 3rem;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.footer-brand {
+  font-family:var(--font-display);
+  font-size:1.2rem; letter-spacing:2px; color:var(--orange);
+}
+.footer-copy {
+  font-family:var(--font-mono);
+  font-size:0.6rem; color:var(--muted2);
+  letter-spacing:1px; text-align:center;
+}
+
+@media(max-width:900px) {
+  nav { padding:0 1.5rem; }
+  .page-hero, .wrap, .filter-bar { padding-left:1.5rem; padding-right:1.5rem; }
+  .overview-row, .detail-grid, .checklist-section { grid-template-columns:1fr; }
+  .strat-head-right { display:none; }
+  footer { flex-direction:column; gap:1rem; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div id="pbar"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="../index.html" class="nav-back">&#8592; Home</a>
+  <a href="../index.html" class="nav-brand">
+    <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+    <div><div class="nav-brand-name">SireMammat</div><div class="nav-brand-sub">Free Futures Education</div></div>
+  </a>
+  <span class="nav-tag">Strategies</span>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="hero-label">Rules-Based · Repeatable · Documented</div>
+  <h1 class="page-title">Trading<br><span>Strategies</span></h1>
+  <p class="page-desc">Every strategy documented with full context — the market condition it requires, exact entry trigger, stop placement, target logic, and the checklist to run before pulling the trigger.</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="chip all active" onclick="filterStrats('all',this)">All</button>
+  <button class="chip" onclick="filterStrats('trend',this)">With-Trend</button>
+  <button class="chip" onclick="filterStrats('reversal',this)">Reversal</button>
+  <button class="chip" onclick="filterStrats('range',this)">Range</button>
+  <button class="chip" onclick="filterStrats('ema',this)">EMA</button>
+  <button class="chip" onclick="filterStrats('vwap',this)">VWAP</button>
+  <span class="strat-count" id="strat-count">4 strategies</span>
+</div>
+
+<!-- CONTENT -->
+<div class="wrap">
+
+  <!-- ═══════════════════════════════════════════════════
+       STRATEGY 1 — M2B
+  ═══════════════════════════════════════════════════ -->
+  <div class="strat-card rev" id="s-m2b" data-tags="trend ema" data-open="false">
+    <div class="strat-head">
+      <div class="strat-accent" style="background:var(--green)"></div>
+      <div class="strat-head-inner" onclick="toggleStrat('s-m2b')">
+        <div class="strat-head-left">
+          <div class="strat-icon" style="background:rgba(0,229,160,0.12);color:var(--green)">M2B</div>
+          <div class="strat-meta">
+            <div class="strat-code">Strategy 01 · With-Trend Long · EMA</div>
+            <div class="strat-name" style="color:var(--green)">Moving Average 2nd Entry Long</div>
+            <div class="strat-tagline">Two-legged pullback to EMA in a strong uptrend — buy the second touch</div>
+            <div class="strat-pills">
+              <span class="pill" style="color:var(--green);border-color:rgba(0,229,160,0.3)">With-Trend</span>
+              <span class="pill" style="color:var(--gold);border-color:rgba(240,180,41,0.3)">EMA</span>
+              <span class="pill" style="color:var(--blue);border-color:rgba(79,142,247,0.3)">2nd Entry</span>
+              <span class="pill" style="color:var(--sub);border-color:var(--border2)">Continuation</span>
+            </div>
+          </div>
+        </div>
+        <div class="strat-head-right">
+          <div class="strat-stat">
+            <div class="strat-stat-val" style="color:var(--green)">Long</div>
+            <div class="strat-stat-label">Direction</div>
+          </div>
+          <div class="strat-stat">
+            <div class="strat-stat-val" style="color:var(--gold)">High</div>
+            <div class="strat-stat-label">Prob. (trend)</div>
+          </div>
+          <div class="strat-stat">
+            <div class="strat-stat-val" style="color:var(--blue)">2:1+</div>
+            <div class="strat-stat-label">Min R:R</div>
+          </div>
+          <div class="strat-chevron">▼</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strat-body">
+
+      <!-- OVERVIEW -->
+      <div class="overview-row">
+        <div class="ov-cell">
+          <div class="ov-label">Trend Context Required</div>
+          <div class="ov-val"><strong>Strong uptrend</strong> — series of higher highs and higher lows. Price predominantly above EMA. Avoid if trend is weak, choppy, or sideways.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Pullback Pattern</div>
+          <div class="ov-val"><strong>Two-legged pullback</strong> down to the EMA. First leg bounces, second leg tests the EMA again — the double-test confirms the level is holding.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Why It Works</div>
+          <div class="ov-val">Institutions buy pullbacks to the EMA in uptrends. The second touch flushes out weak longs and attracts new buyers, creating a higher-probability entry point.</div>
+        </div>
+      </div>
+
+      <!-- CHART VISUAL -->
+      <div class="chart-section">
+        <div class="chart-label">M2B — Visual Pattern Diagram</div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#00E5A0" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+              <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#6B7A99" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+            </defs>
+
+            <!-- EMA line (gently rising) -->
+            <path d="M30 200 Q200 185 350 165 Q500 148 650 132 Q780 118 870 108" fill="none" stroke="#F0B429" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.7"/>
+            <text x="875" y="108" font-family="JetBrains Mono,monospace" font-size="11" fill="#F0B429" dominant-baseline="middle">EMA</text>
+
+            <!-- Trend rising (pre-pullback candles) -->
+            <!-- Candle group 1 - uptrend -->
+            <g opacity="0.6">
+              <line x1="50" y1="215" x2="50" y2="235" stroke="#00E5A0" stroke-width="1"/>
+              <rect x="44" y="210" width="12" height="20" fill="#00E5A0"/>
+              <line x1="75" y1="200" x2="75" y2="220" stroke="#00E5A0" stroke-width="1"/>
+              <rect x="69" y="195" width="12" height="18" fill="#00E5A0"/>
+              <line x1="100" y1="188" x2="100" y2="208" stroke="#00E5A0" stroke-width="1"/>
+              <rect x="94" y="183" width="12" height="18" fill="#00E5A0"/>
+              <line x1="125" y1="175" x2="125" y2="195" stroke="#00E5A0" stroke-width="1"/>
+              <rect x="119" y="170" width="12" height="18" fill="#00E5A0"/>
+            </g>
+
+            <!-- Swing high label -->
+            <text x="138" y="162" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99">Prior high</text>
+            <line x1="131" y1="168" x2="131" y2="170" stroke="#6B7A99" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+            <!-- Leg 1 down -->
+            <line x1="160" y1="170" x2="160" y2="200" stroke="#F05252" stroke-width="1"/>
+            <rect x="154" y="175" width="12" height="22" fill="#F05252"/>
+            <line x1="185" y1="178" x2="185" y2="200" stroke="#F05252" stroke-width="1"/>
+            <rect x="179" y="182" width="12" height="16" fill="#F05252"/>
+
+            <!-- Small bounce (leg 1 end) -->
+            <line x1="210" y1="182" x2="210" y2="198" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="204" y="180" width="12" height="14" fill="#00E5A0"/>
+
+            <!-- Leg 1 annotation -->
+            <text x="175" y="220" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" text-anchor="middle">Leg 1</text>
+
+            <!-- Leg 2 down (to EMA) -->
+            <line x1="235" y1="183" x2="235" y2="205" stroke="#F05252" stroke-width="1"/>
+            <rect x="229" y="186" width="12" height="18" fill="#F05252"/>
+            <line x1="260" y1="178" x2="260" y2="202" stroke="#F05252" stroke-width="1.5"/>
+            <rect x="254" y="181" width="12" height="20" fill="#F05252"/>
+
+            <!-- 2nd touch of EMA glow -->
+            <circle cx="266" cy="172" r="12" fill="rgba(240,180,41,0.12)" stroke="rgba(240,180,41,0.4)" stroke-width="1"/>
+            <text x="280" y="168" font-family="JetBrains Mono,monospace" font-size="10" fill="#F0B429">2nd touch EMA</text>
+
+            <!-- Leg 2 annotation -->
+            <text x="247" y="220" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" text-anchor="middle">Leg 2</text>
+
+            <!-- Signal bar (touches EMA on 2nd leg) -->
+            <line x1="285" y1="162" x2="285" y2="195" stroke="#00E5A0" stroke-width="1.5"/>
+            <rect x="279" y="165" width="12" height="22" fill="#00E5A0" stroke="#00E5A0" stroke-width="1.5"/>
+            <text x="285" y="148" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle">Signal bar</text>
+
+            <!-- Entry arrow -->
+            <circle cx="285" cy="157" r="6" fill="#A855F7"/>
+            <line x1="285" y1="151" x2="285" y2="135" stroke="#A855F7" stroke-width="1.5" marker-end="url(#arr-g)"/>
+            <text x="295" y="138" font-family="JetBrains Mono,monospace" font-size="10" fill="#A855F7">Buy stop 1 tick above</text>
+
+            <!-- Stop line -->
+            <line x1="260" y1="200" x2="360" y2="200" stroke="#F05252" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>
+            <text x="362" y="203" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" dominant-baseline="middle">Stop below leg 2 low</text>
+
+            <!-- Continuation candles -->
+            <line x1="310" y1="148" x2="310" y2="170" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="304" y="143" width="12" height="20" fill="#00E5A0"/>
+            <line x1="335" y1="135" x2="335" y2="158" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="329" y="130" width="12" height="20" fill="#00E5A0"/>
+            <line x1="360" y1="120" x2="360" y2="145" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="354" y="115" width="12" height="22" fill="#00E5A0"/>
+            <line x1="385" y1="108" x2="385" y2="132" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="379" y="103" width="12" height="22" fill="#00E5A0"/>
+            <line x1="410" y1="95" x2="410" y2="118" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="404" y="90" width="12" height="20" fill="#00E5A0"/>
+
+            <!-- Target line & label -->
+            <line x1="285" y1="90" x2="500" y2="90" stroke="#00E5A0" stroke-width="1" stroke-dasharray="5 3" opacity="0.5"/>
+            <text x="510" y="93" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" dominant-baseline="middle">Target — prior swing high / MM</text>
+
+            <!-- Target arrow -->
+            <line x1="416" y1="100" x2="440" y2="93" stroke="#00E5A0" stroke-width="1" marker-end="url(#arr-g)" opacity="0.6"/>
+
+            <!-- Layer labels -->
+            <rect x="30" y="10" width="120" height="22" rx="3" fill="rgba(0,229,160,0.08)" stroke="rgba(0,229,160,0.2)" stroke-width="0.5"/>
+            <text x="90" y="21" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle" dominant-baseline="middle">UPTREND</text>
+
+            <rect x="155" y="10" width="140" height="22" rx="3" fill="rgba(240,82,82,0.08)" stroke="rgba(240,82,82,0.2)" stroke-width="0.5"/>
+            <text x="225" y="21" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" text-anchor="middle" dominant-baseline="middle">2-LEG PULLBACK</text>
+
+            <rect x="300" y="10" width="130" height="22" rx="3" fill="rgba(0,229,160,0.08)" stroke="rgba(0,229,160,0.2)" stroke-width="0.5"/>
+            <text x="365" y="21" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle" dominant-baseline="middle">CONTINUATION</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- DETAIL GRID -->
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-head">
+            <div class="detail-dot" style="background:var(--gold)"></div>
+            <div class="detail-title" style="color:var(--gold)">Entry Trigger</div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>Buy stop</strong> 1 tick above the high of the bar that touches the EMA on the 2nd leg down.</div>
+            <div class="detail-item">Do <strong>not</strong> enter on the first leg — wait for the second test of the EMA to confirm the level is holding.</div>
+            <div class="detail-item">The signal bar should ideally be a <strong>bull bar</strong> or show a lower wick rejection at the EMA.</div>
+            <div class="detail-item">If the entry is not triggered within <strong>2 bars</strong>, cancel the order — the setup is stale.</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-head">
+            <div class="detail-dot" style="background:var(--red)"></div>
+            <div class="detail-title" style="color:var(--red)">Stop Loss</div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item">Stop goes <strong>1 tick below the low of the 2nd leg pullback</strong> — the lowest point the pullback reached before reversing.</div>
+            <div class="detail-item">If the EMA is far from the pullback low, use the <strong>signal bar low</strong> as the stop instead.</div>
+            <div class="detail-item">Move stop to <strong>breakeven</strong> once price has moved 50% of the way to the first target.</div>
+            <div class="detail-item"><strong>Never</strong> widen the stop — if the thesis is wrong, take the loss cleanly.</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-head">
+            <div class="detail-dot" style="background:var(--green)"></div>
+            <div class="detail-title" style="color:var(--green)">Target Logic</div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>First target:</strong> prior swing high — exit 50% of position here.</div>
+            <div class="detail-item"><strong>Second target:</strong> measured move — project the height of the prior bull leg from the pullback low.</div>
+            <div class="detail-item">Move stop to breakeven after first target is hit. Let the runner work.</div>
+            <div class="detail-item">Exit all if price shows a <strong>strong bear reversal bar</strong> or closes below the EMA.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL RULES TABLE -->
+      <div class="rules-section">
+        <div class="rules-title">Complete Rule Set — M2B</div>
+        <table class="rules-table">
+          <thead>
+            <tr>
+              <th>Rule</th>
+              <th>Requirement</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Trend context</td>
+              <td class="td-green">Strong uptrend required</td>
+              <td>Series of HH/HL. Price spending majority of time above EMA. Skip if choppy or sideways.</td>
+            </tr>
+            <tr>
+              <td>Pullback structure</td>
+              <td class="td-gold">Two-legged (a-b-c)</td>
+              <td>First leg down, small bounce, second leg down to EMA. One-legged pullbacks are 1st entry — lower probability.</td>
+            </tr>
+            <tr>
+              <td>EMA touch</td>
+              <td class="td-gold">2nd leg must touch or come within 1–2 ticks of EMA</td>
+              <td>If the 2nd leg doesn't reach the EMA, it's a different setup. Don't force it.</td>
+            </tr>
+            <tr>
+              <td>Signal bar quality</td>
+              <td class="td-green">Bull bar preferred, or lower-wick rejection</td>
+              <td>A bear close signal bar is acceptable only if the trend is very strong. Weak doji signal bars = skip.</td>
+            </tr>
+            <tr>
+              <td>Entry order</td>
+              <td class="td-green">Buy stop 1 tick above signal bar high</td>
+              <td>Never use a market order. Stop entry ensures you only get filled if price moves in your direction.</td>
+            </tr>
+            <tr>
+              <td>Stop placement</td>
+              <td class="td-red">1 tick below leg 2 pullback low</td>
+              <td>Or below signal bar low if tighter. Hard max: 10 pts on ES / 500 pts on NQ.</td>
+            </tr>
+            <tr>
+              <td>Avoid condition</td>
+              <td class="td-red">Weak trend, sideways market, tight trading range</td>
+              <td>If the EMA itself is flat or declining, this setup does not apply. Trend must be directional.</td>
+            </tr>
+            <tr>
+              <td>Target 1</td>
+              <td class="td-green">Prior swing high — exit 50%</td>
+              <td>Move stop to breakeven immediately after T1 is hit.</td>
+            </tr>
+            <tr>
+              <td>Target 2</td>
+              <td class="td-green">Measured move — exit 25%</td>
+              <td>Height of prior bull leg projected from pullback low. Trail stop on remaining 25%.</td>
+            </tr>
+            <tr>
+              <td>Exit early if</td>
+              <td class="td-red">Strong bear bar closes below EMA</td>
+              <td>Or if the pullback extends to a 3rd leg — thesis is no longer valid.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PRE-TRADE CHECKLIST -->
+      <div class="checklist-section">
+        <div class="checklist-col">
+          <div class="checklist-head" style="color:var(--green)">Pre-Entry Checklist — M2B</div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Uptrend confirmed — HH and HL structure visible</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>EMA is rising (not flat or declining)</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Two-legged pullback structure clearly visible</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>2nd leg has touched or come close to EMA</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Signal bar is a bull bar or shows lower wick rejection</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Buy stop order placed 1 tick above signal bar high</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Stop loss placed 1 tick below 2nd leg low</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Risk is within 1–2% of account (size check done)</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Target 1 (prior high) and Target 2 (MM) pre-identified</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>No major news event in the next 30 minutes</span>
+          </div>
+        </div>
+        <div class="checklist-col">
+          <div class="checklist-head" style="color:var(--red)">Skip the Trade If...</div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Trend is weak, choppy, or in a tight trading range</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>EMA is flat or pointing downward</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Pullback is only one leg (this becomes a 1st entry)</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Signal bar is a large bear bar closing on its low</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Pullback has extended to 3 or more legs (reversal risk)</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Already taken 4 trades today (daily max reached)</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>FOMC, CPI, NFP or major news within 30 minutes</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''">
+            <div class="check-box"></div><span>Already down 15 pts today (kill switch triggered)</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end strat-body M2B -->
+  </div><!-- end s-m2b -->
+
+
+  <!-- ═══════════════════════════════════════════════════
+       STRATEGY 2 — M2S
+  ═══════════════════════════════════════════════════ -->
+  <div class="strat-card rev d1" id="s-m2s" data-tags="trend ema" data-open="false">
+    <div class="strat-head">
+      <div class="strat-accent" style="background:var(--red)"></div>
+      <div class="strat-head-inner" onclick="toggleStrat('s-m2s')">
+        <div class="strat-head-left">
+          <div class="strat-icon" style="background:rgba(240,82,82,0.12);color:var(--red)">M2S</div>
+          <div class="strat-meta">
+            <div class="strat-code">Strategy 02 · With-Trend Short · EMA</div>
+            <div class="strat-name" style="color:var(--red)">Moving Average 2nd Entry Short</div>
+            <div class="strat-tagline">Two-legged rally to EMA in a strong downtrend — short the second touch</div>
+            <div class="strat-pills">
+              <span class="pill" style="color:var(--red);border-color:rgba(240,82,82,0.3)">With-Trend</span>
+              <span class="pill" style="color:var(--gold);border-color:rgba(240,180,41,0.3)">EMA</span>
+              <span class="pill" style="color:var(--blue);border-color:rgba(79,142,247,0.3)">2nd Entry</span>
+              <span class="pill" style="color:var(--sub);border-color:var(--border2)">Continuation</span>
+            </div>
+          </div>
+        </div>
+        <div class="strat-head-right">
+          <div class="strat-stat">
+            <div class="strat-stat-val" style="color:var(--red)">Short</div>
+            <div class="strat-stat-label">Direction</div>
+          </div>
+          <div class="strat-stat">
+            <div class="strat-stat-val" style="color:var(--gold)">High</div>
+            <div class="strat-stat-label">Prob. (trend)</div>
+          </div>
+          <div class="strat-stat">
+            <div class="strat-stat-val" style="color:var(--blue)">2:1+</div>
+            <div class="strat-stat-label">Min R:R</div>
+          </div>
+          <div class="strat-chevron">▼</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strat-body">
+
+      <!-- OVERVIEW -->
+      <div class="overview-row">
+        <div class="ov-cell">
+          <div class="ov-label">Trend Context Required</div>
+          <div class="ov-val"><strong>Strong downtrend</strong> — series of lower lows and lower highs. Price predominantly below EMA. Avoid if trend is weak, choppy, or sideways.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Pullback Pattern</div>
+          <div class="ov-val"><strong>Two-legged rally</strong> up to the EMA. First leg bounces up, small pullback, second leg rallies back to EMA — the double-test confirms the level is acting as resistance.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Why It Works</div>
+          <div class="ov-val">Institutions sell rallies to the EMA in downtrends. The second touch traps weak shorts who covered and new longs who bought the rally, fuelling the next leg down.</div>
+        </div>
+      </div>
+
+      <!-- CHART VISUAL -->
+      <div class="chart-section">
+        <div class="chart-label">M2S — Visual Pattern Diagram</div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#F05252" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+              <marker id="arr-p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+            </defs>
+
+            <!-- EMA line (gently falling) -->
+            <path d="M30 80 Q200 95 350 112 Q500 130 650 148 Q780 162 870 172" fill="none" stroke="#F0B429" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.7"/>
+            <text x="875" y="172" font-family="JetBrains Mono,monospace" font-size="11" fill="#F0B429" dominant-baseline="middle">EMA</text>
+
+            <!-- Downtrend candles -->
+            <g opacity="0.6">
+              <line x1="50" y1="55" x2="50" y2="80" stroke="#F05252" stroke-width="1"/>
+              <rect x="44" y="58" width="12" height="20" fill="#F05252"/>
+              <line x1="75" y1="68" x2="75" y2="93" stroke="#F05252" stroke-width="1"/>
+              <rect x="69" y="71" width="12" height="20" fill="#F05252"/>
+              <line x1="100" y1="82" x2="100" y2="106" stroke="#F05252" stroke-width="1"/>
+              <rect x="94" y="85" width="12" height="20" fill="#F05252"/>
+              <line x1="125" y1="96" x2="125" y2="118" stroke="#F05252" stroke-width="1"/>
+              <rect x="119" y="99" width="12" height="18" fill="#F05252"/>
+            </g>
+
+            <!-- Prior swing low label -->
+            <text x="138" y="126" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99">Prior low</text>
+            <line x1="131" y1="118" x2="131" y2="120" stroke="#6B7A99" stroke-width="0.5" stroke-dasharray="3 2"/>
+
+            <!-- Leg 1 up (first leg of rally) -->
+            <line x1="160" y1="100" x2="160" y2="125" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="154" y="103" width="12" height="20" fill="#00E5A0"/>
+            <line x1="185" y1="90" x2="185" y2="110" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="179" y="93" width="12" height="16" fill="#00E5A0"/>
+
+            <!-- Small dip (between legs) -->
+            <line x1="210" y1="94" x2="210" y2="110" stroke="#F05252" stroke-width="1"/>
+            <rect x="204" y="96" width="12" height="12" fill="#F05252"/>
+
+            <!-- Leg 1 annotation -->
+            <text x="175" y="62" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle">Leg 1</text>
+
+            <!-- Leg 2 up (to EMA) -->
+            <line x1="235" y1="88" x2="235" y2="106" stroke="#00E5A0" stroke-width="1"/>
+            <rect x="229" y="90" width="12" height="15" fill="#00E5A0"/>
+            <line x1="260" y1="78" x2="260" y2="100" stroke="#00E5A0" stroke-width="1.5"/>
+            <rect x="254" y="81" width="12" height="18" fill="#00E5A0"/>
+
+            <!-- 2nd touch of EMA glow -->
+            <circle cx="266" cy="112" r="12" fill="rgba(240,180,41,0.12)" stroke="rgba(240,180,41,0.4)" stroke-width="1"/>
+            <text x="280" y="108" font-family="JetBrains Mono,monospace" font-size="10" fill="#F0B429">2nd touch EMA</text>
+
+            <!-- Leg 2 annotation -->
+            <text x="247" y="62" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle">Leg 2</text>
+
+            <!-- Signal bar (at EMA on 2nd leg) -->
+            <line x1="285" y1="98" x2="285" y2="126" stroke="#F05252" stroke-width="1.5"/>
+            <rect x="279" y="101" width="12" height="22" fill="#F05252" stroke="#F05252" stroke-width="1.5"/>
+            <text x="285" y="86" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" text-anchor="middle">Signal bar</text>
+
+            <!-- Entry arrow -->
+            <circle cx="285" cy="126" r="6" fill="#A855F7"/>
+            <line x1="285" y1="132" x2="285" y2="148" stroke="#A855F7" stroke-width="1.5" marker-end="url(#arr-p)"/>
+            <text x="295" y="150" font-family="JetBrains Mono,monospace" font-size="10" fill="#A855F7">Sell stop 1 tick below</text>
+
+            <!-- Stop line -->
+            <line x1="260" y1="80" x2="380" y2="80" stroke="#F05252" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>
+            <text x="382" y="83" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" dominant-baseline="middle">Stop above leg 2 high</text>
+
+            <!-- Continuation candles (down) -->
+            <line x1="310" y1="128" x2="310" y2="150" stroke="#F05252" stroke-width="1"/>
+            <rect x="304" y="131" width="12" height="18" fill="#F05252"/>
+            <line x1="335" y1="142" x2="335" y2="165" stroke="#F05252" stroke-width="1"/>
+            <rect x="329" y="145" width="12" height="18" fill="#F05252"/>
+            <line x1="360" y1="156" x2="360" y2="180" stroke="#F05252" stroke-width="1"/>
+            <rect x="354" y="159" width="12" height="20" fill="#F05252"/>
+            <line x1="385" y1="170" x2="385" y2="194" stroke="#F05252" stroke-width="1"/>
+            <rect x="379" y="173" width="12" height="20" fill="#F05252"/>
+            <line x1="410" y1="183" x2="410" y2="207" stroke="#F05252" stroke-width="1"/>
+            <rect x="404" y="186" width="12" height="20" fill="#F05252"/>
+
+            <!-- Target line & label -->
+            <line x1="285" y1="207" x2="500" y2="207" stroke="#F05252" stroke-width="1" stroke-dasharray="5 3" opacity="0.5"/>
+            <text x="510" y="210" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" dominant-baseline="middle">Target — prior swing low / MM</text>
+
+            <!-- Phase labels -->
+            <rect x="30" y="245" width="120" height="22" rx="3" fill="rgba(240,82,82,0.08)" stroke="rgba(240,82,82,0.2)" stroke-width="0.5"/>
+            <text x="90" y="256" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" text-anchor="middle" dominant-baseline="middle">DOWNTREND</text>
+
+            <rect x="155" y="245" width="140" height="22" rx="3" fill="rgba(0,229,160,0.08)" stroke="rgba(0,229,160,0.2)" stroke-width="0.5"/>
+            <text x="225" y="256" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle" dominant-baseline="middle">2-LEG RALLY</text>
+
+            <rect x="300" y="245" width="130" height="22" rx="3" fill="rgba(240,82,82,0.08)" stroke="rgba(240,82,82,0.2)" stroke-width="0.5"/>
+            <text x="365" y="256" font-family="JetBrains Mono,monospace" font-size="10" fill="#F05252" text-anchor="middle" dominant-baseline="middle">CONTINUATION</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- DETAIL GRID -->
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-head">
+            <div class="detail-dot" style="background:var(--gold)"></div>
+            <div class="detail-title" style="color:var(--gold)">Entry Trigger</div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>Sell stop</strong> 1 tick below the low of the bar that touches the EMA on the 2nd leg up.</div>
+            <div class="detail-item">Do <strong>not</strong> short on the first leg up — wait for the second test of the EMA to confirm resistance.</div>
+            <div class="detail-item">The signal bar should ideally be a <strong>bear bar</strong> or show an upper wick rejection at the EMA.</div>
+            <div class="detail-item">Cancel the order if not triggered within <strong>2 bars</strong> — setup is stale.</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-head">
+            <div class="detail-dot" style="background:var(--red)"></div>
+            <div class="detail-title" style="color:var(--red)">Stop Loss</div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item">Stop goes <strong>1 tick above the high of the 2nd leg rally</strong> — the highest point price reached before reversing.</div>
+            <div class="detail-item">If EMA is far from the rally high, use the <strong>signal bar high</strong> as the stop instead.</div>
+            <div class="detail-item">Move stop to <strong>breakeven</strong> once price has moved 50% of the way to the first target.</div>
+            <div class="detail-item"><strong>Never</strong> widen the stop — if price breaks above the 2nd leg high, the thesis is invalidated.</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-head">
+            <div class="detail-dot" style="background:var(--green)"></div>
+            <div class="detail-title" style="color:var(--green)">Target Logic</div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>First target:</strong> prior swing low — exit 50% of position here.</div>
+            <div class="detail-item"><strong>Second target:</strong> measured move — project the height of the prior bear leg from the rally high.</div>
+            <div class="detail-item">Move stop to breakeven after first target. Trail the runner.</div>
+            <div class="detail-item">Exit all if price shows a <strong>strong bull reversal bar</strong> or closes above the EMA.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULL RULES TABLE -->
+      <div class="rules-section">
+        <div class="rules-title">Complete Rule Set — M2S</div>
+        <table class="rules-table">
+          <thead>
+            <tr><th>Rule</th><th>Requirement</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Trend context</td><td class="td-red">Strong downtrend required</td><td>Series of LL/LH. Price spending majority of time below EMA. Skip if choppy or sideways.</td></tr>
+            <tr><td>Rally structure</td><td class="td-gold">Two-legged (a-b-c)</td><td>First leg up, small dip, second leg up to EMA. One-legged rallies are 1st entry — lower probability.</td></tr>
+            <tr><td>EMA touch</td><td class="td-gold">2nd leg must touch or come within 1–2 ticks of EMA</td><td>If 2nd leg doesn't reach EMA, it's a different setup. Don't force it.</td></tr>
+            <tr><td>Signal bar quality</td><td class="td-red">Bear bar preferred, or upper-wick rejection</td><td>A bull close signal bar is acceptable only if the trend is very strong. Weak doji = skip.</td></tr>
+            <tr><td>Entry order</td><td class="td-red">Sell stop 1 tick below signal bar low</td><td>Never use a market order. Stop entry ensures you're only filled if price moves in your direction.</td></tr>
+            <tr><td>Stop placement</td><td class="td-red">1 tick above leg 2 rally high</td><td>Or above signal bar high if tighter. Hard max: 10 pts on ES / 500 pts on NQ.</td></tr>
+            <tr><td>Avoid condition</td><td class="td-red">Weak trend, sideways market, tight trading range</td><td>If the EMA is flat or rising, this setup does not apply. Trend must be directional downward.</td></tr>
+            <tr><td>Target 1</td><td class="td-green">Prior swing low — exit 50%</td><td>Move stop to breakeven immediately after T1 is hit.</td></tr>
+            <tr><td>Target 2</td><td class="td-green">Measured move — exit 25%</td><td>Height of prior bear leg projected from rally high. Trail stop on remaining 25%.</td></tr>
+            <tr><td>Exit early if</td><td class="td-red">Strong bull bar closes above EMA</td><td>Or if the rally extends to a 3rd leg — thesis is no longer valid.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PRE-TRADE CHECKLIST -->
+      <div class="checklist-section">
+        <div class="checklist-col">
+          <div class="checklist-head" style="color:var(--red)">Pre-Entry Checklist — M2S</div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Downtrend confirmed — LL and LH structure visible</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>EMA is declining (not flat or rising)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Two-legged rally structure clearly visible</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>2nd leg has touched or come close to EMA</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Signal bar is a bear bar or shows upper wick rejection</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Sell stop order placed 1 tick below signal bar low</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Stop loss placed 1 tick above 2nd leg high</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Risk is within 1–2% of account (size check done)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Target 1 (prior low) and Target 2 (MM) pre-identified</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>No major news event in the next 30 minutes</span></div>
+        </div>
+        <div class="checklist-col">
+          <div class="checklist-head" style="color:var(--red)">Skip the Trade If...</div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Trend is weak, choppy, or in a tight trading range</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>EMA is flat or pointing upward</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Rally is only one leg (this becomes a 1st entry)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Signal bar is a large bull bar closing on its high</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Rally has extended to 3 or more legs (reversal risk)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Already taken 4 trades today (daily max reached)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>FOMC, CPI, NFP or major news within 30 minutes</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Already down 15 pts today (kill switch triggered)</span></div>
+        </div>
+      </div>
+
+    </div><!-- end strat-body M2S -->
+  </div><!-- end s-m2s -->
+
+  <!-- ═══════════════════════════════════════════════════
+       STRATEGY 3 — INSIDE BAR BREAKOUT
+  ═══════════════════════════════════════════════════ -->
+  <div class="strat-card rev d1" id="s-ib" data-tags="trend range breakout" data-open="false">
+    <div class="strat-head">
+      <div class="strat-accent" style="background:var(--purple)"></div>
+      <div class="strat-head-inner" onclick="toggleStrat('s-ib')">
+        <div class="strat-head-left">
+          <div class="strat-icon" style="background:rgba(168,85,247,0.12);color:var(--purple)">IB</div>
+          <div class="strat-meta">
+            <div class="strat-code">Strategy 03 · Breakout · 4-Bar Pattern</div>
+            <div class="strat-name" style="color:var(--purple)">Inside Bar Breakout</div>
+            <div class="strat-tagline">Mother bar compression → inside bar → tighter compression → trigger close. Enter on B4 close.</div>
+            <div class="strat-pills">
+              <span class="pill" style="color:var(--purple);border-color:rgba(168,85,247,0.3)">Breakout</span>
+              <span class="pill" style="color:var(--green);border-color:rgba(0,229,160,0.3)">Long &amp; Short</span>
+              <span class="pill" style="color:var(--gold);border-color:rgba(240,180,41,0.3)">4-Bar Pattern</span>
+              <span class="pill" style="color:var(--sub);border-color:var(--border2)">Compression</span>
+            </div>
+          </div>
+        </div>
+        <div class="strat-head-right">
+          <div class="strat-stat"><div class="strat-stat-val" style="color:var(--green)">Both</div><div class="strat-stat-label">Direction</div></div>
+          <div class="strat-stat"><div class="strat-stat-val" style="color:var(--gold)">Med–High</div><div class="strat-stat-label">Probability</div></div>
+          <div class="strat-stat"><div class="strat-stat-val" style="color:var(--blue)">2:1+</div><div class="strat-stat-label">Min R:R</div></div>
+          <div class="strat-chevron">▼</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strat-body">
+
+      <!-- OVERVIEW -->
+      <div class="overview-row">
+        <div class="ov-cell">
+          <div class="ov-label">The 4-Bar Structure</div>
+          <div class="ov-val"><strong>B1 Mother Bar</strong> — wide range, sets boundaries. <strong>B2 Inside Bar</strong> — contained within B1. <strong>B3 Compression</strong> — even tighter. <strong>B4 Trigger</strong> — closes above B3 high (long) or below B3 low (short).</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Why It Works</div>
+          <div class="ov-val">Each bar builds energy inside the mother bar's range. The final compression (B3) is a coil — when B4 closes outside B3, trapped participants on the wrong side are forced to exit, fuelling the breakout move.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Context Matters</div>
+          <div class="ov-val">Higher probability when the breakout direction aligns with the <strong>prevailing trend</strong>. Counter-trend breakouts fail more often. Check VWAP and EMA direction before committing to a side.</div>
+        </div>
+      </div>
+
+      <!-- CHART VISUAL — LONG -->
+      <div class="chart-section">
+        <div class="chart-label">Inside Bar Breakout — Long &amp; Short Pattern Diagrams</div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr-pu" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+              <marker id="arr-pu2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#A855F7" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+            </defs>
+
+            <!-- ── LONG SETUP (left) ── -->
+            <text x="110" y="20" font-family="JetBrains Mono,monospace" font-size="11" fill="#00E5A0" text-anchor="middle">LONG BREAKOUT</text>
+
+            <!-- B1 Mother Bar -->
+            <line x1="60" y1="40" x2="60" y2="240" stroke="#6B7A99" stroke-width="1.5"/>
+            <rect x="50" y="60" width="20" height="130" fill="#22c55e" opacity="0.7"/>
+            <text x="60" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99" text-anchor="middle">B1</text>
+            <text x="60" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B7A99" text-anchor="middle">MOTHER</text>
+            <!-- B1 range lines -->
+            <line x1="30" y1="40" x2="115" y2="40" stroke="#3A4560" stroke-width="0.75" stroke-dasharray="4 3"/>
+            <line x1="30" y1="240" x2="115" y2="240" stroke="#3A4560" stroke-width="0.75" stroke-dasharray="4 3"/>
+            <text x="25" y="43" font-family="JetBrains Mono,monospace" font-size="9" fill="#3A4560" text-anchor="end">HIGH</text>
+            <text x="25" y="243" font-family="JetBrains Mono,monospace" font-size="9" fill="#3A4560" text-anchor="end">LOW</text>
+
+            <!-- B2 Inside Bar -->
+            <line x1="100" y1="80" x2="100" y2="200" stroke="#6B7A99" stroke-width="1.5"/>
+            <rect x="90" y="100" width="20" height="80" fill="#ef4444" opacity="0.7"/>
+            <text x="100" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99" text-anchor="middle">B2</text>
+            <text x="100" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B7A99" text-anchor="middle">INSIDE</text>
+
+            <!-- B3 Compression Bar -->
+            <line x1="140" y1="100" x2="140" y2="190" stroke="#6B7A99" stroke-width="1.5"/>
+            <rect x="130" y="115" width="20" height="60" fill="#ef4444" opacity="0.7"/>
+            <text x="140" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99" text-anchor="middle">B3</text>
+            <text x="140" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B7A99" text-anchor="middle">COMPRESS</text>
+            <!-- B3 high trigger line -->
+            <line x1="130" y1="115" x2="220" y2="115" stroke="#A855F7" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="225" y="118" font-family="JetBrains Mono,monospace" font-size="9" fill="#A855F7">B3 high → trigger</text>
+
+            <!-- B4 Trigger Bar (closes above B3 high) -->
+            <line x1="180" y1="90" x2="180" y2="170" stroke="#00E5A0" stroke-width="1.5"/>
+            <rect x="170" y="93" width="20" height="62" fill="#00E5A0" opacity="0.85"/>
+            <text x="180" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#00E5A0" text-anchor="middle">B4</text>
+            <text x="180" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#00E5A0" text-anchor="middle">TRIGGER</text>
+            <text x="180" y="272" font-family="JetBrains Mono,monospace" font-size="9" fill="#A855F7" text-anchor="middle">ENTRY</text>
+
+            <!-- Entry circle -->
+            <circle cx="180" cy="93" r="7" fill="rgba(168,85,247,0.9)"/>
+
+            <!-- Stop line (B1 low) -->
+            <line x1="30" y1="240" x2="220" y2="240" stroke="#ef4444" stroke-width="1" stroke-dasharray="4 3" opacity="0.8"/>
+            <text x="225" y="243" font-family="JetBrains Mono,monospace" font-size="9" fill="#ef4444">Stop (B1 low)</text>
+            <!-- Tight stop (B3 low) -->
+            <line x1="130" y1="175" x2="220" y2="175" stroke="#ef4444" stroke-width="0.75" stroke-dasharray="2 3" opacity="0.6"/>
+            <text x="225" y="178" font-family="JetBrains Mono,monospace" font-size="9" fill="#ef4444" opacity="0.7">Tight stop (B3)</text>
+
+            <!-- T1 1:1 -->
+            <line x1="30" y1="40" x2="290" y2="40" stroke="#00E5A0" stroke-width="0.75" stroke-dasharray="4 3" opacity="0.5"/>
+            <!-- T2 line above -->
+            <line x1="180" y1="16" x2="290" y2="16" stroke="#00E5A0" stroke-width="0.75" stroke-dasharray="4 3" opacity="0.35"/>
+            <text x="225" y="12" font-family="JetBrains Mono,monospace" font-size="9" fill="#00E5A0" opacity="0.7">T2 · 2:1</text>
+            <text x="225" y="38" font-family="JetBrains Mono,monospace" font-size="9" fill="#00E5A0">T1 · 1:1 (B1 range)</text>
+
+            <!-- ── DIVIDER ── -->
+            <line x1="430" y1="10" x2="430" y2="285" stroke="#1E2D45" stroke-width="1"/>
+
+            <!-- ── SHORT SETUP (right) ── -->
+            <text x="680" y="20" font-family="JetBrains Mono,monospace" font-size="11" fill="#ef4444" text-anchor="middle">SHORT BREAKOUT</text>
+
+            <!-- B1 Mother Bar -->
+            <line x1="500" y1="40" x2="500" y2="240" stroke="#6B7A99" stroke-width="1.5"/>
+            <rect x="490" y="80" width="20" height="100" fill="#ef4444" opacity="0.7"/>
+            <text x="500" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99" text-anchor="middle">B1</text>
+            <text x="500" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B7A99" text-anchor="middle">MOTHER</text>
+            <line x1="470" y1="40" x2="590" y2="40" stroke="#3A4560" stroke-width="0.75" stroke-dasharray="4 3"/>
+            <line x1="470" y1="240" x2="590" y2="240" stroke="#3A4560" stroke-width="0.75" stroke-dasharray="4 3"/>
+            <text x="465" y="43" font-family="JetBrains Mono,monospace" font-size="9" fill="#3A4560" text-anchor="end">HIGH</text>
+            <text x="465" y="243" font-family="JetBrains Mono,monospace" font-size="9" fill="#3A4560" text-anchor="end">LOW</text>
+
+            <!-- B2 Inside Bar -->
+            <line x1="540" y1="70" x2="540" y2="190" stroke="#6B7A99" stroke-width="1.5"/>
+            <rect x="530" y="90" width="20" height="80" fill="#22c55e" opacity="0.7"/>
+            <text x="540" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99" text-anchor="middle">B2</text>
+            <text x="540" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B7A99" text-anchor="middle">INSIDE</text>
+
+            <!-- B3 Compression -->
+            <line x1="580" y1="90" x2="580" y2="180" stroke="#6B7A99" stroke-width="1.5"/>
+            <rect x="570" y="108" width="20" height="60" fill="#22c55e" opacity="0.7"/>
+            <text x="580" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#6B7A99" text-anchor="middle">B3</text>
+            <text x="580" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#6B7A99" text-anchor="middle">COMPRESS</text>
+            <!-- B3 low trigger line -->
+            <line x1="570" y1="168" x2="760" y2="168" stroke="#A855F7" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="765" y="171" font-family="JetBrains Mono,monospace" font-size="9" fill="#A855F7">B3 low → trigger</text>
+
+            <!-- B4 Trigger Bar (closes below B3 low) -->
+            <line x1="620" y1="120" x2="620" y2="210" stroke="#ef4444" stroke-width="1.5"/>
+            <rect x="610" y="148" width="20" height="60" fill="#ef4444" opacity="0.85"/>
+            <text x="620" y="35" font-family="JetBrains Mono,monospace" font-size="10" fill="#ef4444" text-anchor="middle">B4</text>
+            <text x="620" y="258" font-family="JetBrains Mono,monospace" font-size="9" fill="#ef4444" text-anchor="middle">TRIGGER</text>
+            <text x="620" y="272" font-family="JetBrains Mono,monospace" font-size="9" fill="#A855F7" text-anchor="middle">ENTRY</text>
+
+            <!-- Entry circle -->
+            <circle cx="620" cy="208" r="7" fill="rgba(168,85,247,0.9)"/>
+
+            <!-- Stop line (B1 high) -->
+            <line x1="470" y1="40" x2="760" y2="40" stroke="#ef4444" stroke-width="1" stroke-dasharray="4 3" opacity="0.8"/>
+            <text x="765" y="43" font-family="JetBrains Mono,monospace" font-size="9" fill="#ef4444">Stop (B1 high)</text>
+            <!-- Tight stop B3 high -->
+            <line x1="570" y1="108" x2="760" y2="108" stroke="#ef4444" stroke-width="0.75" stroke-dasharray="2 3" opacity="0.6"/>
+            <text x="765" y="111" font-family="JetBrains Mono,monospace" font-size="9" fill="#ef4444" opacity="0.7">Tight (B3 high)</text>
+
+            <!-- T1 1:1 and T2 -->
+            <line x1="470" y1="240" x2="760" y2="240" stroke="#00E5A0" stroke-width="0.75" stroke-dasharray="4 3" opacity="0.5"/>
+            <text x="765" y="243" font-family="JetBrains Mono,monospace" font-size="9" fill="#00E5A0">T1 · 1:1</text>
+            <line x1="620" y1="284" x2="760" y2="284" stroke="#00E5A0" stroke-width="0.75" stroke-dasharray="4 3" opacity="0.35"/>
+            <text x="765" y="287" font-family="JetBrains Mono,monospace" font-size="9" fill="#00E5A0" opacity="0.7">T2 · 2:1</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- DETAIL GRID -->
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-head"><div class="detail-dot" style="background:var(--gold)"></div><div class="detail-title" style="color:var(--gold)">Entry Trigger</div></div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>Long:</strong> Enter on the <strong>close of B4</strong> when it closes above B3's high. Do not enter earlier.</div>
+            <div class="detail-item"><strong>Short:</strong> Enter on the <strong>close of B4</strong> when it closes below B3's low. Same logic, mirrored.</div>
+            <div class="detail-item">B4 must close <strong>outside</strong> B3's range — a close inside B3 is not a trigger, no matter how close it gets.</div>
+            <div class="detail-item">If B4 is an outside bar engulfing B3 entirely, the setup is weaker — consider skipping or reducing size.</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-head"><div class="detail-dot" style="background:var(--red)"></div><div class="detail-title" style="color:var(--red)">Stop Loss</div></div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>Wide stop:</strong> 1 tick beyond B1's opposite extreme (below B1 low for longs, above B1 high for shorts).</div>
+            <div class="detail-item"><strong>Tight stop:</strong> 1 tick beyond B3's opposite extreme — tighter R:R but higher chance of being stopped out early.</div>
+            <div class="detail-item">Use tight stop in <strong>strong trending conditions</strong>. Use wide stop when the setup is less clean or context is mixed.</div>
+            <div class="detail-item">Move to <strong>breakeven</strong> once T1 (1:1) is hit.</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-head"><div class="detail-dot" style="background:var(--green)"></div><div class="detail-title" style="color:var(--green)">Target Logic</div></div>
+          <div class="detail-body">
+            <div class="detail-item"><strong>T1 (1:1):</strong> Project B1's full range from the entry point. Exit 50% here.</div>
+            <div class="detail-item"><strong>T2 (2:1):</strong> Double B1's range from entry. Exit 25% here, trail remaining 25%.</div>
+            <div class="detail-item">In a strong trend, price may extend well beyond T2 — use a trailing stop on the runner rather than taking a fixed exit.</div>
+            <div class="detail-item">Exit all if price re-enters B3's range after the breakout — setup has failed.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RULES TABLE -->
+      <div class="rules-section">
+        <div class="rules-title">Complete Rule Set — Inside Bar Breakout</div>
+        <table class="rules-table">
+          <thead><tr><th>Bar</th><th>Rule</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>B1 — Mother Bar</td><td class="td-gold">Wide range bar — sets the boundary</td><td>All subsequent bars must remain inside B1's range. A B1 that is an inside bar itself weakens the setup.</td></tr>
+            <tr><td>B2 — Inside Bar</td><td class="td-gold">High and low contained within B1</td><td>Signals initial consolidation. The smaller relative to B1, the better.</td></tr>
+            <tr><td>B3 — Compression</td><td class="td-gold">Further compression inside B1 (usually B2 too)</td><td>B3's high (long) or low (short) becomes the key trigger level. This bar builds the coil.</td></tr>
+            <tr><td>B4 — Trigger</td><td class="td-green">Closes outside B3's range</td><td>Long: closes above B3 high. Short: closes below B3 low. Entry is on the close of this bar.</td></tr>
+            <tr><td>Entry</td><td class="td-green">Close of B4</td><td>Market order on B4 close, or limit order at B4's close price if using a slower entry.</td></tr>
+            <tr><td>Stop — wide</td><td class="td-red">1 tick beyond B1's opposite extreme</td><td>Long: 1 tick below B1 low. Short: 1 tick above B1 high. Safer but compresses R:R.</td></tr>
+            <tr><td>Stop — tight</td><td class="td-red">1 tick beyond B3's opposite extreme</td><td>Better R:R but more vulnerable to noise. Use in strong trend context only.</td></tr>
+            <tr><td>Target 1</td><td class="td-green">B1 range projected from entry (1:1)</td><td>Exit 50% at T1. Move stop to breakeven immediately.</td></tr>
+            <tr><td>Target 2</td><td class="td-green">2× B1 range from entry (2:1)</td><td>Exit 25% at T2. Trail remaining 25%.</td></tr>
+            <tr><td>Avoid</td><td class="td-red">Counter-trend in sideways / weak market</td><td>Best results when breakout direction aligns with the prevailing trend and VWAP/EMA.</td></tr>
+            <tr><td>Fail signal</td><td class="td-red">B5 re-enters B3's range</td><td>If price reverses back inside B3 after the B4 trigger, the breakout has failed — exit immediately.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="checklist-section">
+        <div class="checklist-col">
+          <div class="checklist-head" style="color:var(--purple)">Pre-Entry Checklist — IB Breakout</div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B1 is a clearly wide range bar relative to recent bars</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B2 is fully contained within B1's high/low range</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B3 shows further compression — smaller than B2</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B4 has closed outside B3's range (not just poked)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Breakout direction aligns with prevailing trend / VWAP</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Stop level identified (B1 wide or B3 tight)</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>T1 and T2 pre-calculated from B1 range</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Risk is within 1–2% of account</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>No major news event in next 30 minutes</span></div>
+        </div>
+        <div class="checklist-col">
+          <div class="checklist-head" style="color:var(--red)">Skip the Trade If...</div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B4 closes inside B3's range — no trigger confirmed</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B4 is a large outside bar engulfing B3 entirely</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Breakout direction is counter-trend in a weak market</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>B1 is too small — not a genuine wide-range mother bar</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Any bar pokes outside B1's range before B4 triggers</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>4 trades already taken today</span></div>
+          <div class="check-item" onclick="this.classList.toggle('checked');this.querySelector('.check-box').textContent=this.classList.contains('checked')?'✓':''"><div class="check-box"></div><span>Already down 15 pts today (kill switch)</span></div>
+        </div>
+      </div>
+
+    </div><!-- end strat-body IB -->
+  </div><!-- end s-ib -->
+
+
+  <!-- ═══════════════════════════════════════════════════
+       STRATEGY 4 — FAILURE PATTERNS
+  ═══════════════════════════════════════════════════ -->
+  <div class="strat-card rev d2" id="s-fail" data-tags="reversal range" data-open="false">
+    <div class="strat-head">
+      <div class="strat-accent" style="background:var(--red)"></div>
+      <div class="strat-head-inner" onclick="toggleStrat('s-fail')">
+        <div class="strat-head-left">
+          <div class="strat-icon" style="background:rgba(240,82,82,0.12);color:var(--red)">FP</div>
+          <div class="strat-meta">
+            <div class="strat-code">Strategy 04 · Reversal · Traps &amp; Failures</div>
+            <div class="strat-name" style="color:var(--red)">Failure Patterns</div>
+            <div class="strat-tagline">H2 Failure · L2 Failure · Bear Micro-Channel Fade — trading trapped participants</div>
+            <div class="strat-pills">
+              <span class="pill" style="color:var(--red);border-color:rgba(240,82,82,0.3)">Reversal</span>
+              <span class="pill" style="color:var(--orange);border-color:rgba(251,146,60,0.3)">Traps</span>
+              <span class="pill" style="color:var(--blue);border-color:rgba(79,142,247,0.3)">Counter-Setup</span>
+              <span class="pill" style="color:var(--sub);border-color:var(--border2)">Al Brooks</span>
+            </div>
+          </div>
+        </div>
+        <div class="strat-head-right">
+          <div class="strat-stat"><div class="strat-stat-val" style="color:var(--orange)">Both</div><div class="strat-stat-label">Direction</div></div>
+          <div class="strat-stat"><div class="strat-stat-val" style="color:var(--gold)">Context</div><div class="strat-stat-label">Dependent</div></div>
+          <div class="strat-stat"><div class="strat-stat-val" style="color:var(--blue)">2:1+</div><div class="strat-stat-label">Min R:R</div></div>
+          <div class="strat-chevron">▼</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strat-body">
+
+      <div class="overview-row" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="ov-cell">
+          <div class="ov-label">What Is a Failure Pattern?</div>
+          <div class="ov-val">A failure pattern occurs when a standard setup (H2 long, L2 short) triggers — but price <strong>immediately reverses</strong> against it. Trapped participants become the fuel for the counter-move.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Why They Work</div>
+          <div class="ov-val">Every trader who entered the failed setup now has a stop in the market. When those stops are hit, they <strong>add momentum</strong> to the reversal. The bigger the trapped crowd, the stronger the failure move.</div>
+        </div>
+        <div class="ov-cell">
+          <div class="ov-label">Key Warning</div>
+          <div class="ov-val">Failure patterns are <strong>advanced setups</strong>. They require fast recognition and decisive action. Do not trade them until standard setups (M2B, M2S, IB) are fully mastered.</div>
+        </div>
+      </div>
+
+      <!-- THREE PANELS -->
+      <div style="padding:2rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;border-bottom:1px solid var(--border)">
+
+        <!-- H2 FAILURE -->
+        <div class="detail-card" style="border-left:3px solid var(--red)">
+          <div class="detail-head" style="background:rgba(240,82,82,0.06)">
+            <div class="detail-dot" style="background:var(--red)"></div>
+            <div class="detail-title" style="color:var(--red)">Panel 01 — H2 Failure</div>
+          </div>
+          <div style="padding:1rem 1.2rem">
+            <!-- Mini SVG diagram -->
+            <svg viewBox="0 0 200 140" style="width:100%;margin-bottom:0.8rem;background:var(--bg3);border-radius:6px;padding:8px">
+              <!-- Bull pullback candles -->
+              <line x1="20" y1="90" x2="20" y2="110" stroke="#22c55e" stroke-width="1"/><rect x="15" y="92" width="10" height="16" fill="#22c55e"/>
+              <line x1="38" y1="82" x2="38" y2="102" stroke="#22c55e" stroke-width="1"/><rect x="33" y="84" width="10" height="16" fill="#22c55e"/>
+              <line x1="56" y1="74" x2="56" y2="94" stroke="#ef4444" stroke-width="1"/><rect x="51" y="76" width="10" height="16" fill="#ef4444"/>
+              <!-- Signal bar -->
+              <line x1="74" y1="68" x2="74" y2="88" stroke="#22c55e" stroke-width="1.5"/><rect x="69" y="70" width="10" height="16" fill="#22c55e"/>
+              <text x="74" y="62" font-size="8" font-family="JetBrains Mono,monospace" fill="#6B7A99" text-anchor="middle">SB</text>
+              <!-- H2 trigger -->
+              <line x1="74" y1="70" x2="115" y2="70" stroke="#22c55e" stroke-width="0.75" stroke-dasharray="3 2" opacity="0.6"/>
+              <text x="100" y="65" font-size="7" font-family="JetBrains Mono,monospace" fill="#22c55e">H2↑ trigger</text>
+              <!-- Trigger bar — reversal -->
+              <line x1="92" y1="55" x2="92" y2="100" stroke="#ef4444" stroke-width="1.5"/><rect x="87" y="72" width="10" height="26" fill="#ef4444"/>
+              <text x="92" y="50" font-size="8" font-family="JetBrains Mono,monospace" fill="#ef4444" text-anchor="middle">REVERSAL</text>
+              <!-- Sharp drop -->
+              <line x1="110" y1="90" x2="110" y2="120" stroke="#ef4444" stroke-width="1"/><rect x="105" y="96" width="10" height="22" fill="#ef4444"/>
+              <line x1="128" y1="104" x2="128" y2="132" stroke="#ef4444" stroke-width="1"/><rect x="123" y="110" width="10" height="20" fill="#ef4444"/>
+              <line x1="146" y1="115" x2="146" y2="135" stroke="#ef4444" stroke-width="1"/><rect x="141" y="118" width="10" height="16" fill="#ef4444"/>
+              <text x="100" y="138" font-size="8" font-family="JetBrains Mono,monospace" fill="#ef4444" text-anchor="middle">BULLS TRAPPED → sharp drop</text>
+            </svg>
+            <div class="detail-item"><strong>Setup:</strong> Bull pullback forms, H2 buy triggers fire — price reverses immediately below the signal bar.</div>
+            <div class="detail-item"><strong>Trapped:</strong> Bulls who bought the H2 are now underwater and forced to exit.</div>
+            <div class="detail-item"><strong>Entry:</strong> Short below the signal bar low once reversal is confirmed.</div>
+            <div class="detail-item"><strong>Stop:</strong> Above the signal bar high.</div>
+            <div class="detail-item"><strong>Target:</strong> Measured move down or prior swing low.</div>
+          </div>
+        </div>
+
+        <!-- L2 FAILURE -->
+        <div class="detail-card" style="border-left:3px solid var(--green)">
+          <div class="detail-head" style="background:rgba(0,229,160,0.06)">
+            <div class="detail-dot" style="background:var(--green)"></div>
+            <div class="detail-title" style="color:var(--green)">Panel 02 — L2 Failure</div>
+          </div>
+          <div style="padding:1rem 1.2rem">
+            <svg viewBox="0 0 200 140" style="width:100%;margin-bottom:0.8rem;background:var(--bg3);border-radius:6px;padding:8px">
+              <!-- Bear rally candles -->
+              <line x1="20" y1="40" x2="20" y2="70" stroke="#ef4444" stroke-width="1"/><rect x="15" y="44" width="10" height="20" fill="#ef4444"/>
+              <line x1="38" y1="50" x2="38" y2="76" stroke="#ef4444" stroke-width="1"/><rect x="33" y="54" width="10" height="18" fill="#ef4444"/>
+              <line x1="56" y1="56" x2="56" y2="82" stroke="#22c55e" stroke-width="1"/><rect x="51" y="58" width="10" height="18" fill="#22c55e"/>
+              <!-- Signal bar -->
+              <line x1="74" y1="62" x2="74" y2="88" stroke="#ef4444" stroke-width="1.5"/><rect x="69" y="64" width="10" height="20" fill="#ef4444"/>
+              <text x="74" y="58" font-size="8" font-family="JetBrains Mono,monospace" fill="#6B7A99" text-anchor="middle">SB</text>
+              <line x1="74" y1="84" x2="115" y2="84" stroke="#ef4444" stroke-width="0.75" stroke-dasharray="3 2" opacity="0.6"/>
+              <text x="100" y="96" font-size="7" font-family="JetBrains Mono,monospace" fill="#ef4444">L2↓ trigger</text>
+              <!-- Strong buying absorbs -->
+              <line x1="92" y1="50" x2="92" y2="92" stroke="#22c55e" stroke-width="2"/><rect x="87" y="54" width="10" height="26" fill="#22c55e"/>
+              <text x="92" y="46" font-size="8" font-family="JetBrains Mono,monospace" fill="#22c55e" text-anchor="middle">STRONG BUY</text>
+              <line x1="110" y1="42" x2="110" y2="72" stroke="#22c55e" stroke-width="1"/><rect x="105" y="46" width="10" height="20" fill="#22c55e"/>
+              <line x1="128" y1="34" x2="128" y2="62" stroke="#22c55e" stroke-width="1"/><rect x="123" y="38" width="10" height="18" fill="#22c55e"/>
+              <line x1="146" y1="26" x2="146" y2="54" stroke="#22c55e" stroke-width="1"/><rect x="141" y="30" width="10" height="18" fill="#22c55e"/>
+              <text x="100" y="138" font-size="8" font-family="JetBrains Mono,monospace" fill="#22c55e" text-anchor="middle">BEARS TRAPPED → reversal up</text>
+            </svg>
+            <div class="detail-item"><strong>Setup:</strong> Bear rally forms, L2 short triggers fire — strong buying absorbs all sellers and price reverses up.</div>
+            <div class="detail-item"><strong>Trapped:</strong> Bears who shorted the L2 are now underwater and forced to cover (buy).</div>
+            <div class="detail-item"><strong>Entry:</strong> Long above the signal bar high once reversal is confirmed.</div>
+            <div class="detail-item"><strong>Stop:</strong> Below the signal bar low.</div>
+            <div class="detail-item"><strong>Target:</strong> Measured move up or prior swing high.</div>
+          </div>
+        </div>
+
+        <!-- BEAR MICRO-CHANNEL FADE -->
+        <div class="detail-card" style="border-left:3px solid var(--orange)">
+          <div class="detail-head" style="background:rgba(251,146,60,0.06)">
+            <div class="detail-dot" style="background:var(--orange)"></div>
+            <div class="detail-title" style="color:var(--orange)">Panel 03 — Bear Micro-Channel</div>
+          </div>
+          <div style="padding:1rem 1.2rem">
+            <svg viewBox="0 0 200 140" style="width:100%;margin-bottom:0.8rem;background:var(--bg3);border-radius:6px;padding:8px">
+              <!-- Tight channel bear bars -->
+              <line x1="15" y1="20" x2="180" y2="120" stroke="#ef4444" stroke-width="0.75" stroke-dasharray="3 2" opacity="0.4"/>
+              <line x1="15" y1="35" x2="180" y2="135" stroke="#ef4444" stroke-width="0.75" stroke-dasharray="3 2" opacity="0.4"/>
+              <line x1="20" y1="22" x2="20" y2="36" stroke="#ef4444" stroke-width="1"/><rect x="15" y="24" width="10" height="11" fill="#ef4444"/>
+              <line x1="36" y1="30" x2="36" y2="46" stroke="#ef4444" stroke-width="1"/><rect x="31" y="32" width="10" height="12" fill="#ef4444"/>
+              <line x1="52" y1="40" x2="52" y2="56" stroke="#ef4444" stroke-width="1"/><rect x="47" y="42" width="10" height="12" fill="#ef4444"/>
+              <line x1="68" y1="50" x2="68" y2="66" stroke="#ef4444" stroke-width="1"/><rect x="63" y="52" width="10" height="12" fill="#ef4444"/>
+              <line x1="84" y1="60" x2="84" y2="76" stroke="#ef4444" stroke-width="1"/><rect x="79" y="62" width="10" height="12" fill="#ef4444"/>
+              <!-- FADE FAILS -->
+              <line x1="100" y1="66" x2="100" y2="86" stroke="#22c55e" stroke-width="1.5"/><rect x="95" y="68" width="10" height="16" fill="#22c55e"/>
+              <text x="100" y="62" font-size="7" font-family="JetBrains Mono,monospace" fill="#6B7A99" text-anchor="middle">FADE↑</text>
+              <text x="100" y="97" font-size="7" font-family="JetBrains Mono,monospace" fill="#ef4444" text-anchor="middle">FAILS</text>
+              <!-- Channel continues -->
+              <line x1="116" y1="78" x2="116" y2="96" stroke="#ef4444" stroke-width="1"/><rect x="111" y="80" width="10" height="14" fill="#ef4444"/>
+              <line x1="132" y1="88" x2="132" y2="106" stroke="#ef4444" stroke-width="1"/><rect x="127" y="90" width="10" height="14" fill="#ef4444"/>
+              <line x1="148" y1="98" x2="148" y2="116" stroke="#ef4444" stroke-width="1"/><rect x="143" y="100" width="10" height="14" fill="#ef4444"/>
+              <text x="100" y="132" font-size="8" font-family="JetBrains Mono,monospace" fill="#ef4444" text-anchor="middle">Keep shorting until exhaustion</text>
+            </svg>
+            <div class="detail-item"><strong>Setup:</strong> Nonstop bear bars in a tight channel — no bull bars, no pauses.</div>
+            <div class="detail-item"><strong>Fading fails repeatedly:</strong> Buying against this channel almost always loses. The channel absorbs every counter-move.</div>
+            <div class="detail-item"><strong>Correct approach:</strong> Keep shorting with the channel on every small bounce. Do not fade until a clear exhaustion signal appears.</div>
+            <div class="detail-item"><strong>Exhaustion signal:</strong> A large bull outside bar, a gap reversal, or price closing far above the channel top.</div>
+            <div class="detail-item"><strong>Brooks rule:</strong> In a bear micro-channel, assume continuation until proven wrong.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RULES TABLE -->
+      <div class="rules-section">
+        <div class="rules-title">Failure Pattern Rules — Quick Reference</div>
+        <table class="rules-table">
+          <thead><tr><th>Pattern</th><th>Trigger</th><th>Entry</th><th>Stop</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>H2 Failure</td><td class="td-red">H2 buy fires, price reverses below signal bar</td><td>Short below signal bar low</td><td>Above signal bar high</td><td>MM down or prior swing low</td></tr>
+            <tr><td>L2 Failure</td><td class="td-green">L2 short fires, strong buying absorbs — reversal up</td><td>Long above signal bar high</td><td>Below signal bar low</td><td>MM up or prior swing high</td></tr>
+            <tr><td>Bear Micro-Channel</td><td class="td-red">Tight consecutive bear bars, fades fail</td><td>Short every bounce inside channel</td><td>Above prior bar high</td><td>Until exhaustion signal</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- KEY PRINCIPLE BOX -->
+      <div style="padding:1.5rem 2rem 2rem">
+        <div style="background:rgba(240,82,82,0.06);border:1px solid rgba(240,82,82,0.2);border-radius:10px;padding:1.2rem 1.5rem">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.6rem">Brooks Core Principle — Failure Patterns</div>
+          <div style="font-size:0.88rem;color:var(--sub);line-height:1.75">"When a reliable setup fails, the failure itself becomes a high-probability trade in the opposite direction. The trapped participants — bulls in an H2 failure, bears in an L2 failure — are forced to exit, and their exits are your entry signal. The bigger the crowd that got trapped, the stronger the failure move."</div>
+        </div>
+      </div>
+
+    </div><!-- end strat-body FP -->
+  </div><!-- end s-fail -->
+
+  <!-- COMING SOON -->
+  <div class="coming-soon rev" data-tags="all">
+    <div class="cs-icon">&#9881;</div>
+    <div class="cs-label">More strategies coming — add via Site Editor</div>
+  </div>
+
+</div><!-- end wrap -->
+
+<footer>
+  <span class="footer-brand">Strategies</span>
+  <span class="footer-copy">&#169; 2025 Sire Mammat &middot; All trading involves risk</span>
+  <a href="../index.html" class="nav-back">&#8592; Back to Hub</a>
+</footer>
+
+<script>
+// PROGRESS
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  document.getElementById('pbar').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';
+});
+
+// REVEAL
+const ro=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');}),{threshold:0.06});
+document.querySelectorAll('.rev').forEach(el=>ro.observe(el));
+
+// TOGGLE STRATEGY OPEN/CLOSE
+function toggleStrat(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// FILTER
+function filterStrats(tag, btn) {
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.strat-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const tags = (card.dataset.tags || '') + ' all';
+    const show = tag === 'all' || tags.includes(tag);
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('strat-count').textContent =
+    visible + (visible === 1 ? ' strategy' : ' strategies');
+}
+
+// Auto-open first card
+document.getElementById('s-m2b').classList.add('open');
+</script>
+</body>
+</html>

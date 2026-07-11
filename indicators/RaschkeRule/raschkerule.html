@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raschke 12 Rules — SireMammat Edition · Documentation</title>
+<meta name="description" content="Linda Raschke's 12 Rules of Trading — SireMammat's coded implementation for ES/NQ/MES futures. Momentum-based pullback strategy with automated dashboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark: #0E0A04; --dark2: #16100A; --dark3: #1E1508; --dark4: #2C2010;
+  --gold: #B87333; --gold-lt: #E8C46A; --gold-dim: #6B4420;
+  --cream: #F5EDD8; --cream2: #EDE0C4; --muted: #8C7355; --muted2: #5C4A35;
+  --white: #FFFFFF; --red: #C04030; --green: #3A7A50; --blue: #3A6A9A;
+  --font-display: 'EB Garamond', Georgia, serif;
+  --font-body: 'Libre Baskerville', Georgia, serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+  --radius: 4px; --radius-lg: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--dark); color: var(--cream); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+a { color: var(--gold-lt); text-decoration: none; } a:hover { color: var(--gold); }
+ul { list-style: none; }
+
+.ticker-bar { background: var(--dark2); border-bottom: 1px solid var(--gold-dim); overflow: hidden; height: 32px; display: flex; align-items: center; }
+.ticker-track { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; }
+.ticker-item { font-family: var(--font-mono); font-size: 11px; font-weight: 400; padding: 0 28px; color: var(--muted); letter-spacing: 0.04em; border-right: 1px solid var(--dark4); display: flex; align-items: center; gap: 8px; height: 32px; }
+.ticker-item .sym { color: var(--cream2); font-weight: 500; }
+.ticker-item .up { color: var(--green); } .ticker-item .dn { color: var(--red); }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+nav { position: sticky; top: 0; z-index: 100; background: rgba(14,10,4,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--dark4); display: flex; align-items: center; justify-content: space-between; padding: 0 3rem; height: 64px; }
+.nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.nav-logo svg { flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--cream); letter-spacing: 0.02em; line-height: 1; }
+.nav-logo-sub { font-family: var(--font-mono); font-size: 9px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-links a { font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+.nav-links a:hover { color: var(--gold-lt); }
+.nav-cta { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dark) !important; background: var(--gold); padding: 8px 18px; border-radius: var(--radius); transition: background 0.2s; }
+.nav-cta:hover { background: var(--gold-lt) !important; color: var(--dark) !important; }
+
+.hero { position: relative; overflow: hidden; padding: 6rem 3rem 0; border-bottom: 1px solid var(--dark4); }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 70% 50%, rgba(184,115,51,0.08) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 10% 80%, rgba(184,115,51,0.04) 0%, transparent 60%); pointer-events: none; }
+.hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(184,115,51,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(184,115,51,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; mask-image: radial-gradient(ellipse at 70% 50%, black 30%, transparent 70%); }
+.hero-inner { max-width: 1200px; margin: 0 auto; padding: 3rem 0 0; position: relative; z-index: 2; }
+.hero-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+.hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--gold); }
+.hero-title { font-family: var(--font-display); font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 500; line-height: 1.08; color: var(--cream); margin-bottom: 1rem; letter-spacing: 3px; }
+.hero-title em { font-style: italic; color: var(--gold-lt); }
+.hero-sub { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 2.5rem; }
+
+.stat-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--dark4); border-top: 1px solid var(--dark4); position: relative; z-index: 2; }
+.stat-cell { background: var(--dark2); padding: 1.4rem 2rem; position: relative; }
+.stat-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.sc-gold::before { background: var(--gold); } .sc-green::before { background: var(--green); }
+.sc-red::before { background: var(--red); } .sc-blue::before { background: var(--blue); }
+.sc-amber::before { background: #C9A84C; }
+.stat-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.stat-val { font-family: var(--font-display); font-size: 2rem; letter-spacing: 1px; line-height: 1; }
+.stat-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+section { padding: 4rem 3rem; position: relative; z-index: 2; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px; }
+.section-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+.section-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 500; color: var(--cream); margin-bottom: 1rem; line-height: 1.15; }
+.section-sub { font-family: var(--font-body); font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.8; margin-bottom: 2.5rem; }
+
+.divider { display: flex; align-items: center; gap: 1.5rem; padding: 0 3rem; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+.divider-line { flex: 1; height: 1px; background: var(--dark4); }
+
+.brooks-box { background: var(--dark2); border: 1px solid var(--dark4); border-left: 3px solid var(--gold); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; padding: 1.5rem 2rem; margin-bottom: 2rem; }
+.brooks-label { font-family: var(--font-mono); font-size: 9px; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.8rem; }
+.brooks-quote { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 0.02em; color: var(--cream); line-height: 1.4; margin-bottom: 0.5rem; font-style: italic; }
+.brooks-attr { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+
+.bar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--dark4); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem; }
+.bar-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.bar-cell { background: var(--dark2); padding: 1.4rem; transition: background 0.2s; }
+.bar-cell:hover { background: var(--dark3); }
+.bar-num { font-family: var(--font-display); font-size: 2.5rem; color: rgba(184,115,51,0.15); line-height: 1; margin-bottom: 0.5rem; }
+.bar-name { font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.bar-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--cream); }
+.bar-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+.bar-desc strong { color: var(--cream); }
+
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+.analysis-card { background: var(--dark2); border: 1px solid var(--dark4); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.2s; }
+.analysis-card:hover { border-color: var(--gold-dim); }
+.analysis-head { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--dark4); display: flex; align-items: center; gap: 0.6rem; }
+.analysis-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.analysis-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+.analysis-body { padding: 1.2rem; }
+.analysis-item { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.7rem; font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+.analysis-item:last-child { margin-bottom: 0; }
+.ai-icon { font-size: 0.8rem; flex-shrink: 0; margin-top: 2px; }
+.analysis-item strong { color: var(--cream); font-weight: 500; }
+
+.concepts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--dark4); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem; }
+.concept-cell { background: var(--dark2); padding: 1.4rem; border-left: 3px solid var(--gold); transition: background 0.2s; }
+.concept-cell:hover { background: var(--dark3); }
+.concept-name { font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.concept-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--cream); }
+.concept-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+.lessons-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.lesson-card { background: var(--dark2); border: 1px solid var(--dark4); border-radius: var(--radius-lg); padding: 1.2rem; transition: border-color 0.2s; }
+.lesson-card:hover { border-color: var(--gold-dim); }
+.lesson-num { font-family: var(--font-display); font-size: 2rem; color: rgba(184,115,51,0.2); line-height: 1; margin-bottom: 0.5rem; }
+.lesson-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--gold-lt); }
+.lesson-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+.rule-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--dark4); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem; }
+.rule-cell { background: var(--dark2); padding: 1.4rem; transition: background 0.2s; }
+.rule-cell:hover { background: var(--dark3); }
+.rule-num { font-family: var(--font-display); font-size: 2rem; color: rgba(184,115,51,0.25); line-height: 1; margin-bottom: 0.5rem; }
+.rule-label { font-family: var(--font-mono); font-size: 10px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.rule-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--cream); }
+.rule-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+.rule-desc strong { color: var(--cream); }
+.rule-status { display: inline-block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 2px; margin-top: 0.5rem; }
+.status-coded { background: rgba(58,122,80,0.15); color: var(--green); }
+.status-planned { background: rgba(184,115,51,0.15); color: var(--gold); }
+
+.rating-box { background: var(--dark2); border: 1px solid var(--dark4); border-radius: var(--radius-lg); padding: 2rem; display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center; margin-bottom: 2rem; transition: border-color 0.2s; }
+.rating-box:hover { border-color: var(--gold-dim); }
+.rating-grade { font-family: var(--font-display); font-size: 6rem; color: var(--gold-lt); line-height: 1; letter-spacing: 2px; }
+.rating-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.rating-title { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 0.02em; margin-bottom: 0.6rem; color: var(--cream); }
+.rating-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.75; }
+
+.philosophy { background: var(--dark3); border-top: 1px solid var(--dark4); border-bottom: 1px solid var(--dark4); padding: 5rem 3rem; text-align: center; position: relative; z-index: 2; }
+.philosophy blockquote { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight: 400; font-style: italic; color: var(--cream); line-height: 1.5; max-width: 800px; margin: 0 auto 1.5rem; }
+.philosophy blockquote em { color: var(--gold-lt); font-style: normal; }
+.philosophy cite { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+
+.cta-block { text-align: center; padding: 4rem 3rem; position: relative; z-index: 2; }
+.cta-btn { display: inline-block; background: var(--gold); color: var(--dark); font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 40px; border-radius: var(--radius); transition: background 0.2s; }
+.cta-btn:hover { background: var(--gold-lt); color: var(--dark); }
+.cta-sub { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 1rem; letter-spacing: 0.06em; }
+
+footer { background: var(--dark2); border-top: 1px solid var(--dark4); padding: 3rem 3rem 2rem; position: relative; z-index: 2; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--dark4); }
+.footer-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 1rem; }
+.footer-brand-name { font-family: var(--font-display); font-size: 1.3rem; font-weight: 500; color: var(--cream); }
+.footer-tagline { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; max-width: 300px; line-height: 1.6; }
+.footer-links { display: flex; gap: 3rem; }
+.footer-col-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.footer-col-links { display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-col-links a { font-family: var(--font-mono); font-size: 11px; color: var(--muted); transition: color 0.2s; }
+.footer-col-links a:hover { color: var(--gold-lt); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-family: var(--font-mono); font-size: 10px; color: var(--muted2); letter-spacing: 0.04em; }
+.footer-disclaimer { font-family: var(--font-mono); font-size: 10px; color: var(--muted2); max-width: 400px; text-align: right; line-height: 1.6; }
+
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  nav { padding: 0 1.5rem; } .nav-links { display: none; }
+  .hero { padding: 4rem 1.5rem 0; } section { padding: 3rem 1.5rem; }
+  .stat-strip, .bar-grid, .bar-grid-4, .analysis-grid, .concepts-grid, .lessons-grid, .rule-card-grid { grid-template-columns: 1fr; }
+  .rating-box { grid-template-columns: 1fr; } .philosophy { padding: 3rem 1.5rem; }
+  .divider { padding: 0 1.5rem; } footer { padding: 2rem 1.5rem 1.5rem; }
+  .footer-top { flex-direction: column; gap: 2rem; }
+  .footer-links { flex-wrap: wrap; gap: 2rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-disclaimer { text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER BAR -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="sym">ES</span> 5,943.25 <span class="dn">−12.50</span></div>
+    <div class="ticker-item"><span class="sym">NQ</span> 20,812.00 <span class="dn">−48.25</span></div>
+    <div class="ticker-item"><span class="sym">MES</span> 5,943.25 <span class="dn">−12.50</span></div>
+    <div class="ticker-item"><span class="sym">MNQ</span> 20,812.00 <span class="dn">−48.25</span></div>
+    <div class="ticker-item"><span class="sym">VIX</span> 19.42 <span class="up">+1.28</span></div>
+    <div class="ticker-item"><span class="sym">DXY</span> 104.88 <span class="up">+0.34</span></div>
+    <div class="ticker-item"><span class="sym">GOLD</span> 2,318.60 <span class="dn">−14.20</span></div>
+    <div class="ticker-item"><span class="sym">10Y</span> 4.412% <span class="up">+0.018</span></div>
+    <div class="ticker-item"><span class="sym">ES</span> 5,943.25 <span class="dn">−12.50</span></div>
+    <div class="ticker-item"><span class="sym">NQ</span> 20,812.00 <span class="dn">−48.25</span></div>
+    <div class="ticker-item"><span class="sym">MES</span> 5,943.25 <span class="dn">−12.50</span></div>
+    <div class="ticker-item"><span class="sym">MNQ</span> 20,812.00 <span class="dn">−48.25</span></div>
+    <div class="ticker-item"><span class="sym">VIX</span> 19.42 <span class="up">+1.28</span></div>
+    <div class="ticker-item"><span class="sym">DXY</span> 104.88 <span class="up">+0.34</span></div>
+    <div class="ticker-item"><span class="sym">GOLD</span> 2,318.60 <span class="dn">−14.20</span></div>
+    <div class="ticker-item"><span class="sym">10Y</span> 4.412% <span class="up">+0.018</span></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="https://siremammat.neocities.org/" class="nav-logo">
+    <svg width="28" height="36" viewBox="0 0 56 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/>
+      <line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/>
+    </svg>
+    <div>
+      <div class="nav-logo-text">SireMammat</div>
+      <div class="nav-logo-sub">Free Futures Education</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://siremammat.neocities.org/#hub">Hub</a></li>
+    <li><a href="https://siremammat.neocities.org/#about">About</a></li>
+    <li><a href="https://siremammat.neocities.org/indicators/index.html">Indicators</a></li>
+    <li><a href="https://siremammat.neocities.org/#tools">Tools</a></li>
+    <li><a href="https://siremammat.neocities.org/#contact">Contact</a></li>
+    <li><a href="https://youtube.com/@SireMammat" class="nav-cta">Subscribe →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Technical Trading Strategy · Linda Raschke Methodology</div>
+    <h1 class="hero-title">Raschke <em>12 Rules</em></h1>
+    <div class="hero-sub">SireMammat Edition · ES / NQ / MES · Pine Script v5 · 5m / 15m / 1H</div>
+  </div>
+  <div class="stat-strip">
+    <div class="stat-cell sc-gold">
+      <div class="stat-label">Strategy</div>
+      <div class="stat-val" style="color:var(--gold-lt)">R12</div>
+      <div class="stat-sub">Raschke 12 Rules</div>
+    </div>
+    <div class="stat-cell sc-green">
+      <div class="stat-label">EMA Anchor</div>
+      <div class="stat-val" style="color:var(--green)">20</div>
+      <div class="stat-sub">Period</div>
+    </div>
+    <div class="stat-cell sc-red">
+      <div class="stat-label">Markets</div>
+      <div class="stat-val" style="color:var(--cream)">ES/NQ</div>
+      <div class="stat-sub">MES/MNQ</div>
+    </div>
+    <div class="stat-cell sc-blue">
+      <div class="stat-label">Timeframes</div>
+      <div class="stat-val" style="color:var(--blue)">5-15-60</div>
+      <div class="stat-sub">Minutes</div>
+    </div>
+    <div class="stat-cell sc-amber">
+      <div class="stat-label">Language</div>
+      <div class="stat-val" style="color:#C9A84C">v5</div>
+      <div class="stat-sub">Pine Script</div>
+    </div>
+  </div>
+</div>
+
+<!-- CORE PHILOSOPHY -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow fade-up">Core Philosophy</div>
+    <h2 class="section-title fade-up">Momentum Precedes Price</h2>
+    <p class="section-sub fade-up">The foundational principle behind Linda Raschke's 12 Rules — and the engine that drives this implementation.</p>
+
+    <div class="brooks-box fade-up">
+      <div class="brooks-label">Linda Raschke — Trading Sardine</div>
+      <div class="brooks-quote">"The first pullback after a new high or low offers the highest-conviction entry point. Momentum precedes price — and the market always tells you where it wants to go before it gets there."</div>
+      <div class="brooks-attr">— Linda Raschke · Street Smarts</div>
+    </div>
+
+    <div class="analysis-grid fade-up">
+      <div class="analysis-card">
+        <div class="analysis-head"><div class="analysis-dot" style="background:var(--green)"></div><div class="analysis-title" style="color:var(--green)">What This Strategy Does</div></div>
+        <div class="analysis-body">
+          <div class="analysis-item"><span class="ai-icon" style="color:var(--green)">✓</span><div><strong>Automates Raschke's rules:</strong> Converts the 12 Rules from discretionary principles into coded, visual signals on the chart — removing ambiguity from execution.</div></div>
+          <div class="analysis-item"><span class="ai-icon" style="color:var(--green)">✓</span><div><strong>Pullback identification:</strong> Detects the first touch of the 20 EMA following a fresh 20-period high or low — the highest-probability entry per Raschke's Rule 1.</div></div>
+          <div class="analysis-item"><span class="ai-icon" style="color:var(--green)">✓</span><div><strong>Exhaustion detection:</strong> Identifies momentum climax bars based on ATR volatility and volume spikes, providing automated exit signals before mean reversion (Rule 12).</div></div>
+        </div>
+      </div>
+      <div class="analysis-card">
+        <div class="analysis-head"><div class="analysis-dot" style="background:var(--gold)"></div><div class="analysis-title" style="color:var(--gold)">SireMammat Additions</div></div>
+        <div class="analysis-body">
+          <div class="analysis-item"><span class="ai-icon" style="color:var(--gold)">+</span><div><strong>Integrated dashboard:</strong> Real-time table tracking technical health — Last Hour Truth, Trend Status, Morning Reversal alerts — all in one view.</div></div>
+          <div class="analysis-item"><span class="ai-icon" style="color:var(--gold)">+</span><div><strong>9-point positioning:</strong> Users can customize the dashboard anchor from 9 positions on the chart, ensuring it never obstructs price action.</div></div>
+          <div class="analysis-item"><span class="ai-icon" style="color:var(--gold)">+</span><div><strong>Session awareness:</strong> Built-in RTH filtering and session-specific logic for futures markets (ES, NQ, MES, MNQ).</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="3="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="2" height="38" rx="2" strokeround"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<!-- 12 RULES BREAKDOWN -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow fade-up">The 12 Rules</div>
+    <h2 class="section-title fade-up">Complete Rule Breakdown</h2>
+    <p class="section-sub fade-up">All 12 rules from Linda Raschke's methodology — with implementation status for the SireMammat edition.</p>
+
+    <div class="rule-card-grid fade-up">
+      <div class="rule-cell">
+        <div class="rule-num">01</div>
+        <div class="rule-label">Rule 1</div>
+        <div class="rule-title">The Pullback</div>
+        <div class="rule-desc">Identifies the <strong>first touch of the 20 EMA</strong> following a fresh 20-period high or low. This is the highest-conviction entry point — momentum has already established direction, and the pullback offers a low-risk entry.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">02</div>
+        <div class="rule-label">Rule 2</div>
+        <div class="rule-title">Trend Identification</div>
+        <div class="rule-desc">Trade in the direction of the prevailing trend. The 20 EMA slope and price position relative to it determine trend state. <strong>Avoid counter-trend entries</strong> unless exhaustion signals confirm.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">03</div>
+        <div class="rule-label">Rule 3</div>
+        <div class="rule-title">Morning Reversal</div>
+        <div class="rule-desc">Alerts when early-session volatility suggests a <strong>reversal of the opening gap</strong>. The first 30 minutes often trap early movers — the reversal signal catches the real move.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">04</div>
+        <div class="rule-label">Rule 4</div>
+        <div class="rule-title">Volume Confirmation</div>
+        <div class="rule-desc">Validates signals with volume analysis. A pullback to the 20 EMA on <strong>declining volume</strong> is higher quality than one on rising volume — it shows the pullback is a pause, not a reversal.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">05</div>
+        <div class="rule-label">Rule 5</div>
+        <div class="rule-title">Previous Day High</div>
+        <div class="rule-desc">Tracks price relative to the <strong>Previous Day's High</strong>. Sustained trading above PDH confirms bullish bias. Rejection at PDH is a short signal.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">06</div>
+        <div class="rule-label">Rule 6</div>
+        <div class="rule-title">Previous Day Low</div>
+        <div class="rule-desc">Tracks price relative to the <strong>Previous Day's Low</strong>. Sustained trading below PDL confirms bearish bias. Bounce off PDL is a long signal.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">07</div>
+        <div class="rule-label">Rule 7</div>
+        <div class="rule-title">The Last Hour</div>
+        <div class="rule-desc">Analyzes price action in the <strong>final hour of the session</strong> to determine if "Smart Money" is marking positions for the next day's follow-through. Direction in the last 60 minutes often carries into the next session.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">08</div>
+        <div class="rule-label">Rule 8</div>
+        <div class="rule-title">Range Expansion</div>
+        <div class="rule-desc">Detects when the current bar's range <strong>exceeds 1.5× the average bar range</strong>. Range expansion after a pullback signals trend resumption. Range expansion at exhaustion signals reversal.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">09</div>
+        <div class="rule-label">Rule 9</div>
+        <div class="rule-title">Consecutive Bars</div>
+        <div class="rule-desc">Counts consecutive bullish or bearish closes. <strong>3+ consecutive bars</strong> in one direction signals strong momentum — but 5+ bars warns of exhaustion and potential reversal.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">10</div>
+        <div class="rule-label">Rule 10</div>
+        <div class="rule-title">Inside Bar Breakout</div>
+        <div class="rule-desc">Identifies inside bars and tracks breakout direction. An inside bar after a trend move is a <strong>coiling pattern</strong> — the breakout direction typically continues the prevailing trend.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">11</div>
+        <div class="rule-label">Rule 11</div>
+        <div class="rule-title">Time-Based Exits</div>
+        <div class="rule-desc">Implements time-based exit logic. Trades that haven't reached their target within a <strong>defined number of bars</strong> are closed to avoid dead money and capital drag.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+      <div class="rule-cell">
+        <div class="rule-num">12</div>
+        <div class="rule-label">Rule 12</div>
+        <div class="rule-title">Momentum Climax</div>
+        <div class="rule-desc">Detects exhaustion bars based on <strong>ATR volatility and volume spikes</strong>. When momentum reaches extreme levels, the strategy provides an automated exit signal before mean reversion.</div>
+        <div class="rule-status status-coded">● CODED</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<!-- INTEGRATED DASHBOARD -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow fade-up">Features</div>
+    <h2 class="section-title fade-up">Integrated Dashboard</h2>
+    <p class="section-sub fade-up">The SireMammat Edition includes a real-time table tracking technical health across three key dimensions.</p>
+
+    <div class="bar-grid fade-up">
+      <div class="bar-cell">
+        <div class="bar-num">01</div>
+        <div class="bar-name">Last Hour Truth</div>
+        <div class="bar-title">Closing Session Sentiment</div>
+        <div class="bar-desc">Real-time analysis of the final hour's price action. Tracks whether <strong>"Smart Money" is accumulating or distributing</strong> into the close. Direction in the last 60 minutes often carries into the next session — this metric tells you which side is winning the closing battle.</div>
+      </div>
+      <div class="bar-cell">
+        <div class="bar-num">02</div>
+        <div class="bar-name">Trend Status</div>
+        <div class="bar-title">PDH/PDL Tracker</div>
+        <div class="bar-desc">Tracks price relative to the <strong>Previous Day's High and Low</strong> (Rules 5 &amp; 6). Displays whether price is sustained above PDH (bullish), below PDL (bearish), or within the range (neutral). A clean read on trend context at a glance.</div>
+      </div>
+      <div class="bar-cell">
+        <div class="bar-num">03</div>
+        <div class="bar-name">Morning Reversal</div>
+        <div class="bar-title">Gap Reversal Alert</div>
+        <div class="bar-desc">Alerts when early-session volatility suggests a <strong>reversal of the opening gap</strong> (Rule 3). The first 30 minutes often trap early movers — this signal catches the real move when the gap fill fails or succeeds.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<!-- KEY CONCEPTS -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow fade-up">Concepts</div>
+    <h2 class="section-title fade-up">Key Concepts</h2>
+    <p class="section-sub fade-up">The four foundational ideas behind the Raschke 12 Rules implementation.</p>
+
+    <div class="concepts-grid fade-up">
+      <div class="concept-cell">
+        <div class="concept-name">Entry Logic</div>
+        <div class="concept-title">First Pullback to 20 EMA</div>
+        <div class="concept-desc">The core entry signal. After a fresh 20-period high or low, the first pullback to the 20 EMA offers the highest-conviction entry. Momentum has already established direction, and the pullback provides a low-risk, high-reward entry with a defined stop below the EMA.</div>
+      </div>
+      <div class="concept-cell">
+        <div class="concept-name">Exit Logic</div>
+        <div class="concept-title">Momentum Climax Detection</div>
+        <div class="concept-desc">When ATR-based volatility spikes and volume surges simultaneously, the move is likely exhausting. Rule 12 detects these climax bars and signals an automated exit — capturing profits before mean reversion takes hold.</div>
+      </div>
+      <div class="concept-cell">
+        <div class="concept-name">Session Logic</div>
+        <div class="concept-title">Last Hour Smart Money</div>
+        <div class="concept-desc">The final hour of the session reveals institutional intent. If Smart Money is buying into the close, expect follow-through the next day. If they're selling, expect weakness. Rule 7 tracks this behavior in real time.</div>
+      </div>
+      <div class="concept-cell">
+        <div class="concept-name">Risk Logic</div>
+        <div class="concept-title">Time-Based Exit Discipline</div>
+        <div class="concept-desc">Trades that haven't reached their target within a defined number of bars are closed automatically. This prevents dead money, reduces capital drag, and enforces the discipline of cutting trades that aren't working — regardless of P&L.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<!-- RATING -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow fade-up">Verdict</div>
+    <h2 class="section-title fade-up">Implementation Rating</h2>
+
+    <div class="rating-box fade-up">
+      <div class="rating-grade">A</div>
+      <div>
+        <div class="rating-label">Overall Grade</div>
+        <div class="rating-title">Complete Raschke Implementation</div>
+        <div class="rating-desc">All 12 rules are coded and operational. The integrated dashboard provides real-time context across session sentiment, trend state, and morning reversal signals. The 9-point positioning system ensures the dashboard never obstructs price action. The SireMammat Edition transforms Linda Raschke's discretionary principles into a systematic, visual, and repeatable trading framework for futures markets.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<div class="philosophy">
+  <blockquote>
+    "<em>Momentum precedes price.</em> The first pullback after a new high or low offers the <em>highest-conviction entry point</em>."
+  </blockquote>
+  <cite>— Linda Raschke · Street Smarts</cite>
+</div>
+
+<!-- LESSONS -->
+<section>
+  <div class="section-inner">
+    <div class="section-eyebrow fade-up">Takeaways</div>
+    <h2 class="section-title fade-up">Key Lessons</h2>
+    <p class="section-sub fade-up">Five principles from the Raschke methodology that apply to every trade.</p>
+
+    <div class="lessons-grid fade-up">
+      <div class="lesson-card">
+        <div class="lesson-num">01</div>
+        <div class="lesson-title">Trade the first pullback</div>
+        <div class="lesson-desc">The first touch of the 20 EMA after a new high or low is the highest-probability entry. Don't wait for the second or third — the first has the most fuel.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">02</div>
+        <div class="lesson-title">Watch the last hour</div>
+        <div class="lesson-desc">Smart Money reveals intent in the final 60 minutes. Direction into the close often carries into the next session. Trust what the close tells you.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">03</div>
+        <div class="lesson-title">Respect exhaustion</div>
+        <div class="lesson-desc">Momentum climax bars are exit signals, not entry signals. When ATR spikes and volume surges, take profits — don't chase.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">04</div>
+        <div class="lesson-title">Use time-based exits</div>
+        <div class="lesson-desc">If a trade hasn't worked within the expected timeframe, close it. Dead money is a cost — cut trades that aren't performing.</div>
+      </div>
+      <div class="lesson-card">
+        <div class="lesson-num">05</div>
+        <div class="lesson-title">Confirm with volume</div>
+        <div class="lesson-desc">A pullback on declining volume is higher quality than one on rising volume. Volume confirms that the pullback is a pause, not a reversal.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <a href="https://siremammat.neocities.org/indicators/index.html" class="cta-btn">← Back to Indicators</a>
+  <div class="cta-sub">Raschke 12 Rules · SireMammat Edition · Pine Script v5</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">
+        <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+        <div class="footer-brand-name">SireMammat</div>
+      </div>
+      <div class="footer-tagline">Free futures trading education built on Al Brooks price action methodology. ES · NQ · MES · MNQ</div>
+    </div>
+    <div class="footer-links">
+      <div>
+        <div class="footer-col-title">Education</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/Learn/index.html">Learn Price Action</a></li>
+          <li><a href="https://siremammat.neocities.org/Playbooks/index.html">Playbooks</a></li>
+          <li><a href="https://siremammat.neocities.org/Strategies/index.html">Strategies</a></li>
+          <li><a href="https://siremammat.neocities.org/TradePlan/trading-plan.html">Trading Plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Analysis</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/casestudies/index.html">Case Studies</a></li>
+          <li><a href="https://siremammat.neocities.org/Analysis/analysis.html">Market Analysis</a></li>
+          <li><a href="https://siremammat.neocities.org/Tools/tools.html">Tools &amp; Brokers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Indicators</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/indicators/index.html">All Indicators</a></li>
+          <li><a href="https://siremammat.neocities.org/indicators/Sire-SF/sire-sf.html">Sire SF</a></li>
+          <li><a href="https://siremammat.neocities.org/indicators/SireGLCore/sire-gl.html">Sire GL Core</a></li>
+          <li><a href="https://siremammat.neocities.org/indicators/TD9/TD-Seq.html">TD Sequential</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Connect</div>
+        <ul class="footer-col-links">
+          <li><a href="https://youtube.com/@SireMammat">YouTube</a></li>
+          <li><a href="https://x.com/SireMammat">X / Twitter</a></li>
+          <li><a href="https://instagram.com/SireMammat">Instagram</a></li>
+          <li><a href="mailto:siremammat@gmail.com">Email</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2025 Sire Mammat &middot; All rights reserved</div>
+    <div class="footer-disclaimer">Trading involves substantial risk of loss. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => { if (el.isIntersecting) { el.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+Context :
+Price had rallied from 6,811 all the way to 6,856 
+through the pre-market session without any meaningful pullback.
+TD9 at the overnight high = maximum extension + exhaustion. 
+The confluence of ONH resistance + TD9 = very high conviction short.
+
+Setup 1 — TD9 Short (Bars 62–70)
+
+Bar 9 (cyan) fires at the overnight high 6,856.50 
+Entry short 1 tick below bar 66 (signal bar)  - Filled at Bar 67
+STOP above bar 66
+Using Bar 66 to MeasureMove down targeting 1:2.5R
+Exit at bar 70 gives 55 ticks
+
+Setup 2
+
+Context :
+Double-bottom structure (bars 79/80 
+= first low, base held as higher low)
+Cumulative delta turned strongly bullish 
+through bars 82–86. Price reclaimed the pdSettlement 
+level on bar 87 confirming buyers back in control
+Bar 80/81 is a High 2 Buy Signal
+Entry long 1 tick above 81 
+STOP below bar 80 low just above VWAP
+Using Bar 80/81 to Measure Move Up
+Exit at the bar 88 gives — 120 ticks
+
+Lessons Learn: 
+Never move the STOP and 
+trust the process even as if the move was going against you.
+You accept the risk when you enter.

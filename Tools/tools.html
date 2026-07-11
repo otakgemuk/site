@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools &amp; Brokers — SireMammat</title>
+<meta name="description" content="The platforms, tools, and prop firms used by SireMammat — charting, execution, journaling, and evaluation. Honest reviews, no paid promotions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#0E0A04; --dark2:#16100A; --dark3:#1E1508; --dark4:#2C2010;
+  --gold:#B87333; --gold-lt:#E8C46A; --gold-dim:#6B4420;
+  --cream:#F5EDD8; --cream2:#EDE0C4; --muted:#8C7355; --muted2:#5C4A35;
+  --red:#C04030; --green:#3A7A50; --blue:#6B8EC4;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:4px; --radius-lg:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--cream);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden;}
+a{color:var(--gold-lt);text-decoration:none;}
+a:hover{color:var(--gold);}
+ul{list-style:none;}
+
+.ticker-bar{background:var(--dark2);border-bottom:1px solid var(--gold-dim);overflow:hidden;height:32px;display:flex;align-items:center;}
+.ticker-track{display:flex;white-space:nowrap;animation:ticker 30s linear infinite;}
+.ticker-item{font-family:var(--font-mono);font-size:11px;padding:0 28px;color:var(--muted);letter-spacing:.04em;border-right:1px solid var(--dark4);display:flex;align-items:center;gap:8px;height:32px;}
+.ticker-item .sym{color:var(--cream2);font-weight:500;}
+.ticker-item .up{color:var(--green);}
+.ticker-item .dn{color:var(--red);}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(14,10,4,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--dark4);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:64px;}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.nav-logo-text{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--cream);letter-spacing:.02em;line-height:1;}
+.nav-logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-top:2px;}
+.nav-links{display:flex;gap:2rem;align-items:center;}
+.nav-links a{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-lt);}
+.nav-cta{color:var(--dark)!important;background:var(--gold);padding:8px 18px;border-radius:var(--radius);transition:background .2s;}
+.nav-cta:hover{background:var(--gold-lt)!important;color:var(--dark)!important;}
+
+.page-wrap{position:relative;}
+.page-wrap::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,115,51,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,115,51,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;mask-image:radial-gradient(ellipse at 60% 30%,black 20%,transparent 70%);}
+
+.page-header{position:relative;z-index:1;padding:5rem 3rem 3rem;max-width:1100px;margin:0 auto;}
+.page-eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.page-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold);}
+.page-title{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.05;letter-spacing:.02em;margin-bottom:.8rem;}
+.page-title em{color:var(--gold-lt);font-style:italic;}
+.page-sub{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:640px;margin-bottom:.6rem;}
+.page-note{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.04em;padding:.5rem .9rem;border-left:2px solid var(--dark4);display:inline-block;margin-top:.8rem;}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1100px;margin:0 auto 2.5rem;padding:0 3rem;position:relative;z-index:1;}
+.stat-item{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);padding:1.1rem 1.3rem;transition:border-color .2s;}
+.stat-item:hover{border-color:var(--gold-dim);}
+.stat-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.stat-num{font-family:var(--font-display);font-size:1.9rem;font-weight:600;color:var(--gold-lt);line-height:1;}
+.stat-sub{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:.3rem;}
+
+.filter-wrap{max-width:1100px;margin:0 auto;padding:0 3rem 1.5rem;position:relative;z-index:1;}
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;}
+.filter-btn{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .9rem;border-radius:40px;border:1px solid var(--dark4);background:none;color:var(--muted);cursor:pointer;transition:all .18s;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold-lt);background:rgba(184,115,51,.06);}
+
+.tools-wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 3rem 5rem;}
+.section-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding-bottom:.6rem;border-bottom:1px solid var(--dark4);margin:0 0 1.2rem;}
+.tools-grid{display:flex;flex-direction:column;gap:1.2rem;}
+
+.tool-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .2s;}
+.tool-card:hover{border-color:rgba(184,115,51,.25);}
+.tool-card.featured{border-left:3px solid var(--gold);}
+.tool-inner{padding:1.6rem 2rem;}
+.tool-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:.8rem;}
+.tool-name-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.tool-name{font-family:var(--font-display);font-size:1.4rem;font-weight:600;letter-spacing:.02em;}
+.tool-cat{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .65rem;border-radius:var(--radius);border:1px solid var(--dark4);color:var(--muted);}
+.tool-cat.prop{border-color:var(--gold-dim);color:var(--gold);}
+.tool-cat.charting{border-color:rgba(107,142,196,.4);color:var(--blue);}
+.tool-cat.journaling{border-color:rgba(58,122,80,.4);color:var(--green);}
+.tool-cat.execution{border-color:var(--gold-dim);color:var(--gold-lt);}
+.tool-cat.education{border-color:var(--gold-dim);color:var(--gold);}
+.tool-meta{display:flex;align-items:center;gap:.75rem;}
+.stars{font-size:.8rem;color:var(--gold);letter-spacing:2px;}
+.use-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .65rem;border-radius:var(--radius);background:rgba(58,122,80,.08);border:1px solid rgba(58,122,80,.25);color:var(--green);}
+.tool-desc{font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem;}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.3rem;}
+.pc-col h4{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;}
+.pc-col.pros h4{color:var(--green);}
+.pc-col.cons h4{color:var(--red);}
+.pc-item{display:flex;gap:.5rem;font-size:.83rem;color:var(--muted);line-height:1.55;margin-bottom:.3rem;}
+.pc-item .mark{flex-shrink:0;margin-top:2px;}
+.pros .pc-item .mark{color:var(--green);}
+.cons .pc-item .mark{color:var(--red);}
+.tool-footer{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--dark4);}
+.code-chip{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .85rem;border-radius:var(--radius);background:rgba(184,115,51,.07);border:1px solid var(--gold-dim);color:var(--gold);}
+.aff-note{font-family:var(--font-mono);font-size:9px;color:var(--muted2);}
+.visit-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--gold);color:var(--dark);border-radius:var(--radius);padding:.5rem 1.2rem;font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .18s;margin-left:auto;}
+.visit-btn:hover{background:var(--gold-lt);color:var(--dark);}
+
+.divider{display:flex;align-items:center;gap:1rem;padding:1.5rem 3rem;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.divider-line{flex:1;height:1px;background:var(--dark4);}
+
+footer{background:var(--dark2);border-top:1px solid var(--dark4);padding:3rem 3rem 2rem;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:2.5rem;}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:.8rem;}
+.footer-brand-name{font-family:var(--font-display);font-size:1.3rem;font-weight:500;color:var(--cream);}
+.footer-tagline{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.06em;max-width:300px;line-height:1.6;}
+.footer-links{display:flex;gap:3rem;}
+.footer-col-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.footer-col-links{display:flex;flex-direction:column;gap:.6rem;}
+.footer-col-links a{font-family:var(--font-mono);font-size:11px;color:var(--muted);transition:color .2s;}
+.footer-col-links a:hover{color:var(--gold-lt);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;border-top:1px solid var(--dark4);}
+.footer-copy{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.04em;}
+.footer-disclaimer{font-family:var(--font-mono);font-size:10px;color:var(--muted2);max-width:420px;text-align:right;line-height:1.6;}
+
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  nav{padding:0 1.5rem;} .nav-links{display:none;}
+  .page-header,.stats-row,.filter-wrap,.tools-wrap,.divider{padding-left:1.5rem;padding-right:1.5rem;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .pros-cons{grid-template-columns:1fr;}
+  .footer-top{flex-direction:column;gap:2rem;} .footer-links{flex-wrap:wrap;gap:2rem;}
+  .footer-bottom{flex-direction:column;gap:1rem;text-align:center;} .footer-disclaimer{text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="sym">ES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">NQ</span> 20,934.00 <span class="up">+67.25</span></div>
+    <div class="ticker-item"><span class="sym">MES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">MNQ</span> 20,934.00 <span class="dn">−18.75</span></div>
+    <div class="ticker-item"><span class="sym">VIX</span> 18.24 <span class="dn">−0.84</span></div>
+    <div class="ticker-item"><span class="sym">DXY</span> 104.32 <span class="up">+0.21</span></div>
+    <div class="ticker-item"><span class="sym">GOLD</span> 2,341.40 <span class="up">+8.60</span></div>
+    <div class="ticker-item"><span class="sym">10Y</span> 4.328% <span class="dn">−0.012</span></div>
+    <div class="ticker-item"><span class="sym">ES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">NQ</span> 20,934.00 <span class="up">+67.25</span></div>
+    <div class="ticker-item"><span class="sym">MES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">MNQ</span> 20,934.00 <span class="dn">−18.75</span></div>
+    <div class="ticker-item"><span class="sym">VIX</span> 18.24 <span class="dn">−0.84</span></div>
+    <div class="ticker-item"><span class="sym">DXY</span> 104.32 <span class="up">+0.21</span></div>
+    <div class="ticker-item"><span class="sym">GOLD</span> 2,341.40 <span class="up">+8.60</span></div>
+    <div class="ticker-item"><span class="sym">10Y</span> 4.328% <span class="dn">−0.012</span></div>
+  </div>
+</div>
+
+<nav>
+  <a href="https://siremammat.neocities.org/" class="nav-logo">
+    <svg width="28" height="36" viewBox="0 0 56 72" fill="none">
+      <rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/>
+      <line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="8" cy="20" r="3" fill="#B87333"/>
+      <circle cx="28" cy="22" r="3" fill="#B87333"/>
+      <circle cx="48" cy="20" r="3" fill="#B87333"/>
+    </svg>
+    <div>
+      <div class="nav-logo-text">SireMammat</div>
+      <div class="nav-logo-sub">Free Futures Education</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://siremammat.neocities.org/#hub">Hub</a></li>
+    <li><a href="https://siremammat.neocities.org/#about">About</a></li>
+    <li><a href="https://siremammat.neocities.org/indicators/">Indicators</a></li>
+    <li><a href="https://siremammat.neocities.org/Tools/tools" class="active">Tools</a></li>
+    <li><a href="https://siremammat.neocities.org/#contact">Contact</a></li>
+    <li><a href="https://youtube.com/@SireMammat" class="nav-cta" target="_blank" rel="noopener">Subscribe →</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header fade-up">
+    <div class="page-eyebrow">Recommended Infrastructure</div>
+    <h1 class="page-title">Tools &amp; <em>Brokers</em></h1>
+    <p class="page-sub">The platforms, tools, and prop firms I actually use in my daily trading operation. Charting, execution, journaling, and evaluation — selected on merit, not sponsorship.</p>
+    <span class="page-note">No paid promotions. Affiliate codes may be present — they cost you nothing and help keep this site free.</span>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item fade-up"><div class="stat-lbl">Tools tracked</div><div class="stat-num">10</div><div class="stat-sub">All categories</div></div>
+    <div class="stat-item fade-up"><div class="stat-lbl">Used daily</div><div class="stat-num">4</div><div class="stat-sub">Primary stack</div></div>
+    <div class="stat-item fade-up"><div class="stat-lbl">Avg rating</div><div class="stat-num">4.3</div><div class="stat-sub">Out of 5</div></div>
+    <div class="stat-item fade-up"><div class="stat-lbl">Free tiers</div><div class="stat-num">3</div><div class="stat-sub">Accessible options</div></div>
+  </div>
+
+  <div class="filter-wrap">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterTools('all',this)">All</button>
+      <button class="filter-btn" onclick="filterTools('charting',this)">Charting</button>
+      <button class="filter-btn" onclick="filterTools('execution',this)">Execution</button>
+      <button class="filter-btn" onclick="filterTools('journaling',this)">Journaling</button>
+      <button class="filter-btn" onclick="filterTools('prop',this)">Prop Firms</button>
+    </div>
+  </div>
+
+  <div class="tools-wrap">
+    <div class="section-lbl">Charting &amp; Execution</div>
+    <div class="tools-grid">
+
+      <div class="tool-card featured fade-up" data-cat="charting" id="tool-tradingview">
+        <div class="tool-inner">
+          <div class="tool-top">
+            <div class="tool-name-row">
+              <span class="tool-name">TradingView</span>
+              <span class="tool-cat charting">Charting</span>
+            </div>
+            <div class="tool-meta"><span class="stars">★★★★★</span><span class="use-badge">Primary</span></div>
+          </div>
+          <p class="tool-desc">Primary charting platform for all price action analysis, indicator development, and strategy scripts. Pine Script environment is where GreenLight Pro and SireTactics indicators live. Unmatched for multi-timeframe ES/NQ work.</p>
+          <div class="pros-cons">
+            <div class="pc-col pros"><h4>Pros</h4>
+              <div class="pc-item"><span class="mark">✓</span>Best multi-timeframe layout for futures</div>
+              <div class="pc-item"><span class="mark">✓</span>Pine Script for custom indicators</div>
+              <div class="pc-item"><span class="mark">✓</span>Free tier genuinely usable</div>
+              <div class="pc-item"><span class="mark">✓</span>Active community and idea sharing</div>
+            </div>
+            <div class="pc-col cons"><h4>Cons</h4>
+              <div class="pc-item"><span class="mark">✗</span>Charting only — not an execution platform</div>
+              <div class="pc-item"><span class="mark">✗</span>Pro plan needed for more than 3 indicators</div>
+            </div>
+          </div>
+          <div class="tool-footer">
+            <span class="aff-note">No affiliate code</span>
+            <a href="https://tradingview.com" target="_blank" rel="noopener" class="visit-btn">Visit TradingView →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card fade-up" data-cat="execution" id="tool-ninjatrader">
+        <div class="tool-inner">
+          <div class="tool-top">
+            <div class="tool-name-row">
+              <span class="tool-name">NinjaTrader</span>
+              <span class="tool-cat execution">Execution</span>
+            </div>
+            <div class="tool-meta"><span class="stars">★★★★★</span><span class="use-badge">Primary</span></div>
+          </div>
+          <p class="tool-desc">Execution platform for futures. DOM trading, advanced order types, and deep market depth. The SuperDOM is unmatched for fast scalp execution on ES and NQ. Free sim trading available indefinitely.</p>
+          <div class="pros-cons">
+            <div class="pc-col pros"><h4>Pros</h4>
+              <div class="pc-item"><span class="mark">✓</span>Best DOM for futures execution</div>
+              <div class="pc-item"><span class="mark">✓</span>Free sim trading indefinitely</div>
+              <div class="pc-item"><span class="mark">✓</span>Advanced order types and automation</div>
+            </div>
+            <div class="pc-col cons"><h4>Cons</h4>
+              <div class="pc-item"><span class="mark">✗</span>Windows only — no native Mac</div>
+              <div class="pc-item"><span class="mark">✗</span>Learning curve on order entry setup</div>
+            </div>
+          </div>
+          <div class="tool-footer">
+            <span class="aff-note">No affiliate code</span>
+            <a href="https://ninjatrader.com" target="_blank" rel="noopener" class="visit-btn">Visit NinjaTrader →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card fade-up" data-cat="journaling" id="tool-tradervue">
+        <div class="tool-inner">
+          <div class="tool-top">
+            <div class="tool-name-row">
+              <span class="tool-name">TraderVue</span>
+              <span class="tool-cat journaling">Journaling</span>
+            </div>
+            <div class="tool-meta"><span class="stars">★★★★★</span><span class="use-badge">Primary</span></div>
+          </div>
+          <p class="tool-desc">Trade journaling and analytics. Auto-imports from most brokers. Forces the data discipline that separates profitable traders from hopeful ones — the weekly stats breakdown is essential for identifying patterns in your own execution.</p>
+          <div class="pros-cons">
+            <div class="pc-col pros"><h4>Pros</h4>
+              <div class="pc-item"><span class="mark">✓</span>Auto-import from most platforms</div>
+              <div class="pc-item"><span class="mark">✓</span>Deep analytics on win rate by setup</div>
+              <div class="pc-item"><span class="mark">✓</span>Free tier for low-volume traders</div>
+            </div>
+            <div class="pc-col cons"><h4>Cons</h4>
+              <div class="pc-item"><span class="mark">✗</span>UI feels dated compared to newer tools</div>
+              <div class="pc-item"><span class="mark">✗</span>Silver plan needed for full analytics</div>
+            </div>
+          </div>
+          <div class="tool-footer">
+            <span class="aff-note">No affiliate code</span>
+            <a href="https://tradervue.com" target="_blank" rel="noopener" class="visit-btn">Visit TraderVue →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-lbl" style="margin-top:2.5rem;">Prop Firms</div>
+    <div class="tools-grid">
+
+      <div class="tool-card featured fade-up" data-cat="prop" id="tool-tradeday">
+        <div class="tool-inner">
+          <div class="tool-top">
+            <div class="tool-name-row">
+              <span class="tool-name">TradeDay</span>
+              <span class="tool-cat prop">Prop Firm</span>
+            </div>
+            <div class="tool-meta"><span class="stars">★★★★☆</span><span class="use-badge">Active</span></div>
+          </div>
+          <p class="tool-desc">Static drawdown model, no activation fees. One of the cleanest eval structures in the industry — the drawdown never moves, which removes a major source of psychological friction during the eval process.</p>
+          <div class="pros-cons">
+            <div class="pc-col pros"><h4>Pros</h4>
+              <div class="pc-item"><span class="mark">✓</span>Static trailing drawdown</div>
+              <div class="pc-item"><span class="mark">✓</span>No activation fee on most plans</div>
+              <div class="pc-item"><span class="mark">✓</span>Consistent payout history</div>
+              <div class="pc-item"><span class="mark">✓</span>No minimum trading days</div>
+            </div>
+            <div class="pc-col cons"><h4>Cons</h4>
+              <div class="pc-item"><span class="mark">✗</span>Cheapest plan uses trailing drawdown</div>
+              <div class="pc-item"><span class="mark">✗</span>Plans priced higher than some competitors</div>
+            </div>
+          </div>
+          <div class="tool-footer">
+            <span class="code-chip">Code: MOT</span>
+            <span class="aff-note">Affiliate link</span>
+            <a href="https://members.tradeday.com/membership-plans-pricing?a_aid=MOT" target="_blank" rel="noopener" class="visit-btn">Visit TradeDay →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card fade-up" data-cat="prop" id="tool-lucid">
+        <div class="tool-inner">
+          <div class="tool-top">
+            <div class="tool-name-row">
+              <span class="tool-name">Lucid Trading</span>
+              <span class="tool-cat prop">Prop Firm</span>
+            </div>
+            <div class="tool-meta"><span class="stars">★★★★☆</span><span class="use-badge">Active</span></div>
+          </div>
+          <p class="tool-desc">Fast payout structure via LucidFlex — 15-minute payouts are the fastest in the industry. Clean dashboard and straightforward eval rules. Regular reset promotions make it one of the most cost-efficient firms to run multiple accounts on.</p>
+          <div class="pros-cons">
+            <div class="pc-col pros"><h4>Pros</h4>
+              <div class="pc-item"><span class="mark">✓</span>15-minute payouts via LucidFlex</div>
+              <div class="pc-item"><span class="mark">✓</span>Regular buy-3-get-1 reset deals</div>
+              <div class="pc-item"><span class="mark">✓</span>Simple, clean eval rules</div>
+            </div>
+            <div class="pc-col cons"><h4>Cons</h4>
+              <div class="pc-item"><span class="mark">✗</span>Consistency rule applies</div>
+              <div class="pc-item"><span class="mark">✗</span>Smaller account sizes than some competitors</div>
+            </div>
+          </div>
+          <div class="tool-footer">
+            <span class="code-chip">Code: MOT</span>
+            <span class="aff-note">Affiliate link</span>
+            <a href="https://lucidtrading.com/ref/mightyoxtrading/" target="_blank" rel="noopener" class="visit-btn">Visit Lucid →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card fade-up" data-cat="prop" id="tool-mffu">
+        <div class="tool-inner">
+          <div class="tool-top">
+            <div class="tool-name-row">
+              <span class="tool-name">MyFundedFutures</span>
+              <span class="tool-cat prop">Prop Firm</span>
+            </div>
+            <div class="tool-meta"><span class="stars">★★★★☆</span><span class="use-badge">Active</span></div>
+          </div>
+          <p class="tool-desc">One of the most established prop firms in the futures space. Rapid plans offer a fast path to funded status. Wide range of account sizes and a transparent payout history.</p>
+          <div class="pros-cons">
+            <div class="pc-col pros"><h4>Pros</h4>
+              <div class="pc-item"><span class="mark">✓</span>Established track record</div>
+              <div class="pc-item"><span class="mark">✓</span>Wide range of account sizes</div>
+              <div class="pc-item"><span class="mark">✓</span>Rapid eval path available</div>
+            </div>
+            <div class="pc-col cons"><h4>Cons</h4>
+              <div class="pc-item"><span class="mark">✗</span>Rules can change — always verify current terms</div>
+              <div class="pc-item"><span class="mark">✗</span>Higher concentration risk if over-reliant</div>
+            </div>
+          </div>
+          <div class="tool-footer">
+            <span class="code-chip">Code: MOT</span>
+            <span class="aff-note">Affiliate link</span>
+            <a href="https://myfundedfutures.com/?ref=66" target="_blank" rel="noopener" class="visit-btn">Visit MFFU →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+    <div class="divider-line"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">
+        <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+        <div class="footer-brand-name">SireMammat</div>
+      </div>
+      <div class="footer-tagline">Free futures trading education built on Al Brooks price action methodology. ES · NQ · MES · MNQ</div>
+    </div>
+    <div class="footer-links">
+      <div>
+        <div class="footer-col-title">Education</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/Learn/">Learn Price Action</a></li>
+          <li><a href="https://siremammat.neocities.org/Playbooks/">Playbooks</a></li>
+          <li><a href="https://siremammat.neocities.org/Strategies/">Strategies</a></li>
+          <li><a href="https://siremammat.neocities.org/TradePlan/trading-plan">Trading Plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Analysis</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/casestudies/">Case Studies</a></li>
+          <li><a href="https://siremammat.neocities.org/analysis/">Market Analysis</a></li>
+          <li><a href="https://siremammat.neocities.org/Tools/tools">Tools &amp; Brokers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Connect</div>
+        <ul class="footer-col-links">
+          <li><a href="https://youtube.com/@SireMammat" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="https://x.com/SireMammat" target="_blank" rel="noopener">X / Twitter</a></li>
+          <li><a href="https://instagram.com/SireMammat" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="mailto:siremammat@gmail.com">Email</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Sire Mammat · All rights reserved</div>
+    <div class="footer-disclaimer">Trading involves substantial risk of loss. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</div>
+  </div>
+</footer>
+
+<script>
+function filterTools(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tool-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+  });
+}
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brand_identity_system>
+    <identity>
+        <brand_name>SireMammat</brand_name> [cite: 2]
+        <tagline>Free futures trading education, built on Al Brooks methodology.</tagline> [cite: 4, 5]
+        <philosophies>
+            <framework>Purple Cow (Seth Godin Methodology)</framework> [cite: 6, 8]
+            <mission>Teaching the reading of price itself rather than selling signals.</mission> [cite: 13]
+            <radical_act>Providing premium education for free in a paid-course dominated space.</radical_act> [cite: 14, 15]
+            <accessibility>Making complex Al Brooks concepts ownable for anyone.</accessibility> [cite: 16, 17]
+        </philosophies>
+    </identity>
+
+    <symbolism>
+        <winning_mark>The Crowned Candle</winning_mark> [cite: 19, 21]
+        <visual_description>A price action candle with a three-point crown on top.</visual_description> [cite: 48, 56]
+        <components>
+            <component name="Candle">
+                <meaning>The universal symbol of price action and market memory.</meaning> [cite: 49, 50]
+            </component>
+            <component name="Crown">
+                <meaning>Mastery, royalty, and authority without arrogance.</meaning> [cite: 51, 52]
+            </component>
+        </components>
+        <design_tests>
+            <test id="01" name="Remarkable">Prompts the question "What is that?" which serves as marketing.</test> [cite: 59, 61, 62]
+            <test id="02" name="Ownable">Not associated with any major trading competitors or Al Brooks students.</test> [cite: 64, 65, 66]
+            <test id="03" name="Monochrome">Works as a pure line drawing or stamp without needing color.</test> [cite: 68, 69, 70]
+            <test id="04" name="Describable">Explainable in one sentence: "A price candle with a crown."</test> [cite: 72, 73, 74]
+            <test id="05" name="Drawable">Rectangle + vertical line + 3-point crown; recallable after one week.</test> [cite: 76, 77, 78]
+        </design_tests>
+    </symbolism>
+
+    <deployment_strategy>
+        <social_media>
+            <youtube>Dark gold crown on black in top-left of thumbnails.</youtube> [cite: 81, 82]
+            <short_form>Watermark with crown mark in bottom-left of chart breakdowns.</short_form> [cite: 83, 84]
+        </social_media>
+        <technical_tools>
+            <tradingview_prefix>♛ SM ·</tradingview_prefix> [cite: 88, 102]
+            <pine_script_label>label.new() drops the crown mark on live charts.</pine_script_label> [cite: 103]
+        </technical_tools>
+        <content>
+            <watermark_opacity>30% on all content slides.</watermark_opacity> [cite: 100]
+            <presentation_divider>Centred crown as a section divider.</presentation_divider> [cite: 97, 101]
+        </content>
+    </deployment_strategy>
+
+    <operational_data>
+        <session date="04/03/26">
+            <playbook>PB-VolumeP</playbook>
+            <net_pnl currency="USD">+39.00</net_pnl>
+            <status>DISCIPLINED</status>
+        </session>
+        <session date="04/02/26">
+            <playbook>PB-SchoolRun</playbook>
+            <net_pnl currency="USD">+741.00</net_pnl>
+            <status>BLUEPRINT</status>
+        </session>
+        <session date="04/01/26">
+            <playbook>PB-20P / Tilt</playbook>
+            <net_pnl currency="USD">-3642.50</net_pnl>
+            <status>OVER-TRADE</status>
+        </session>
+    </operational_data>
+</brand_identity_system>

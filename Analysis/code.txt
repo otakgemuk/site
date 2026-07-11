@@ -1,0 +1,9 @@
+your-website/
+├── index.html (Main landing page)
+├── trade-cards/
+│   ├── 2026-04-08.html
+│   ├── 2026-04-07.html
+│   └── template.html
+├── upload-template.html
+├── upload-html.html
+└── upload-paste.html

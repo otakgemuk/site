@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Performance — Sire Mammat</title>
+<style>
+:root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--cream);font-family:var(--font-body),sans-serif;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,115,51,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(184,115,51,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+#pbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--green));width:0%;z-index:2000;}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(14,10,4,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--dark4);height:64px;display:flex;align-items:center;padding:0 3rem;justify-content:space-between;}
+.nav-back{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;white-space:nowrap;}
+.nav-back:hover{color:var(--gold-lt);}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-brand-name{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--cream);letter-spacing:0.02em;}
+.nav-brand-sub{font-family:var(--font-mono);font-size:0.55rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;}
+.nav-tag{font-family:var(--font-mono);font-size:0.6rem;background:rgba(184,115,51,0.1);color:var(--gold);border:1px solid rgba(184,115,51,0.25);border-radius:4px;padding:0.25rem 0.7rem;letter-spacing:1px;}
+.hero{position:relative;z-index:1;padding:100px 3rem 0;overflow:hidden;}
+.hero-ambient{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 80% 40%,rgba(240,180,41,0.05),transparent);}
+.hero-ghost{position:absolute;right:0;top:60px;font-family:var(--font-display);font-size:clamp(8rem,18vw,16rem);color:rgba(240,180,41,0.03);-webkit-text-stroke:1px rgba(240,180,41,0.05);line-height:1;pointer-events:none;user-select:none;letter-spacing:4px;}
+.hero-eye{font-family:var(--font-mono);font-size:0.62rem;color:var(--gold);letter-spacing:4px;text-transform:uppercase;display:flex;align-items:center;gap:0.8rem;margin-bottom:1.2rem;}
+.hero-eye::before{content:'';width:24px;height:1px;background:var(--gold);}
+.hero-title{font-family:var(--font-display);font-size:clamp(4rem,9vw,8rem);letter-spacing:3px;line-height:0.9;margin-bottom:1rem;}
+.hero-title span{color:var(--gold);}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:600px;line-height:1.8;font-weight:300;}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--dark4);border-top:1px solid var(--dark4);margin-top:3rem;}
+.sc{background:var(--dark2);padding:1.3rem 2rem;position:relative;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0.7;}
+.sl{font-family:var(--font-mono);font-size:0.55rem;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.4rem;}
+.sv{font-family:var(--font-display);font-size:1.9rem;letter-spacing:1px;line-height:1;}
+.ss{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;}
+.wrap{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:3rem 3rem 6rem;}
+.sec-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.sec-label{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;white-space:nowrap;}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--dark4),transparent);}
+.perf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:3rem;}
+.pc{background:var(--dark2);border:1px solid var(--dark4);border-radius:10px;padding:1.4rem;}
+.plbl{font-family:var(--font-mono);font-size:0.58rem;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.5rem;}
+.pval{font-family:var(--font-display);font-size:2.2rem;letter-spacing:1px;line-height:1;margin-bottom:0.3rem;}
+.psub{font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;}
+.eqr{display:flex;justify-content:space-between;align-items:center;padding:0.35rem 0;border-bottom:1px solid var(--dark4);font-size:0.8rem;}
+.eqr:last-child{border-bottom:none;}
+.mchart{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:0.8rem;}
+.bar{flex:1;border-radius:2px 2px 0 0;min-height:4px;}
+.filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.chip{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:1px;border:1px solid rgba(184,115,51,0.2);border-radius:4px;padding:0.3rem 0.8rem;cursor:pointer;transition:all 0.15s;background:none;color:var(--muted);}
+.chip:hover{border-color:var(--gold);color:var(--gold);}
+.chip.active{background:rgba(240,180,41,0.1);border-color:rgba(240,180,41,0.3);color:var(--gold);}
+.eod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.eod-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;transition:all 0.22s;display:flex;flex-direction:column;position:relative;}
+.eod-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity 0.2s;}
+.eod-card:hover{border-color:rgba(184,115,51,0.2);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+.eod-card:hover::before{opacity:1;}
+.eod-card.win::before,.eod-card:hover.win::before{background:var(--green);}
+.eod-card.loss::before,.eod-card:hover.loss::before{background:var(--red);}
+.eod-card.be::before,.eod-card:hover.be::before{background:var(--gold);}
+.eod-head{padding:1.1rem 1.3rem;border-bottom:1px solid var(--dark4);display:flex;justify-content:space-between;align-items:flex-start;}
+.eod-num{font-family:var(--font-mono);font-size:0.58rem;color:var(--muted2);letter-spacing:2px;margin-bottom:0.3rem;}
+.eod-date{font-family:var(--font-mono);font-size:0.62rem;color:var(--muted);}
+.badge{font-family:var(--font-mono);font-size:0.58rem;letter-spacing:1px;border-radius:4px;padding:0.22rem 0.6rem;border:1px solid;}
+.badge.win{color:var(--green);background:rgba(184,115,51,0.08);border-color:rgba(184,115,51,0.25);}
+.badge.loss{color:var(--red);background:rgba(240,82,82,0.08);border-color:rgba(240,82,82,0.25);}
+.badge.be{color:var(--gold);background:rgba(240,180,41,0.08);border-color:rgba(240,180,41,0.25);}
+.eod-body{padding:1.1rem 1.3rem;flex:1;}
+.eod-pts{font-family:var(--font-display);font-size:2rem;letter-spacing:1px;line-height:1;margin-bottom:0.2rem;}
+.eod-title{font-weight:600;font-size:0.86rem;margin-bottom:0.45rem;line-height:1.4;}
+.eod-note{font-size:0.77rem;color:var(--muted);line-height:1.6;}
+.eod-tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.7rem;}
+.tag{font-family:var(--font-mono);font-size:0.53rem;color:var(--muted2);letter-spacing:1px;background:var(--dark3);border:1px solid var(--dark4);border-radius:3px;padding:0.15rem 0.4rem;}
+.eod-foot{padding:0.75rem 1.3rem;border-top:1px solid var(--dark4);display:flex;justify-content:space-between;align-items:center;}
+.eod-tcount{font-family:var(--font-mono);font-size:0.56rem;color:var(--muted2);letter-spacing:1px;}
+.eod-open{font-family:var(--font-mono);font-size:0.58rem;color:var(--muted);letter-spacing:1px;transition:color 0.2s;}
+.eod-card:hover .eod-open{color:var(--gold);}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted);}
+.empty-state-icon{font-size:3rem;margin-bottom:1rem;opacity:0.4;}
+.empty-state-text{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;}
+footer{position:relative;z-index:1;border-top:1px solid var(--dark4);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;}
+.fbrand{font-family:var(--font-display);font-size:1.1rem;letter-spacing:2px;color:var(--gold);}
+.fcopy{font-family:var(--font-mono);font-size:0.6rem;color:var(--muted2);letter-spacing:1px;}
+@media(max-width:1000px){nav,.wrap,.hero{padding-left:1.5rem;padding-right:1.5rem;}.stat-strip,.perf-grid{grid-template-columns:1fr 1fr;}.eod-grid{grid-template-columns:1fr 1fr;}.hero-ghost{display:none;}footer{flex-direction:column;gap:1rem;text-align:center;}}
+@media(max-width:600px){.eod-grid,.perf-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="pbar"></div>
+<nav>
+  <a href="../index.html" class="nav-back">&#8592; Home</a>
+  <a href="../index.html" class="nav-brand">
+    <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+    <div><div class="nav-brand-name">SireMammat</div><div class="nav-brand-sub">Free Futures Education</div></div>
+  </a>
+  <span class="nav-tag">Performance</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-ambient"></div>
+  <div class="hero-ghost">PERF</div>
+  <div class="hero-eye">Daily Review &middot; Real Numbers &middot; Honest Logs</div>
+  <h1 class="hero-title">Performance<br><span>Dashboard</span></h1>
+  <p class="hero-sub">Every session logged. Every EOD reviewed. Real numbers — wins, losses, and the honest reasoning behind each day's execution.</p>
+  <div class="stat-strip">
+    <div class="sc"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);opacity:0.7"></div><div class="sl">Net Points YTD</div><div class="sv" style="color:var(--green)" id="stat-pts">—</div><div class="ss" id="stat-pts-sub">Loading...</div></div>
+    <div class="sc"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:0.7"></div><div class="sl">Win Rate</div><div class="sv" style="color:var(--gold)" id="stat-wr">—</div><div class="ss" id="stat-wr-sub">Loading...</div></div>
+    <div class="sc"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--blue);opacity:0.7"></div><div class="sl">Avg Points / Day</div><div class="sv" style="color:var(--blue)" id="stat-avg">—</div><div class="ss">Win days only</div></div>
+    <div class="sc"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--sub2);opacity:0.7"></div><div class="sl">Sessions Logged</div><div class="sv" style="color:var(--cream)" id="stat-count">—</div><div class="ss">EOD reviews</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec-head">
+    <span class="sec-label" style="color:var(--gold)">Overall Stats</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="perf-grid">
+    <div class="pc">
+      <div class="plbl">Net Points YTD</div>
+      <div class="pval" style="color:var(--green)" id="dash-pts">—</div>
+      <div class="psub">Across all instruments</div>
+      <div class="mchart" id="dash-chart"></div>
+    </div>
+    <div class="pc">
+      <div class="plbl">Win / Loss Record</div>
+      <div class="pval" id="dash-record" style="color:var(--gold)">—</div>
+      <div class="psub" id="dash-wr-sub">Loading...</div>
+      <div class="eqr"><span style="color:var(--sub)">Total sessions</span><span id="dash-total">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Win days</span><span style="color:var(--green)" id="dash-wins">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Loss days</span><span style="color:var(--red)" id="dash-losses">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Break-even</span><span id="dash-be">—</span></div>
+    </div>
+    <div class="pc">
+      <div class="plbl">Avg Win Day</div>
+      <div class="pval" style="color:var(--blue)" id="dash-avgw">—</div>
+      <div class="psub">Points on winning sessions</div>
+      <div class="eqr"><span style="color:var(--sub)">Best session</span><span style="color:var(--green)" id="dash-best">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Worst session</span><span style="color:var(--red)" id="dash-worst">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Avg loss day</span><span style="color:var(--red)" id="dash-avgl">—</span></div>
+    </div>
+    <div class="pc">
+      <div class="plbl">Total Trades</div>
+      <div class="pval" style="color:var(--cream)" id="dash-trades">—</div>
+      <div class="psub">Across all sessions</div>
+      <div class="eqr"><span style="color:var(--sub)">Trades won</span><span style="color:var(--green)" id="dash-tw">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Trades lost</span><span style="color:var(--red)" id="dash-tl">—</span></div>
+      <div class="eqr"><span style="color:var(--sub)">Trade win rate</span><span id="dash-twr">—</span></div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <span class="sec-label" style="color:var(--gold)">EOD Reviews</span>
+    <div class="sec-line"></div>
+    <a href="../EODReview/editor.html" style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--green);text-decoration:none;letter-spacing:1px;border:1px solid rgba(0,229,160,0.3);border-radius:4px;padding:0.3rem 0.8rem;transition:all 0.15s;white-space:nowrap" onmouseover="this.style.background='rgba(0,229,160,0.08)'" onmouseout="this.style.background=''">+ Add EOD Review</a>
+  </div>
+
+  <div class="filter-row">
+    <button class="chip active" onclick="filter('all',this)">All</button>
+    <button class="chip" onclick="filter('WIN',this)">Wins</button>
+    <button class="chip" onclick="filter('LOSS',this)">Losses</button>
+    <button class="chip" onclick="filter('BE',this)">Break-even</button>
+    <button class="chip" onclick="filter('ES',this)">ES</button>
+    <button class="chip" onclick="filter('NQ',this)">NQ</button>
+    <button class="chip" onclick="filter('MES',this)">MES</button>
+    <button class="chip" onclick="filter('MNQ',this)">MNQ</button>
+  </div>
+
+  <div class="eod-grid" id="eod-grid">
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-state-icon">&#128203;</div>
+      <div class="empty-state-text">Loading reviews...</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="fbrand">Performance</span>
+  <span class="fcopy">&#169; 2025 Sire Mammat &middot; All trading involves risk</span>
+  <a href="index.html" class="nav-back">&#8592; Hub</a>
+</footer>
+
+<script src="eod-data.js"></script>
+<script>
+window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pbar').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';});
+
+const COLS = {WIN:'var(--green)', LOSS:'var(--red)', BE:'var(--gold)'};
+let activeFilter = 'all';
+
+function computeStats(data) {
+  const wins   = data.filter(e=>e.result==='WIN');
+  const losses = data.filter(e=>e.result==='LOSS');
+  const bes    = data.filter(e=>e.result==='BE');
+  const totalPts = data.reduce((s,e)=>s+e.pts, 0);
+  const avgWin   = wins.length ? wins.reduce((s,e)=>s+e.pts,0)/wins.length : 0;
+  const avgLoss  = losses.length ? losses.reduce((s,e)=>s+e.pts,0)/losses.length : 0;
+  const best     = data.length ? Math.max(...data.map(e=>e.pts)) : 0;
+  const worst    = data.length ? Math.min(...data.map(e=>e.pts)) : 0;
+  const totalTrades = data.reduce((s,e)=>s+e.trades,0);
+  const tradeWins   = data.reduce((s,e)=>s+e.wins,0);
+  const tradeLosses = data.reduce((s,e)=>s+e.losses,0);
+  const wr = data.length ? Math.round(wins.length/data.length*100) : 0;
+  const twr = totalTrades ? Math.round(tradeWins/totalTrades*100) : 0;
+  return {wins,losses,bes,totalPts,avgWin,avgLoss,best,worst,totalTrades,tradeWins,tradeLosses,wr,twr};
+}
+
+function fmt(v) {
+  if (v === 0) return '0.0';
+  return (v > 0 ? '+' : '') + v.toFixed(1);
+}
+
+function renderStats(data) {
+  const s = computeStats(data);
+  const ptsColor = s.totalPts >= 0 ? 'var(--green)' : 'var(--red)';
+
+  document.getElementById('stat-pts').textContent = fmt(s.totalPts);
+  document.getElementById('stat-pts').style.color = ptsColor;
+  document.getElementById('stat-pts-sub').textContent = `${data.length} sessions logged`;
+  document.getElementById('stat-wr').textContent = s.wr + '%';
+  document.getElementById('stat-wr-sub').textContent = `${s.wins.length}W ${s.losses.length}L`;
+  document.getElementById('stat-avg').textContent = s.avgWin > 0 ? '+' + s.avgWin.toFixed(1) : '—';
+  document.getElementById('stat-count').textContent = data.length;
+
+  document.getElementById('dash-pts').textContent = fmt(s.totalPts);
+  document.getElementById('dash-pts').style.color = ptsColor;
+  document.getElementById('dash-record').textContent = `${s.wins.length}W — ${s.losses.length}L`;
+  document.getElementById('dash-wr-sub').textContent = `${s.wr}% win rate`;
+  document.getElementById('dash-total').textContent = data.length;
+  document.getElementById('dash-wins').textContent = s.wins.length;
+  document.getElementById('dash-losses').textContent = s.losses.length;
+  document.getElementById('dash-be').textContent = s.bes.length;
+  document.getElementById('dash-avgw').textContent = s.avgWin > 0 ? '+' + s.avgWin.toFixed(1) + ' pts' : '—';
+  document.getElementById('dash-best').textContent = fmt(s.best) + ' pts';
+  document.getElementById('dash-worst').textContent = fmt(s.worst) + ' pts';
+  document.getElementById('dash-avgl').textContent = s.avgLoss < 0 ? s.avgLoss.toFixed(1) + ' pts' : '—';
+  document.getElementById('dash-trades').textContent = s.totalTrades;
+  document.getElementById('dash-tw').textContent = s.tradeWins;
+  document.getElementById('dash-tl').textContent = s.tradeLosses;
+  document.getElementById('dash-twr').textContent = s.twr + '%';
+
+  // Mini chart — last 8 sessions
+  const recent = [...data].sort((a,b)=>b.num-a.num).slice(0,8).reverse();
+  const maxAbs = Math.max(...recent.map(e=>Math.abs(e.pts)), 1);
+  document.getElementById('dash-chart').innerHTML = recent.map(e => {
+    const h = Math.max(8, Math.round(Math.abs(e.pts)/maxAbs*36));
+    const col = e.pts >= 0 ? 'rgba(0,229,160,0.6)' : 'rgba(240,82,82,0.5)';
+    return `<div class="bar" style="height:${h}px;background:${col}" title="${fmt(e.pts)} pts"></div>`;
+  }).join('');
+}
+
+function renderCards(data, filterVal='all') {
+  const sorted = [...data].sort((a,b)=>b.num-a.num);
+  const filtered = filterVal==='all' ? sorted : sorted.filter(e=>
+    e.result===filterVal || e.instrument===filterVal
+  );
+
+  const grid = document.getElementById('eod-grid');
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">&#128203;</div><div class="empty-state-text">No sessions match this filter</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(e => {
+    const res = e.result.toLowerCase();
+    const ptsColor = COLS[e.result] || 'var(--text)';
+    const ptsStr = fmt(e.pts) + ' pts';
+    const tagsHtml = e.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+    return `
+    <a href="eod-review.html?id=${e.num}" class="eod-card ${res}">
+      <div class="eod-head">
+        <div>
+          <div class="eod-num">EOD ${String(e.num).padStart(2,'0')}</div>
+          <div class="eod-date">${e.date} &middot; ${e.day}</div>
+        </div>
+        <div class="badge ${res}">${e.result} DAY</div>
+      </div>
+      <div class="eod-body">
+        <div class="eod-pts" style="color:${ptsColor}">${ptsStr}</div>
+        <div class="eod-title">${e.title}</div>
+        <div class="eod-note">${e.summary}</div>
+        <div class="eod-tags">${tagsHtml}</div>
+      </div>
+      <div class="eod-foot">
+        <span class="eod-tcount">${e.trades} trades &middot; ${e.wins}W ${e.losses}L</span>
+        <span class="eod-open">Read Review &rarr;</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function filter(val, btn) {
+  activeFilter = val;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(EOD_DATA, val);
+}
+
+// Init
+renderStats(EOD_DATA);
+renderCards(EOD_DATA, 'all');
+</script>
+</body>
+</html>

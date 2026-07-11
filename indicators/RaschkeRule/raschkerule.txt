@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raschke 12 Rules (SireMammat Ed.) — Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:     #0E0A04;
+  --dark2:    #16100A;
+  --gold:     #B87333;
+  --gold-lt:  #E8C46A;
+  --cream:    #F5EDD8;
+  --muted:    #8C7355;
+  --green:    #3A7A50;
+  --red:      #C04030;
+}
+
+body {
+  background: var(--dark);
+  color: var(--cream);
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.7;
+  padding: 4rem 2rem;
+}
+
+.doc-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header-block {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 500;
+  color: var(--gold-lt);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.grid-section {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.main-content h2 {
+  font-family: 'EB Garamond', serif;
+  font-size: 2rem;
+  color: var(--gold-lt);
+  border-bottom: 1px solid #2C2010;
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+}
+
+.logic-card {
+  background: var(--dark2);
+  border: 1px solid #2C2010;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 3px solid var(--gold);
+}
+
+.rule-list {
+  list-style: none;
+  padding: 0;
+}
+
+.rule-list li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.rule-list li::before {
+  content: "•";
+  color: var(--gold);
+  position: absolute;
+  left: 0;
+}
+
+.sidebar-card {
+  background: var(--dark2);
+  border: 1px solid #2C2010;
+  padding: 1.5rem;
+  border-radius: 8px;
+  position: sticky;
+  top: 2rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #2C2010;
+  padding: 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+.btn-p {
+  background: var(--gold);
+  color: var(--dark);
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase;
+  padding: 12px;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  border-radius: 4px;
+}
+
+.disclaimer {
+  margin-top: 4rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  border-top: 1px solid #2C2010;
+  padding-top: 2rem;
+}
+
+strong { color: var(--gold-lt); }
+</style>
+</head>
+<body>
+
+<div class="doc-container">
+  <div class="header-block">
+    <div class="eyebrow">Technical Trading Strategy</div>
+    <h1>Raschke 12 Rules</h1>
+    <div class="tagline">SireMammat’s Technical Implementation for Futures</div>
+  </div>
+
+  <div class="grid-section">
+    <div class="main-content">
+      <div class="logic-card">
+        <p>This strategy is a coded interpretation of <strong>Linda Raschke’s 12 Rules of Trading</strong>. It focuses on the principle that momentum precedes price and that the first pullback after a new high or low offers the highest-conviction entry point.</p>
+      </div>
+
+      <h2>Core Trading Logic</h2>
+      <p>The script automates several of the "Rules" to provide clear visual cues and execution signals on the chart:</p>
+      
+      <ul class="rule-list">
+        <li><strong>Rule 1 (The Pullback):</strong> Identifies the first touch of the 20 EMA following a fresh 20-period high or low.</li>
+        <li><strong>Rule 7 (The Last Hour):</strong> Analyzes price action in the final hour of the session to determine if "Smart Money" is marking positions for the next day's follow-through.</li>
+        <li><strong>Rule 12 (Momentum Climax):</strong> Detects exhaustion bars based on ATR volatility and volume spikes, providing an automated exit signal before mean reversion.</li>
+      </ul>
+
+      <h2>Integrated Dashboard</h2>
+      <p>The <strong>SireMammat Edition</strong> includes a real-time table tracking technical health:</p>
+      <ul class="rule-list">
+        <li><strong>Last Hour Truth:</strong> Real-time sentiment of the closing session.</li>
+        <li><strong>Trend Status:</strong> Tracks price relative to the Previous Day's High/Low (Rules 5 & 6).</li>
+        <li><strong>Morning Reversal:</strong> Alerts when early volatility suggests a reversal of the opening gap (Rule 3).</li>
+      </ul>
+
+      <h2>Dashboard Positioning</h2>
+      <p>Users can customize the visual layout via the input menu, choosing from 9 different anchor points on the chart to ensure the dashboard never obstructs price action or other indicators.</p>
+    </div>
+
+    <div class="sidebar-wrapper">
+      <div class="sidebar-card">
+        <div class="eyebrow" style="margin-bottom: 0.5rem;">Strategy Specs</div>
+        <div class="stat-row"><span>Author</span><strong>SireMammat</strong></div>
+        <div class="stat-row"><span>EMA Anchor</span><strong>20 Period</strong></div>
+        <div class="stat-row"><span>Market</span><strong>ES / NQ / MES</strong></div>
+        <div class="stat-row"><span>Timeframe</span><strong>5m / 15m / 1H</strong></div>
+        <div class="stat-row"><span>Version</span><strong>Pine Script v5</strong></div>
+        
+        <a href="#" class="btn-p">Get Access</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    © 2026 SireMammat. This strategy is based on the methodology of Linda Raschke. Trading futures involves significant risk. Past performance of the Raschke 12 Rules implementation is not indicative of future results.
+  </div>
+</div>
+
+</body>
+</html>

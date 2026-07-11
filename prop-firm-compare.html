@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mighty Ox Trading — Prop Firm Comparator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-card: #111118;
+    --bg-card-hover: #16161f;
+    --bg-surface: #1a1a24;
+    --border: #2a2a3a;
+    --border-accent: #3a3a50;
+    --text-primary: #f0f0f5;
+    --text-secondary: #9090a8;
+    --text-muted: #606078;
+    --accent-gold: #f5c842;
+    --accent-gold-dim: #c9a230;
+    --accent-green: #2ecc71;
+    --accent-green-dim: #1a8a4a;
+    --accent-red: #e74c3c;
+    --accent-red-dim: #a83228;
+    --accent-blue: #3498db;
+    --accent-blue-dim: #1e6fa8;
+    --accent-purple: #9b59b6;
+    --glow-gold: 0 0 30px rgba(245,200,66,0.15);
+    --glow-green: 0 0 20px rgba(46,204,113,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Animated Background ── */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,200,66,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(52,152,219,0.03) 0%, transparent 50%),
+      linear-gradient(180deg, var(--bg-deep) 0%, #0d0d15 100%);
+  }
+
+  .bg-grid::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black, transparent);
+  }
+
+  /* ── Floating particles ── */
+  .particles {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    opacity: 0;
+    animation: float-up 8s infinite;
+  }
+  @keyframes float-up {
+    0% { opacity: 0; transform: translateY(100vh) scale(0); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+  }
+
+  /* ── Header ── */
+  header {
+    position: relative; z-index: 10;
+    padding: 40px 32px 32px;
+    text-align: center;
+  }
+
+  .logo-wrap {
+    display: inline-flex; align-items: center; gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dim));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    box-shadow: var(--glow-gold);
+  }
+
+  .logo-text {
+    font-size: 28px; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-gold), #ffe082);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  .tagline {
+    color: var(--text-secondary);
+    font-size: 14px; font-weight: 400;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* ── Nav Tabs ── */
+  .tab-bar {
+    display: flex; justify-content: center; gap: 4px;
+    margin-top: 24px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 4px;
+    width: fit-content;
+    margin-left: auto; margin-right: auto;
+    border: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    padding: 10px 24px;
+    border: none; border-radius: 8px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+  }
+
+  .tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(245,200,66,0.08));
+    color: var(--accent-gold);
+    box-shadow: 0 0 12px rgba(245,200,66,0.08);
+  }
+
+  /* ── Main Content ── */
+  main {
+    position: relative; z-index: 5;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 24px 60px;
+  }
+
+  .tab-content { display: none; animation: fadeIn 0.4s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── Featured Firm Card ── */
+  .featured {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent-gold), var(--accent-green), var(--accent-blue));
+  }
+
+  .featured-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .firm-title {
+    font-size: 36px; font-weight: 900;
+    letter-spacing: -1px;
+  }
+
+  .firm-title .highlight {
+    background: linear-gradient(135deg, var(--accent-gold), #ffe082);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .rank-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, rgba(245,200,66,0.12), rgba(245,200,66,0.04));
+    border: 1px solid rgba(245,200,66,0.25);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 14px; font-weight: 700;
+    color: var(--accent-gold);
+    margin-top: 8px;
+  }
+
+  .rank-badge .num { font-size: 20px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.25s;
+  }
+
+  .stat-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .stat-value {
+    font-size: 24px; font-weight: 800;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .pros-cons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .pros-cons-section {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+
+  .section-title.green { color: var(--accent-green); }
+  .section-title.red { color: var(--accent-red); }
+  .section-title.blue { color: var(--accent-blue); }
+
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .section-title.green .dot { background: var(--accent-green); box-shadow: 0 0 8px rgba(46,204,113,0.4); }
+  .section-title.red .dot { background: var(--accent-red); box-shadow: 0 0 8px rgba(231,76,60,0.4); }
+  .section-title.blue .dot { background: var(--accent-blue); box-shadow: 0 0 8px rgba(52,152,219,0.4); }
+
+  .bullet-list { list-style: none; }
+  .bullet-list li {
+    position: relative;
+    padding: 8px 0 8px 20px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .bullet-list li:last-child { border-bottom: none; }
+  .bullet-list li::before {
+    content: '›';
+    position: absolute; left: 0;
+    font-weight: 700; font-size: 16px;
+  }
+  .pros-cons-section.green .bullet-list li::before { color: var(--accent-green); }
+  .pros-cons-section.red .bullet-list li::before { color: var(--accent-red); }
+  .pros-cons-section.blue .bullet-list li::before { color: var(--accent-blue); }
+
+  /* ── Comparison Table ── */
+  .table-controls {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .search-box {
+    flex: 1; min-width: 200px;
+    padding: 10px 16px 10px 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23606078' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 14px center;
+  }
+  .search-box:focus { border-color: var(--accent-gold); }
+  .search-box::placeholder { color: var(--text-muted); }
+
+  .filter-btn {
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .filter-btn:hover { border-color: var(--border-accent); color: var(--text-primary); }
+  .filter-btn.active {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    background: rgba(245,200,66,0.06);
+  }
+
+  .table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .table-scroll { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    position: sticky; top: 0;
+    background: var(--bg-surface);
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 11px; font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+
+  thead th:hover { color: var(--accent-gold); }
+  thead th .sort-arrow {
+    display: inline-block;
+    margin-left: 4px;
+    opacity: 0.3;
+    font-size: 10px;
+    transition: opacity 0.2s;
+  }
+  thead th.sorted .sort-arrow { opacity: 1; color: var(--accent-gold); }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: all 0.15s;
+  }
+  tbody tr:hover {
+    background: var(--bg-card-hover);
+  }
+
+  tbody tr.featured-row {
+    background: rgba(245,200,66,0.04);
+    border-left: 3px solid var(--accent-gold);
+  }
+  tbody tr.featured-row:hover {
+    background: rgba(245,200,66,0.07);
+  }
+
+  td {
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  td.firm-name {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  tbody tr.featured-row td.firm-name {
+    color: var(--accent-gold);
+  }
+
+  td .dd-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px; font-weight: 600;
+  }
+  .dd-intraday { background: rgba(46,204,113,0.1); color: var(--accent-green); }
+  .dd-eod { background: rgba(52,152,219,0.1); color: var(--accent-blue); }
+  .dd-static { background: rgba(155,89,182,0.1); color: var(--accent-purple); }
+
+  td .cost { font-weight: 600; }
+  td .cost.low { color: var(--accent-green); }
+  td .cost.mid { color: var(--text-primary); }
+  td .cost.high { color: var(--accent-red); }
+
+  td .accounts-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 28px;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+
+  /* ── Other Firms Grid ── */
+  .firms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .firm-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .firm-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  .firm-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .firm-card-name {
+    font-size: 18px; font-weight: 700;
+  }
+
+  .firm-card-rank {
+    font-size: 12px; font-weight: 700;
+    color: var(--accent-gold);
+    background: rgba(245,200,66,0.1);
+    padding: 4px 12px;
+    border-radius: 6px;
+  }
+
+  .firm-card-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .fc-stat-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+  }
+
+  .fc-stat-value {
+    font-size: 15px; font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .fc-bar {
+    height: 4px;
+    background: var(--bg-surface);
+    border-radius: 2px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+
+  .fc-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  /* ── Footer ── */
+  footer {
+    position: relative; z-index: 5;
+    text-align: center;
+    padding: 32px;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  footer a {
+    color: var(--accent-gold-dim);
+    text-decoration: none;
+  }
+
+  /* ── Ticker Strip ── */
+  .ticker-strip {
+    position: relative; z-index: 5;
+    overflow: hidden;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .ticker-track {
+    display: flex;
+    animation: ticker 30s linear infinite;
+    width: fit-content;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 32px;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .ticker-item .name { color: var(--text-secondary); }
+  .ticker-item .val { font-weight: 700; }
+  .ticker-item .val.up { color: var(--accent-green); }
+  .ticker-item .val.down { color: var(--accent-red); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    header { padding: 24px 16px; }
+    main { padding: 16px 12px 40px; }
+    .featured { padding: 24px 16px; }
+    .firm-title { font-size: 24px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .pros-cons { grid-template-columns: 1fr; }
+    .tab-btn { padding: 8px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">🐂</div>
+    <span class="logo-text">Mighty Ox Trading</span>
+  </div>
+  <div class="tagline">Prop Firm Intelligence & Comparison</div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="compare">Compare</button>
+    <button class="tab-btn" data-tab="firms">All Firms</button>
+  </div>
+</header>
+
+<!-- Ticker Strip -->
+<div class="ticker-strip">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<main>
+  <!-- ═══════ OVERVIEW TAB ═══════ -->
+  <div class="tab-content active" id="tab-overview">
+
+    <div class="featured">
+      <div class="featured-header">
+        <div>
+          <div class="firm-title"><span class="highlight">Bulenox</span></div>
+          <div class="rank-badge">
+            <span>MOT Rank</span>
+            <span class="num">#5</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">$29.25</div>
+          <div class="stat-label">Lowest Eval Cost</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">90/10</div>
+          <div class="stat-label">Payout Split</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">11</div>
+          <div class="stat-label">Max Funded Accts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3+ yrs</div>
+          <div class="stat-label">Stability</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Yes</div>
+          <div class="stat-label">News Trading</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Account Sizes</div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <div class="pros-cons-section green">
+          <div class="section-title green"><span class="dot"></span> Positives</div>
+          <ul class="bullet-list">
+            <li>3+ Years of Stability</li>
+            <li>Price Match Most Sales</li>
+            <li>11 Accounts Allowed</li>
+            <li>Few Payout Denials</li>
+            <li>Lack of Drama</li>
+          </ul>
+        </div>
+        <div class="pros-cons-section red">
+          <div class="section-title red"><span class="dot"></span> Drawbacks</div>
+          <ul class="bullet-list">
+            <li>Secrecy — Lack of transparency</li>
+            <li>High Funded Setup Fees above 50K</li>
+            <li>New Path to Live is a bit confusing</li>
+          </ul>
+        </div>
+        <div class="pros-cons-section blue">
+          <div class="section-title blue"><span class="dot"></span> Suggestions</div>
+          <ul class="bullet-list">
+            <li>Come out from the shadows</li>
+            <li>Reduce the setup fees</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ COMPARE TAB ═══════ -->
+  <div class="tab-content" id="tab-compare">
+
+    <div class="table-controls">
+      <input type="text" class="search-box" id="searchBox" placeholder="Search firms...">
+      <button class="filter-btn active" data-dd="all">All</button>
+      <button class="filter-btn" data-dd="Intraday">Intraday</button>
+      <button class="filter-btn" data-dd="EOD">EOD</button>
+      <button class="filter-btn" data-dd="Static">Static</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table id="compareTable">
+          <thead>
+            <tr>
+              <th data-sort="name">Prop Firm <span class="sort-arrow">▲</span></th>
+              <th data-sort="eval">Eval Cost <span class="sort-arrow">▲</span></th>
+              <th data-sort="setup">Setup Fee <span class="sort-arrow">▲</span></th>
+              <th data-sort="total">Total <span class="sort-arrow">▲</span></th>
+              <th data-sort="accounts">Max Accts <span class="sort-arrow">▲</span></th>
+              <th data-sort="dd">DD Type <span class="sort-arrow">▲</span></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ ALL FIRMS TAB ═══════ -->
+  <div class="tab-content" id="tab-firms">
+    <div class="firms-grid" id="firmsGrid"></div>
+  </div>
+</main>
+
+<footer>
+  Built with 🐂 by <a href="#">Mighty Ox Trading</a> &middot; Data for informational purposes only &middot; 2024
+</footer>
+
+<script>
+// ── Data ──
+const firms = [
+  { name: "Tradeify - Intraday", eval: 50, setup: 99, total: 149, accounts: 5, dd: "Intraday" },
+  { name: "Funded Futures Network", eval: 175, setup: 0, total: 175, accounts: 5, dd: "Intraday" },
+  { name: "Tradeify - EOD", eval: 220.35, setup: 0, total: 220.35, accounts: 5, dd: "EOD" },
+  { name: "TakeProfitTrader", eval: 252, setup: 0, total: 252, accounts: 5, dd: "EOD" },
+  { name: "Apex", eval: 148.5, setup: 130, total: 278.5, accounts: 20, dd: "Intraday" },
+  { name: "Earn2Trade - Gmini", eval: 140, setup: 139, total: 279, accounts: 3, dd: "EOD" },
+  { name: "Topstep", eval: 149, setup: 149, total: 298, accounts: 5, dd: "EOD" },
+  { name: "TradeDay - Intraday", eval: 180, setup: 139, total: 319, accounts: 1, dd: "Intraday" },
+  { name: "Daytraders - Rithmic - St", eval: 200, setup: 130, total: 330, accounts: 5, dd: "Static" },
+  { name: "Phoenix", eval: 198.8, setup: 149, total: 347.8, accounts: 3, dd: "EOD" },
+  { name: "TradeDay - EOD", eval: 210, setup: 139, total: 349, accounts: 1, dd: "EOD" },
+  { name: "OneUp", eval: 175, setup: 175, total: 350, accounts: 3, dd: "Intraday" },
+  { name: "MFFU - Starter Plus", eval: 358.15, setup: 0, total: 358.15, accounts: 3, dd: "EOD" },
+  { name: "TradingPit - Prime", eval: 231.2, setup: 129, total: 360.2, accounts: 5, dd: "EOD" },
+  { name: "Alpha Standard", eval: 215.1, setup: 149, total: 364.1, accounts: 3, dd: "EOD" },
+  { name: "Phoenix Static", eval: 378, setup: 0, total: 378, accounts: 10, dd: "Static" },
+  { name: "Legends", eval: 96, setup: 299, total: 395, accounts: 10, dd: "EOD" },
+  { name: "MFFU - Expert", eval: 453.15, setup: 0, total: 453.15, accounts: 3, dd: "EOD" },
+  { name: "Daytraders - Rithmic", eval: 349.5, setup: 130, total: 479.5, accounts: 5, dd: "Intraday" },
+  { name: "Alpha Advanced", eval: 377.1, setup: 120, total: 497.1, accounts: 3, dd: "EOD" },
+  { name: "Bulenox - Intraday", eval: 29.25, setup: 498, total: 527.25, accounts: 11, dd: "Intraday", featured: true },
+  { name: "Bulenox - EOD", eval: 81.25, setup: 498, total: 579.25, accounts: 11, dd: "EOD", featured: true },
+];
+
+// ── Particles ──
+const particlesEl = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 8 + 's';
+  p.style.animationDuration = (6 + Math.random() * 6) + 's';
+  p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+  particlesEl.appendChild(p);
+}
+
+// ── Ticker ──
+const tickerData = [
+  { name: "Tradeify", val: "$149", up: true },
+  { name: "Apex", val: "$278.50", up: false },
+  { name: "Topstep", val: "$298", up: false },
+  { name: "Bulenox", val: "$527.25", up: false },
+  { name: "Funded Futures", val: "$175", up: true },
+  { name: "Legends", val: "$395", up: false },
+  { name: "Phoenix", val: "$347.80", up: true },
+  { name: "TakeProfit", val: "$252", up: true },
+  { name: "MFFU Expert", val: "$453.15", up: false },
+  { name: "OneUp", val: "$350", up: false },
+];
+
+const tickerEl = document.getElementById('ticker');
+const tickerHTML = tickerData.map(t =>
+  `<div class="ticker-item"><span class="name">${t.name}</span><span class="val ${t.up ? 'up' : 'down'}">${t.val}</span></div>`
+).join('');
+tickerEl.innerHTML = tickerHTML + tickerHTML; // duplicate for seamless loop
+
+// ── Tabs ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ── Table ──
+let sortCol = 'total';
+let sortAsc = true;
+let filterDD = 'all';
+let searchQuery = '';
+
+function costClass(val) {
+  if (val <= 200) return 'low';
+  if (val <= 400) return 'mid';
+  return 'high';
+}
+
+function ddClass(dd) {
+  if (dd === 'Intraday') return 'dd-intraday';
+  if (dd === 'EOD') return 'dd-eod';
+  return 'dd-static';
+}
+
+function renderTable() {
+  let data = [...firms];
+
+  // filter
+  if (filterDD !== 'all') data = data.filter(f => f.dd === filterDD);
+  if (searchQuery) data = data.filter(f => f.name.toLowerCase().includes(searchQuery));
+
+  // sort
+  data.sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (sortCol === 'name') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    if (va < vb) return sortAsc ? -1 : 1;
+    if (va > vb) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = data.map(f => `
+    <tr class="${f.featured ? 'featured-row' : ''}">
+      <td class="firm-name">${f.name}</td>
+      <td><span class="cost ${costClass(f.eval)}">$${f.eval.toFixed(2)}</span></td>
+      <td><span class="cost ${costClass(f.setup)}">$${f.setup.toFixed(2)}</span></td>
+      <td><span class="cost ${costClass(f.total)}">$${f.total.toFixed(2)}</span></td>
+      <td><span class="accounts-badge">${f.accounts}</span></td>
+      <td><span class="dd-tag ${ddClass(f.dd)}">${f.dd}</span></td>
+    </tr>
+  `).join('');
+
+  // update sort arrows
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.sort === sortCol);
+    th.querySelector('.sort-arrow').textContent = (th.dataset.sort === sortCol && !sortAsc) ? '▼' : '▲';
+  });
+}
+
+document.querySelectorAll('thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    if (sortCol === th.dataset.sort) { sortAsc = !sortAsc; }
+    else { sortCol = th.dataset.sort; sortAsc = true; }
+    renderTable();
+  });
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterDD = btn.dataset.dd;
+    renderTable();
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase();
+  renderTable();
+});
+
+renderTable();
+
+// ── Firms Grid ──
+function renderFirms() {
+  const maxTotal = Math.max(...firms.map(f => f.total));
+  const grid = document.getElementById('firmsGrid');
+
+  // Group by firm name prefix (before the dash)
+  const grouped = {};
+  firms.forEach(f => {
+    const key = f.name.split(' - ')[0];
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(f);
+  });
+
+  grid.innerHTML = Object.entries(grouped).map(([name, variants]) => {
+    const best = variants.reduce((a, b) => a.total < b.total ? a : b);
+    const pct = Math.min(100, (1 - (best.total - 149) / (maxTotal - 149)) * 100);
+    const barColor = pct > 70 ? 'var(--accent-green)' : pct > 40 ? 'var(--accent-gold)' : 'var(--accent-red)';
+
+    return `
+      <div class="firm-card">
+        <div class="firm-card-header">
+          <div class="firm-card-name">${name}</div>
+          ${best.featured ? '<div class="firm-card-rank">⭐ Featured</div>' : ''}
+        </div>
+        <div class="firm-card-stats">
+          <div>
+            <div class="fc-stat-label">Best Total</div>
+            <div class="fc-stat-value">$${best.total.toFixed(2)}</div>
+          </div>
+          <div>
+            <div class="fc-stat-label">Eval Cost</div>
+            <div class="fc-stat-value">$${best.eval.toFixed(2)}</div>
+          </div>
+          <div>
+            <div class="fc-stat-label">Max Accounts</div>
+            <div class="fc-stat-value">${best.accounts}</div>
+          </div>
+          <div>
+            <div class="fc-stat-label">DD Type</div>
+            <div class="fc-stat-value">${variants.map(v => v.dd).join(', ')}</div>
+          </div>
+        </div>
+        <div class="fc-bar">
+          <div class="fc-bar-fill" style="width:${Math.max(5, pct)}%; background:${barColor};"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+renderFirms();
+</script>
+</body>
+</html>

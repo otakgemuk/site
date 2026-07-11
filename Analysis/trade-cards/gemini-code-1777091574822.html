@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SM VENTURES | Session Terminal</title>
+    <style>
+        :root {
+            --bg-deep: #08080a;
+            --panel-bg: #111114;
+            --accent-green: #00ff9d;
+            --accent-blue: #00d1ff;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(0, 255, 157, 0.15);
+            --border-dim: #1e293b;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .terminal-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        /* Sidebar Stats */
+        .sidebar {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .brand-block {
+            border-bottom: 2px solid var(--accent-green);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .brand-block h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--accent-green);
+            text-shadow: 0 0 10px var(--border-glow);
+        }
+
+        .stat-group {
+            margin-bottom: 20px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+        .main-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-window {
+            background: #000;
+            border: 1px solid var(--border-dim);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-window img {
+            width: 100%;
+            display: block;
+            opacity: 0.9;
+        }
+
+        .log-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-dim);
+            padding: 20px;
+        }
+
+        .panel-header {
+            color: var(--accent-green);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            padding: 10px;
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        td {
+            padding: 12px 10px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .result-win { color: var(--accent-green); font-weight: bold; }
+
+        .session-notes {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            border-left: 2px solid var(--accent-blue);
+            padding-left: 15px;
+        }
+
+        .status-tag {
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--accent-green);
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            border: 1px solid var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <aside class="sidebar">
+        <div class="brand-block">
+            <h1>SM VENTURES</h1>
+            <div style="font-size: 0.6rem; color: var(--text-secondary);">EDITION: SIREMAMMAT</div>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Total Points</span>
+            <span class="stat-value" style="color: var(--accent-green);">+66.00</span>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Profit Target</span>
+            <span class="stat-value">$3,300.00</span>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Instrument</span>
+            <span class="stat-value">ES / MES</span>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Date</span>
+            <span class="stat-value">24-APR-2026</span>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Status</span>
+            <span class="status-tag">GOAL REACHED</span>
+        </div>
+    </aside>
+
+    <main class="main-view">
+        <div class="chart-window">
+            <img src="https://i.ibb.co/4f7a2a/image_4f7a2a.png" alt="Session Chart Analysis">
+        </div>
+
+        <div class="log-panel">
+            <div class="panel-header">
+                <span>Execution Log</span>
+                <span style="color: var(--text-secondary);">4 Rotations Complete</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trade</th>
+                        <th>Type</th>
+                        <th>Logic</th>
+                        <th>Outcome</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>T01</td>
+                        <td>BREAKOUT</td>
+                        <td>H2 Entry / MM Target</td>
+                        <td class="result-win">+30.00</td>
+                    </tr>
+                    <tr>
+                        <td>T02-05</td>
+                        <td>MFR SCALP</td>
+                        <td>.21 / .79 Limit Rotations</td>
+                        <td class="result-win">+36.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="session-notes">
+                <strong>Technical Summary:</strong><br>
+                Price held previous day's Green TD9 floor at Bar 1. Breakout at Bar 15 transitioned to high-prob TR behavior after Bar 28. Utilized .21/.79 MFR levels for 4 clean rotations. Friday session concluded early with discipline.
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

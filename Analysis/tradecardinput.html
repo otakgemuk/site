@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Trade Card Template</title>
+  <style>
+    body { font-family: 'DM Mono', monospace; background: #0E0A04; color: #F5EDD8; padding: 40px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7355; }
+    input, textarea, select { width: 100%; padding: 12px; background: #16100A; border: 1px solid #2C2010; color: #F5EDD8; border-radius: 4px; font-family: inherit; }
+    textarea { min-height: 100px; }
+    .btn { background: #6B4420; color: #E8C46A; border: 1px solid rgba(184,115,51,0.4); padding: 12px 24px; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Create Trade Card from Template</h2>
+  <form id="tradeCardForm">
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" id="date" required>
+    </div>
+    <div class="form-group">
+      <label>Instrument</label>
+      <select id="instrument">
+        <option value="MESM6">MESM6 - Micro E-mini S&P 500</option>
+        <option value="NQ">NQ - E-mini Nasdaq</option>
+        <option value="ES">ES - E-mini S&P 500</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Session Bias</label>
+      <select id="bias">
+        <option value="Bullish">Bullish</option>
+        <option value="Bearish">Bearish</option>
+        <option value="Range">Range</option>
+        <option value="Neutral">Neutral</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Session Summary</label>
+      <textarea id="summary" placeholder="Brief overview of the trading session..."></textarea>
+    </div>
+    <button type="submit" class="btn">Generate Trade Card</button>
+  </form>
+  
+  <script>
+    document.getElementById('tradeCardForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // In real implementation, this would generate the HTML file
+      alert('Trade card template generated! You can now edit the detailed HTML file.');
+    });
+  </script>
+</body>
+</html>

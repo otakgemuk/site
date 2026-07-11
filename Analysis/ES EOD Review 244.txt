@@ -1,0 +1,44 @@
+ES EOD Review 24/4
+
+The day started with a gap up and overlapping bars From Bar 1 to Bar 12
+The Low of Bar 1 was few ticks above the Green TD9 , Demark's indication 
+of price exhaustion from the previous day, which is also good indication 
+where support is for the day.
+
+Market is in a trading range behavior until a breakout occurs so its a limite order market.
+
+Bar 8/9 is a high 1 and Bar 13/14 is a H2. This is a good indication of markets moving higher.
+Bar 15 closes at its high and above the close of Bar 1. Some considers this as a breakout point.
+
+T01
+Entry Buy 1 tick above Bar 14 filled at Bar 16
+Using Bar 13/14 for a Measured Move up
+Exit at Bar 28 give 1:2 RR 30 points
+
+From Bar 28, bars start to overlapping again, this is an indication of market  moving sideways
+a trading range market behavior.
+Bar 28 can be considered as a Mother Bar encapsulating the bars moving up and down
+Its Friday so its good to walk away with 30 points secured.\
+
+Potential traders that is not taken
+T02
+Entry Buy Limit at .21 Modified Fib Retracement (MFR) Filled at Bar 34
+Exit Sell Limit at .79 Filled at Bar 37 gives 9 points
+
+T03
+Entry Sell Limit at .79 MFR filled at Bar Bar 42
+Exit Buy Limit at 0.21 MFR filled at Bar 47 gives 9 points
+
+T04
+Entry Buy Limit at .21 MFR filled at Bar 49
+Exit Sell Limit at .79 MFR filled at Bar 53 gives 9 points
+
+T05
+Entry Sell Limit at .79 MFR filled at Bar 54
+Exit Buy Limit at .21 MFR filled at Bar 59 gives 9 points
+
+No trades got filled at .21 MFR after bar 59, this is a good
+indication TR Behavior either paused or price moving higher 
+Best to walk away after 4 good trades.
+End
+

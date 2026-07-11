@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools & Brokers — SireMammat</title>
+<meta name="description" content="The platforms, tools, and prop firms used by SireMammat — charting, execution, journaling, and evaluation. Honest reviews, no paid promotions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#0E0A04; --dark2:#16100A; --dark3:#1E1508; --dark4:#2C2010;
+  --gold:#B87333; --gold-lt:#E8C46A; --gold-dim:#6B4420;
+  --cream:#F5EDD8; --cream2:#EDE0C4; --muted:#8C7355; --muted2:#5C4A35;
+  --red:#C04030; --green:#3A7A50; --blue:#6B8EC4;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+  --radius:4px; --radius-lg:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--cream);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden;}
+a{color:var(--gold-lt);text-decoration:none;}
+a:hover{color:var(--gold);}
+ul{list-style:none;}
+
+/* TICKER */
+.ticker-bar{background:var(--dark2);border-bottom:1px solid var(--gold-dim);overflow:hidden;height:32px;display:flex;align-items:center;}
+.ticker-track{display:flex;white-space:nowrap;animation:ticker 30s linear infinite;}
+.ticker-item{font-family:var(--font-mono);font-size:11px;padding:0 28px;color:var(--muted);letter-spacing:.04em;border-right:1px solid var(--dark4);display:flex;align-items:center;gap:8px;height:32px;transition:background .3s ease;}
+.ticker-item .sym{color:var(--cream2);font-weight:500;}
+.ticker-item .up{color:var(--green);}
+.ticker-item .dn{color:var(--red);}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(14,10,4,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--dark4);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:64px;}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.nav-logo-text{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--cream);letter-spacing:.02em;line-height:1;}
+.nav-logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-top:2px;}
+.nav-links{display:flex;gap:2rem;align-items:center;}
+.nav-links a{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-lt);}
+.nav-cta{color:var(--dark)!important;background:var(--gold);padding:8px 18px;border-radius:var(--radius);transition:background .2s;}
+.nav-cta:hover{background:var(--gold-lt)!important;color:var(--dark)!important;}
+
+/* PAGE WRAP */
+.page-wrap{position:relative;}
+.page-wrap::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(184,115,51,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,115,51,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;mask-image:radial-gradient(ellipse at 60% 30%,black 20%,transparent 70%);}
+
+/* HEADER */
+.page-header{position:relative;z-index:1;padding:5rem 3rem 3rem;max-width:1100px;margin:0 auto;}
+.page-eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.page-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--gold);}
+.page-title{font-family:var(--font-display);font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.05;letter-spacing:.02em;margin-bottom:.8rem;}
+.page-title em{color:var(--gold-lt);font-style:italic;}
+.page-sub{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:640px;margin-bottom:.6rem;}
+.page-note{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.04em;padding:.5rem .9rem;border-left:2px solid var(--dark4);display:inline-block;margin-top:.8rem;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:1100px;margin:0 auto 2.5rem;padding:0 3rem;position:relative;z-index:1;}
+.stat-item{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);padding:1.1rem 1.3rem;transition:border-color .2s;}
+.stat-item:hover{border-color:var(--gold-dim);}
+.stat-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.stat-num{font-family:var(--font-display);font-size:1.9rem;font-weight:600;color:var(--gold-lt);line-height:1;}
+.stat-sub{font-family:var(--font-mono);font-size:10px;color:var(--muted2);margin-top:.3rem;}
+
+/* FILTERS */
+.filter-wrap{max-width:1100px;margin:0 auto;padding:0 3rem 1.5rem;position:relative;z-index:1;}
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;}
+.filter-btn{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .9rem;border-radius:40px;border:1px solid var(--dark4);background:none;color:var(--muted);cursor:pointer;transition:all .18s;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold-lt);background:rgba(184,115,51,.06);}
+
+/* TOOLS GRID */
+.tools-wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 3rem 5rem;}
+.section-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding-bottom:.6rem;border-bottom:1px solid var(--dark4);margin:2.5rem 0 1.2rem;}
+.section-lbl:first-child{margin-top:0;}
+.tools-grid{display:flex;flex-direction:column;gap:1.2rem;}
+
+/* TOOL CARD */
+.tool-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .2s;}
+.tool-card:hover{border-color:rgba(184,115,51,.25);}
+.tool-card.featured{border-left:3px solid var(--gold);}
+.tool-inner{padding:1.6rem 2rem;}
+.tool-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:.8rem;}
+.tool-name-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.tool-name{font-family:var(--font-display);font-size:1.4rem;font-weight:600;letter-spacing:.02em;}
+.tool-cat{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .65rem;border-radius:var(--radius);border:1px solid var(--dark4);color:var(--muted);}
+.tool-cat.prop{border-color:var(--gold-dim);color:var(--gold);}
+.tool-cat.charting{border-color:rgba(107,142,196,.4);color:var(--blue);}
+.tool-cat.journaling{border-color:rgba(58,122,80,.4);color:var(--green);}
+.tool-cat.execution{border-color:var(--gold-dim);color:var(--gold-lt);}
+.tool-cat.education{border-color:var(--gold-dim);color:var(--gold);}
+.tool-cat.broker{border-color:rgba(107,142,196,.4);color:var(--blue);}
+.tool-cat.overview{border-color:rgba(140,115,85,.4);color:var(--muted);}
+.tool-meta{display:flex;align-items:center;gap:.75rem;}
+.stars{font-size:.8rem;color:var(--gold);letter-spacing:2px;}
+.use-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .65rem;border-radius:var(--radius);background:rgba(58,122,80,.08);border:1px solid rgba(58,122,80,.25);color:var(--green);}
+.tool-desc{font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem;}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.3rem;}
+.pc-col h4{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;}
+.pc-col.pros h4{color:var(--green);}
+.pc-col.cons h4{color:var(--red);}
+.pc-item{display:flex;gap:.5rem;font-size:.83rem;color:var(--muted);line-height:1.55;margin-bottom:.3rem;}
+.pc-item .mark{flex-shrink:0;margin-top:2px;}
+.pros .pc-item .mark{color:var(--green);}
+.cons .pc-item .mark{color:var(--red);}
+.tool-footer{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--dark4);}
+.code-chip{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .85rem;border-radius:var(--radius);background:rgba(184,115,51,.07);border:1px solid var(--gold-dim);color:var(--gold);}
+.aff-note{font-family:var(--font-mono);font-size:9px;color:var(--muted2);}
+.visit-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--gold);color:var(--dark);border-radius:var(--radius);padding:.5rem 1.2rem;font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .18s;margin-left:auto;}
+.visit-btn:hover{background:var(--gold-lt);color:var(--dark);}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:1rem;padding:1.5rem 3rem;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.divider-line{flex:1;height:1px;background:var(--dark4);}
+
+/* FOOTER */
+footer{background:var(--dark2);border-top:1px solid var(--dark4);padding:3rem 3rem 2rem;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;margin-bottom:2.5rem;}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:.8rem;}
+.footer-brand-name{font-family:var(--font-display);font-size:1.3rem;font-weight:500;color:var(--cream);}
+.footer-tagline{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.06em;max-width:300px;line-height:1.6;}
+.footer-links{display:flex;gap:3rem;}
+.footer-col-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.footer-col-links{display:flex;flex-direction:column;gap:.6rem;}
+.footer-col-links a{font-family:var(--font-mono);font-size:11px;color:var(--muted);transition:color .2s;}
+.footer-col-links a:hover{color:var(--gold-lt);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;border-top:1px solid var(--dark4);}
+.footer-copy{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.04em;}
+.footer-disclaimer{font-family:var(--font-mono);font-size:10px;color:var(--muted2);max-width:420px;text-align:right;line-height:1.6;}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  nav{padding:0 1.5rem;} .nav-links{display:none;}
+  .page-header,.stats-row,.filter-wrap,.tools-wrap,.divider{padding-left:1.5rem;padding-right:1.5rem;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .pros-cons{grid-template-columns:1fr;}
+  .footer-top{flex-direction:column;gap:2rem;} .footer-links{flex-wrap:wrap;gap:2rem;}
+  .footer-bottom{flex-direction:column;gap:1rem;text-align:center;} .footer-disclaimer{text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-track" id="ticker">
+    <div class="ticker-item"><span class="sym">ES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">NQ</span> 20,934.00 <span class="up">+67.25</span></div>
+    <div class="ticker-item"><span class="sym">MES</span> 5,847.25 <span class="up">+12.50</span></div>
+    <div class="ticker-item"><span class="sym">MNQ</span> 20,934.00 <span class="dn">−18.75</span></div>
+    <div class="ticker-item"><span class="sym">VIX</span> 18.24 <span class="dn">−0.84</span></div>
+    <div class="ticker-item"><span class="sym">DXY</span> 104.32 <span class="up">+0.21</span></div>
+    <div class="ticker-item"><span class="sym">GOLD</span> 2,341.40 <span class="up">+8.60</span></div>
+    <div class="ticker-item"><span class="sym">10Y</span> 4.328% <span class="dn">−0.012</span></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="https://siremammat.neocities.org/index.html" class="nav-logo">
+    <svg width="28" height="36" viewBox="0 0 56 72" fill="none">
+      <rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/>
+      <line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="8" cy="20" r="3" fill="#B87333"/>
+      <circle cx="28" cy="22" r="3" fill="#B87333"/>
+      <circle cx="48" cy="20" r="3" fill="#B87333"/>
+    </svg>
+    <div>
+      <div class="nav-logo-text">SireMammat</div>
+      <div class="nav-logo-sub">Free Futures Education</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="https://siremammat.neocities.org/index.html#hub">Hub</a></li>
+    <li><a href="https://siremammat.neocities.org/index.html#about">About</a></li>
+    <li><a href="https://siremammat.neocities.org/indicators/index.html">Indicators</a></li>
+    <li><a href="https://siremammat.neocities.org/Tools/tools.html" class="active">Tools</a></li>
+    <li><a href="https://siremammat.neocities.org/index.html#contact">Contact</a></li>
+    <li><a href="https://youtube.com/@SireMammat" class="nav-cta" target="_blank" rel="noopener">Subscribe →</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE -->
+<div class="page-wrap">
+  <div class="page-header fade-up">
+    <div class="page-eyebrow">Recommended Infrastructure</div>
+    <h1 class="page-title">Tools &amp; <em>Brokers</em></h1>
+    <p class="page-sub">The platforms, tools, and prop firms I actually use in my daily trading operation. Charting, execution, journaling, and evaluation — selected on merit, not sponsorship.</p>
+    <span class="page-note">No paid promotions. Affiliate codes may be present — they cost you nothing and help keep this site free.</span>
+  </div>
+
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="filter-wrap">
+    <div class="filter-bar" id="filter-bar"></div>
+  </div>
+
+  <div class="tools-wrap" id="tools-wrap"></div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+    <div class="divider-line"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">
+        <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+        <div class="footer-brand-name">SireMammat</div>
+      </div>
+      <div class="footer-tagline">Free futures trading education built on Al Brooks price action methodology. ES · NQ · MES · MNQ</div>
+    </div>
+    <div class="footer-links">
+      <div>
+        <div class="footer-col-title">Education</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/Learn/index.html">Learn Price Action</a></li>
+          <li><a href="https://siremammat.neocities.org/Playbooks/index.html">Playbooks</a></li>
+          <li><a href="https://siremammat.neocities.org/Strategies/index.html">Strategies</a></li>
+          <li><a href="https://siremammat.neocities.org/TradePlan/trading-plan.html">Trading Plan</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Analysis</div>
+        <ul class="footer-col-links">
+          <li><a href="https://siremammat.neocities.org/casestudies/index.html">Case Studies</a></li>
+          <li><a href="https://siremammat.neocities.org/Analysis/analysis.html">Market Analysis</a></li>
+          <li><a href="https://siremammat.neocities.org/Tools/tools.html">Tools &amp; Brokers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Connect</div>
+        <ul class="footer-col-links">
+          <li><a href="https://youtube.com/@SireMammat" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="https://x.com/SireMammat" target="_blank" rel="noopener">X / Twitter</a></li>
+          <li><a href="https://instagram.com/SireMammat" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="mailto:siremammat@gmail.com">Email</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Sire Mammat · All rights reserved</div>
+    <div class="footer-disclaimer">Trading involves substantial risk of loss. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// TOOLS DATA — edit this array to add/remove/update tools
+// ═══════════════════════════════════════════════════════════════
+const TOOLS = [
+  {
+    section: "Education",
+    name: "Brooks Trading Course",
+    category: "education",
+    catLabel: "Education",
+    rating: 5,
+    featured: true,
+    badge: "Lifetime Access",
+    usedDaily: false,
+    affiliate: true,
+    code: "SIREMAMMAT",
+    url: "https://www.brookstradingcourse.com/buy-the-brooks-price-action-trading-course/ref/siremammat/",
+    tagline: "The definitive Price Action methodology.",
+    description: "Al Brooks' comprehensive course on price action. This is the foundation of my entire trading framework — understanding bar-by-bar market logic without the noise of lagging indicators. The futures module alone is worth the price.",
+    pros: [
+      "Bar-by-bar market logic",
+      "Comprehensive futures module",
+      "Focus on technical health",
+      "One-time cost for lifetime access"
+    ],
+    cons: [
+      "Very dense material",
+      "High learning curve for beginners"
+    ]
+  },
+  {
+    section: "Charting & Execution",
+    name: "TradingView",
+    category: "charting",
+    catLabel: "Charting",
+    rating: 5,
+    featured: true,
+    badge: "Free + Pro",
+    usedDaily: true,
+    affiliate: false,
+    code: null,
+    url: "https://www.tradingview.com/pricing/?share_your_love=otakgemuk",
+    tagline: "Best multi-timeframe charting for daily prep and level identification.",
+    description: "Primary charting platform for all price action analysis, indicator development, and strategy scripts. Pine Script environment is where GreenLight Pro and SireTactics indicators live. Unmatched for multi-timeframe ES/NQ work.",
+    pros: [
+      "Best multi-timeframe layout for futures",
+      "Pine Script for custom indicators",
+      "Free tier genuinely usable",
+      "Active community and idea sharing"
+    ],
+    cons: [
+      "Charting only — not an execution platform",
+      "Pro plan needed for more than 3 indicators"
+    ]
+  },
+  {
+    section: "Charting & Execution",
+    name: "NinjaTrader",
+    category: "execution",
+    catLabel: "Execution",
+    rating: 5,
+    featured: false,
+    badge: "Free + Paid",
+    usedDaily: true,
+    affiliate: false,
+    code: null,
+    url: "https://ninjatrader.com",
+    tagline: "Best DOM for futures execution.",
+    description: "Execution platform for futures. DOM trading, advanced order types, and deep market depth. The SuperDOM is unmatched for fast scalp execution on ES and NQ. Free sim trading available indefinitely.",
+    pros: [
+      "Best DOM for futures execution",
+      "Free sim trading indefinitely",
+      "Advanced order types and automation"
+    ],
+    cons: [
+      "Windows only — no native Mac",
+      "Learning curve on order entry setup"
+    ]
+  },
+  {
+    section: "Charting & Execution",
+    name: "QuantTower",
+    category: "charting",
+    catLabel: "Charting",
+    rating: 4,
+    featured: false,
+    badge: "Multi-Asset Platform",
+    usedDaily: true,
+    affiliate: false,
+    code: null,
+    url: "https://bit.ly/4e2cNyu",
+    tagline: "High-performance execution platform with volume profiles.",
+    description: "My preferred trading platform that comes with multiple feeds and supporting multiple connectivity — CQG, Rithmic, IB, etc. Includes volume profiles and footprint charts for deeper order flow analysis.",
+    pros: [
+      "Very user friendly",
+      "Workspace customization",
+      "Portfolio tracking",
+      "Free copy trading"
+    ],
+    cons: [
+      "High hardware requirement",
+      "Limited indicators in free mode"
+    ]
+  },
+  {
+    section: "Charting & Execution",
+    name: "TraderVue",
+    category: "journaling",
+    catLabel: "Journaling",
+    rating: 5,
+    featured: false,
+    badge: "Free + Silver",
+    usedDaily: true,
+    affiliate: false,
+    code: null,
+    url: "https://tradervue.com",
+    tagline: "Trade journaling with deep analytics on win rate by setup.",
+    description: "Trade journaling and analytics. Auto-imports from most brokers. Forces the data discipline that separates profitable traders from hopeful ones — the weekly stats breakdown is essential for identifying patterns in your own execution.",
+    pros: [
+      "Auto-import from most platforms",
+      "Deep analytics on win rate by setup",
+      "Free tier for low-volume traders"
+    ],
+    cons: [
+      "UI feels dated compared to newer tools",
+      "Silver plan needed for full analytics"
+    ]
+  },
+  {
+    section: "Market Overview",
+    name: "BarChart.com",
+    category: "overview",
+    catLabel: "Market Overview",
+    rating: 5,
+    featured: false,
+    badge: "Free + Paid",
+    usedDaily: true,
+    affiliate: false,
+    code: null,
+    url: "https://www.barchart.com/futures",
+    tagline: "Best major markets overview and COT data.",
+    description: "My daily routine includes checking the market overview and expected move numbers — free and widely used by traders to check Commitment of Traders data. Clean, fast, and covers everything.",
+    pros: [
+      "Easy to understand",
+      "Good coverage across asset classes",
+      "Trading guide and technical analysis",
+      "Free COT data"
+    ],
+    cons: [
+      "Not everything is free"
+    ]
+  },
+  {
+    section: "Market Overview",
+    name: "Finviz",
+    category: "overview",
+    catLabel: "Market Overview",
+    rating: 3,
+    featured: false,
+    badge: "Free",
+    usedDaily: false,
+    affiliate: false,
+    code: null,
+    url: "https://finviz.com/",
+    tagline: "Pre-market heat map and sector scanning.",
+    description: "Finviz gives me a quick visual snapshot of the broad market each morning. Useful context for understanding whether the ES move is broad-based or driven by a handful of mega-caps.",
+    pros: [
+      "Best heat map context",
+      "Free with no account",
+      "Fast to load"
+    ],
+    cons: [
+      "Surface-level overview only",
+      "Real-time requires Elite subscription"
+    ]
+  },
+  {
+    section: "Brokers",
+    name: "Tradovate",
+    category: "broker",
+    catLabel: "Broker",
+    rating: 4,
+    featured: false,
+    badge: "Low Commissions",
+    usedDaily: false,
+    affiliate: false,
+    code: null,
+    url: "https://tradovate.com/",
+    tagline: "Low commission futures broker — excellent for Micros.",
+    description: "Tradovate offers some of the lowest commission rates for futures trading and has a clean browser-based platform. I used it extensively when building consistency on micro contracts.",
+    pros: [
+      "Lowest commissions",
+      "Clean browser platform",
+      "Good mobile app"
+    ],
+    cons: [
+      "Less feature-rich than NinjaTrader",
+      "Subscription adds up at low volume"
+    ]
+  },
+  {
+    section: "Prop Firms",
+    name: "TradeDay",
+    category: "prop",
+    catLabel: "Prop Firm",
+    rating: 4,
+    featured: true,
+    badge: "Active",
+    usedDaily: false,
+    affiliate: true,
+    code: "MOT",
+    url: "https://members.tradeday.com/membership-plans-pricing?a_aid=MOT",
+    tagline: "Static drawdown model with no activation fees.",
+    description: "Static drawdown model, no activation fees. One of the cleanest eval structures in the industry — the drawdown never moves, which removes a major source of psychological friction during the eval process.",
+    pros: [
+      "Static trailing drawdown",
+      "No activation fee on most plans",
+      "Consistent payout history",
+      "No minimum trading days"
+    ],
+    cons: [
+      "Cheapest plan uses trailing drawdown",
+      "Plans priced higher than some competitors"
+    ]
+  },
+  {
+    section: "Prop Firms",
+    name: "Lucid Trading",
+    category: "prop",
+    catLabel: "Prop Firm",
+    rating: 4,
+    featured: false,
+    badge: "Active",
+    usedDaily: false,
+    affiliate: true,
+    code: "MOT",
+    url: "https://lucidtrading.com/ref/mightyoxtrading/",
+    tagline: "15-minute payouts — fastest in the industry.",
+    description: "Fast payout structure via LucidFlex — 15-minute payouts are the fastest in the industry. Clean dashboard and straightforward eval rules. Regular reset promotions make it one of the most cost-efficient firms to run multiple accounts on.",
+    pros: [
+      "15-minute payouts via LucidFlex",
+      "Regular buy-3-get-1 reset deals",
+      "Simple, clean eval rules"
+    ],
+    cons: [
+      "Consistency rule applies",
+      "Smaller account sizes than some competitors"
+    ]
+  },
+  {
+    section: "Prop Firms",
+    name: "MyFundedFutures",
+    category: "prop",
+    catLabel: "Prop Firm",
+    rating: 4,
+    featured: false,
+    badge: "Active",
+    usedDaily: false,
+    affiliate: true,
+    code: "MOT",
+    url: "https://myfundedfutures.com/?ref=66",
+    tagline: "Established track record with rapid eval path.",
+    description: "One of the most established prop firms in the futures space. Rapid plans offer a fast path to funded status. Wide range of account sizes and a transparent payout history.",
+    pros: [
+      "Established track record",
+      "Wide range of account sizes",
+      "Rapid eval path available"
+    ],
+    cons: [
+      "Rules can change — always verify current terms",
+      "Higher concentration risk if over-reliant"
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER ENGINE
+// ═══════════════════════════════════════════════════════════════
+
+function stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
+
+function renderStats() {
+  const daily = TOOLS.filter(t => t.usedDaily).length;
+  const avg = (TOOLS.reduce((s, t) => s + t.rating, 0) / TOOLS.length).toFixed(1);
+  const free = TOOLS.filter(t => t.badge.toLowerCase().includes('free')).length;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-item fade-up"><div class="stat-lbl">Tools tracked</div><div class="stat-num">${TOOLS.length}</div><div class="stat-sub">All categories</div></div>
+    <div class="stat-item fade-up"><div class="stat-lbl">Used daily</div><div class="stat-num">${daily}</div><div class="stat-sub">Primary stack</div></div>
+    <div class="stat-item fade-up"><div class="stat-lbl">Avg rating</div><div class="stat-num">${avg}</div><div class="stat-sub">Out of 5</div></div>
+    <div class="stat-item fade-up"><div class="stat-lbl">Free tiers</div><div class="stat-num">${free}</div><div class="stat-sub">Accessible options</div></div>
+  `;
+}
+
+function renderFilters() {
+  const cats = [...new Set(TOOLS.map(t => t.category))];
+  // Define display order
+  const order = ['education','charting','execution','journaling','overview','broker','prop'];
+  const sorted = order.filter(o => cats.includes(o));
+  const bar = document.getElementById('filter-bar');
+  bar.innerHTML = `<button class="filter-btn active" data-filter="all">All</button>`
+    + sorted.map(c => {
+        const label = TOOLS.find(t => t.category === c).catLabel;
+        return `<button class="filter-btn" data-filter="${c}">${label}</button>`;
+      }).join('');
+  bar.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCards(btn.dataset.filter);
+    });
+  });
+}
+
+function renderCard(t) {
+  return `
+    <div class="tool-card${t.featured ? ' featured' : ''} fade-up" data-cat="${t.category}">
+      <div class="tool-inner">
+        <div class="tool-top">
+          <div class="tool-name-row">
+            <span class="tool-name">${t.name}</span>
+            <span class="tool-cat ${t.category}">${t.catLabel}</span>
+          </div>
+          <div class="tool-meta">
+            <span class="stars">${stars(t.rating)}</span>
+            ${t.usedDaily ? '<span class="use-badge">Used Daily</span>' : ''}
+          </div>
+        </div>
+        <p class="tool-desc">${t.description}</p>
+        <div class="pros-cons">
+          <div class="pc-col pros"><h4>Pros</h4>
+            ${t.pros.map(p => `<div class="pc-item"><span class="mark">✓</span>${p}</div>`).join('')}
+          </div>
+          <div class="pc-col cons"><h4>Cons</h4>
+            ${t.cons.map(c => `<div class="pc-item"><span class="mark">✗</span>${c}</div>`).join('')}
+          </div>
+        </div>
+        <div class="tool-footer">
+          ${t.code ? `<span class="code-chip">Code: ${t.code}</span>` : ''}
+          <span class="aff-note">${t.affiliate ? 'Affiliate link' : 'No affiliate code'}</span>
+          <a href="${t.url}" target="_blank" rel="noopener" class="visit-btn">Visit ${t.name} →</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderCards(filter = 'all') {
+  const filtered = filter === 'all' ? TOOLS : TOOLS.filter(t => t.category === filter);
+  const wrap = document.getElementById('tools-wrap');
+
+  // Group by section
+  const sections = [...new Set(filtered.map(t => t.section))];
+  wrap.innerHTML = sections.map(sec => {
+    const items = filtered.filter(t => t.section === sec);
+    return `<div class="section-lbl">${sec}</div><div class="tools-grid">${items.map(renderCard).join('')}</div>`;
+  }).join('');
+
+  // Re-observe fade-ups
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  wrap.querySelectorAll('.fade-up').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.06) + 's';
+    obs.observe(el);
+  });
+}
+
+// Init
+renderStats();
+renderFilters();
+renderCards();
+
+// Fade-up observer for header + stats
+const headObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.page-header.fade-up, .stat-item.fade-up').forEach(el => headObs.observe(el));
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE TICKER (same as index.html)
+// ═══════════════════════════════════════════════════════════════
+(function() {
+  const SYMBOL_MAP = {
+    'ES':'ES=F','NQ':'NQ=F','MES':'MES=F','MNQ':'MNQ=F',
+    'VIX':'^VIX','DXY':'DX-Y.NYB','GOLD':'GC=F','10Y':'^TNX'
+  };
+  const yfSymbols = Object.values(SYMBOL_MAP).join(',');
+  const PROXIES = [
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`
+  ];
+  let proxyIdx = 0;
+
+  async function fetchWithProxy(url) {
+    for (let i = 0; i < PROXIES.length; i++) {
+      const idx = (proxyIdx + i) % PROXIES.length;
+      try {
+        const res = await fetch(PROXIES[idx](url), { signal: AbortSignal.timeout(8000) });
+        if (res.ok) { proxyIdx = idx; return await res.json(); }
+      } catch(e) {}
+    }
+    throw new Error('All proxies failed');
+  }
+
+  async function fetchIndividual() {
+    const results = {};
+    for (const [label, yfSym] of Object.entries(SYMBOL_MAP)) {
+      try {
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yfSym)}?range=1d&interval=1d`;
+        const data = await fetchWithProxy(url);
+        const result = data.chart?.result?.[0];
+        if (result) {
+          const meta = result.meta;
+          const price = meta.regularMarketPrice;
+          const prevClose = meta.chartPreviousClose ?? meta.previousClose;
+          results[label] = { price, change: price - prevClose };
+        }
+      } catch(e) {}
+    }
+    return results;
+  }
+
+  function formatPrice(label, price) {
+    if (label === '10Y') return price.toFixed(3) + '%';
+    if (label === 'VIX' || label === 'DXY') return price.toFixed(2);
+    return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function formatChange(label, change) {
+    const sign = change >= 0 ? '+' : '';
+    if (label === '10Y') return sign + change.toFixed(3);
+    return sign + change.toFixed(2);
+  }
+
+  function updateTicker(data) {
+    document.querySelectorAll('.ticker-item').forEach(item => {
+      const symEl = item.querySelector('.sym');
+      if (!symEl) return;
+      const label = symEl.textContent.trim();
+      const info = data[label];
+      if (!info) return;
+      const priceNode = item.childNodes[1];
+      const changeEl = item.querySelector('.up, .dn');
+      if (!changeEl) return;
+      const newPrice = formatPrice(label, info.price);
+      const newChange = formatChange(label, info.change);
+      const isUp = info.change >= 0;
+      if (priceNode.textContent.trim() !== newPrice) {
+        item.style.background = isUp ? 'rgba(58,122,80,0.18)' : 'rgba(192,64,48,0.18)';
+        setTimeout(() => { item.style.background = 'transparent'; }, 600);
+      }
+      priceNode.textContent = ' ' + newPrice + ' ';
+      changeEl.textContent = newChange;
+      changeEl.className = isUp ? 'up' : 'dn';
+    });
+  }
+
+  // Duplicate ticker for seamless loop
+  const track = document.getElementById('ticker');
+  if (track && !track.dataset.dup) { track.innerHTML += track.innerHTML; track.dataset.dup = '1'; }
+
+  async function tick() {
+    try {
+      const data = await fetchIndividual();
+      if (Object.keys(data).length) updateTicker(data);
+    } catch(e) { console.warn('[Ticker]', e.message); }
+  }
+  setTimeout(tick, 2000);
+  setInterval(tick, 30000);
+})();
+</script>
+</body>
+</html>

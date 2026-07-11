@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trade Cards — YM | Session Review</title>
+  <style>
+    :root {
+      --bg: #0a0c0f; --surface: #111418; --surface2: #181c22;
+      --border: #232830; --red: #e8394a; --green: #22c87a;
+      --gold: #f5c842; --text: #e8eaf0; --muted: #5a6272;
+      --accent: #3b82f6;
+    }
+    body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); padding:40px; }
+    header { text-align:center; margin-bottom:48px; }
+    .session-label { font-family:'Space Mono', monospace; font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+    header h1 { font-family:'Bebas Neue', sans-serif; font-size:48px; color:var(--text); }
+    header h1 span { color:var(--green); }
+    .subtitle { font-family:'Space Mono', monospace; font-size:11px; color:var(--muted); margin-top:10px; }
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:24px; max-width:1100px; margin:0 auto 40px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; position:relative; }
+    .card.profit::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--green); }
+    .card.short::before { background:var(--red); }
+    .card-header { padding:20px; display:flex; justify-content:space-between; border-bottom:1px solid var(--border); }
+    .trade-id { font-family:'Bebas Neue', sans-serif; font-size:34px; color:var(--green); }
+    .trade-id.short-id { color:var(--red); }
+    .direction-badge { font-family:'Space Mono', monospace; font-size:10px; font-weight:700; padding:3px 9px; border-radius:4px; }
+    .direction-badge.short { background:rgba(232,57,74,0.12); color:var(--red); border:1px solid rgba(232,57,74,0.3); }
+    .direction-badge.long { background:rgba(34,200,122,0.10); color:var(--green); border:1px solid rgba(34,200,122,0.3); }
+    .stats-row { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid var(--border); }
+    .stat { padding:14px; border-right:1px solid var(--border); }
+    .stat:last-child { border-right:none; }
+    .stat-label { font-family:'Space Mono', monospace; font-size:9px; color:var(--muted); text-transform:uppercase; margin-bottom:5px; }
+    .stat-value { font-family:'Space Mono', monospace; font-size:16px; font-weight:700; }
+    .stat-value.profit { color:var(--green); }
+    .stat-value.ratio { color:var(--gold); }
+    .entry-block { padding:16px; border-bottom:1px solid var(--border); }
+    .block-title { font-family:'Space Mono', monospace; font-size:9px; color:var(--muted); text-transform:uppercase; margin-bottom:10px; }
+    .entry-row { display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; }
+    .entry-key { color:var(--muted); }
+    .entry-val { font-family:'Space Mono', monospace; }
+    .rationale { padding:14px; font-size:12px; line-height:1.7; color:#8a94a6; }
+    .rationale strong { color:var(--text); }
+    .tags { padding:0 16px 18px; display:flex; flex-wrap:wrap; gap:6px; }
+    .tag { font-family:'Space Mono', monospace; font-size:9px; padding:3px 8px; border-radius:3px; border:1px solid var(--border); color:var(--muted); background:var(--surface2); }
+    .tag.highlight { border-color:rgba(245,200,66,0.3); color:var(--gold); background:rgba(245,200,66,0.10); }
+    .summary-card { max-width:1100px; margin:0 auto; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:24px; }
+    .sum-item { text-align:center; }
+    .sum-label { font-family:'Space Mono', monospace; font-size:9px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+    .sum-value { font-family:'Bebas Neue', sans-serif; font-size:36px; }
+    .sum-value.green { color:var(--green); }
+    .sum-value.gold { color:var(--gold); }
+    footer { text-align:center; margin-top:36px; font-family:'Space Mono', monospace; font-size:9px; color:#2e3540; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="session-label">RTH Session · YM Futures</div>
+  <h1>TRADE <span>CARDS</span></h1>
+  <div class="subtitle">Session Review · SIRE MAMMAT</div>
+</header>
+
+<div class="cards-grid">
+
+  <!-- Trade 01 -->
+  <div class="card profit">
+    <div class="card-header">
+      <div class="trade-id">T01</div>
+      <div class="trade-type">
+        <div class="direction-badge long">LONG ▲</div>
+        <div class="setup-tag">Range Exhaustion / Buy Low</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">P&L</div><div class="stat-value profit">+331</div></div>
+      <div class="stat"><div class="stat-label">R:R</div><div class="stat-value ratio">1:2.5</div></div>
+      <div class="stat"><div class="stat-label">Result</div><div class="stat-value profit">WIN ✓</div></div>
+    </div>
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row"><span class="entry-key">Entry Trigger</span><span class="entry-val">Buy Limit 1 tick above Bar 15</span></div>
+      <div class="entry-row"><span class="entry-key">Fill Bar</span><span class="entry-val">22</span></div>
+      <div class="entry-row"><span class="entry-key">Exit Bar</span><span class="entry-val">23</span></div>
+      <div class="entry-row"><span class="entry-key">Stop Loss</span><span class="entry-val">Low of Bar 16</span></div>
+    </div>
+    <div class="rationale">
+      <p>Overlapping bars since Bar 6 signaled <strong>range behavior</strong>. Bar 15 bullish inside bar gave a buy-low opportunity. Despite negative CVD and price below VWAP/20EMA, exhaustion (TD9) and range context supported reversal. Bar 23 breakout + CVD trendline break validated the trade.</p>
+    </div>
+    <div class="tags">
+      <span class="tag">Range Exhaustion</span>
+      <span class="tag highlight">TD9 Exhaustion</span>
+      <span class="tag">Buy Low</span>
+      <span class="tag">Breakout Validation</span>
+    </div>
+  </div>
+
+  <!-- Trade 02 -->
+  <div class="card profit short">
+    <div class="card-header">
+      <div class="trade-id short-id">T02</div>
+      <div class="trade-type">
+        <div class="direction-badge short">SHORT ▼</div>
+        <div class="setup-tag">Low 3 / Trend Continuation</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Trade Card — SireMammat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark: #0E0A04; --dark2: #16100A; --dark3: #1E1508; --dark4: #2C2010;
+  --gold: #B87333; --gold-lt: #E8C46A; --gold-dim: #6B4420;
+  --cream: #F5EDD8; --muted: #8C7355; --muted2: #5C4A35;
+  --green: #3A7A50; --red: #C04030;
+  --font-display: 'EB Garamond', Georgia, serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--dark); color: var(--cream);
+  font-family: var(--font-mono); min-height: 100vh; padding: 40px 24px 80px;
+}
+a { color: var(--gold-lt); text-decoration: none; }
+a:hover { color: var(--gold); }
+
+.back-link {
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); display: inline-block; margin-bottom: 32px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--gold-lt); }
+
+h1 {
+  font-family: var(--font-display); font-size: 42px;
+  letter-spacing: 0.06em; margin-bottom: 8px;
+}
+h1 span { color: var(--gold); }
+.subtitle {
+  font-size: 10px; letter-spacing: 0.14em; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 48px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+}
+.option-card {
+  background: var(--dark2); border: 1px solid var(--dark4);
+  border-radius: 10px; padding: 32px; cursor: pointer;
+  transition: all 0.2s; text-decoration: none; color: inherit;
+  display: block;
+}
+.option-card:hover {
+  border-color: var(--gold); transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.option-num {
+  font-family: var(--font-display); font-size: 48px;
+  color: var(--gold-dim); line-height: 1; margin-bottom: 16px;
+}
+.option-title {
+  font-family: var(--font-display); font-size: 22px;
+  color: var(--cream); margin-bottom: 8px;
+}
+.option-desc {
+  font-size: 10px; color: var(--muted); letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+.option-tag {
+  display: inline-block; margin-top: 16px;
+  font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 3px;
+  background: var(--gold-dim); color: var(--gold-lt);
+  border: 1px solid rgba(184,115,51,0.3);
+}
+
+footer {
+  text-align: center; margin-top: 80px; padding-top: 24px;
+  border-top: 1px solid var(--dark4);
+  font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted2);
+}
+
+@media (max-width: 768px) {
+  body { padding: 24px 16px 60px; }
+  .options { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a href="/analysis/" class="back-link">← Back to Analysis</a>
+
+<h1>Upload <span>Trade Card</span></h1>
+<p class="subtitle">Choose how you want to create today's EOD review</p>
+
+<div class="options">
+  <a href="template.html" class="option-card">
+    <div class="option-num">01</div>
+    <div class="option-title">Use Template</div>
+    <div class="option-desc">Fill out a structured form. We generate the HTML trade card for you. Best for consistency.</div>
+    <span class="option-tag">Recommended</span>
+  </a>
+
+  <a href="paste.html" class="option-card">
+    <div class="option-num">02</div>
+    <div class="option-title">Paste &amp; Convert</div>
+    <div class="option-desc">Paste your raw notes or markdown. We format it into a styled trade card automatically.</div>
+    <span class="option-tag">Fast</span>
+  </a>
+
+  <a href="html.html" class="option-card">
+    <div class="option-num">03</div>
+    <div class="option-title">Upload HTML</div>
+    <div class="option-desc">Already have your trade card built? Upload the finished HTML file directly.</div>
+    <span class="option-tag">Advanced</span>
+  </a>
+</div>
+
+<footer>
+  PATIENCE · DISCIPLINE · FEARLESS · EXECUTION &nbsp;·&nbsp; SIRE MAMMAT
+</footer>
+
+</body>
+</html>

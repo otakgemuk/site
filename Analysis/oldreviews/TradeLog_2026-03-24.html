@@ -1,0 +1,267 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Cards — Master Editor</title>
+<style>
+  :root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--dark); font-family: 'DM Sans', sans-serif; color: var(--cream);
+    min-height: 100vh; padding: 80px 24px 60px;
+    background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(59,130,246,0.06) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
+  }
+
+  /* Fixed Toolbar */
+  .toolbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 60px;
+    background: rgba(17, 20, 24, 0.8); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--dark4); z-index: 1000;
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+  }
+  .btn {
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    padding: 8px 16px; border-radius: 4px; cursor: pointer; border: 1px solid var(--dark4);
+    background: var(--surface2); color: var(--cream); transition: 0.2s;
+  }
+  .btn:hover { background: var(--cream); color: var(--dark); }
+  .btn-add { border-color: var(--gold); color: var(--gold); }
+  .btn-save { border-color: var(--green); color: var(--green); }
+
+  header { text-align: center; margin-bottom: 48px; }
+  .session-label-input { background: transparent; border: none; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; text-align: center; width: 100%; outline: none; margin-bottom: 8px; }
+  header h1 { font-family: var(--font-display), sans-serif; font-size: 64px; letter-spacing: 0.06em; color: var(--cream); line-height: 1; }
+  header h1 span { color: var(--green); }
+  .subtitle-input { background: transparent; border: none; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-align: center; width: 100%; outline: none; margin-top: 10px; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto 40px; }
+  
+  .card { background: var(--surface); border: 1px solid var(--dark4); border-radius: 12px; overflow: hidden; position: relative; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green); }
+  .card.short::before { background: var(--red); }
+
+  .remove-btn { position: absolute; top: 10px; right: 10px; color: var(--muted); cursor: pointer; font-size: 10px; border: none; background: none; }
+  .remove-btn:hover { color: var(--red); }
+
+  .card-header { padding: 20px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--dark4); }
+  .trade-id { font-family: var(--font-display), sans-serif; font-size: 34px; color: var(--green); width: 60px; background: transparent; border: none; outline: none; }
+  .card.short .trade-id { color: var(--red); }
+  
+  .trade-type { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .side-select { background: var(--surface2); color: var(--cream); border: 1px solid var(--dark4); font-family: 'Space Mono'; font-size: 10px; padding: 2px 5px; border-radius: 4px; cursor: pointer; }
+  .setup-input { background: transparent; border: none; font-family: 'Space Mono'; font-size: 9px; color: var(--muted); text-align: right; outline: none; width: 150px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--dark4); }
+  .stat { padding: 14px 18px; border-right: 1px solid var(--dark4); }
+  .stat-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+  .stat-input { background: transparent; border: none; font-family: 'Space Mono'; font-size: 16px; font-weight: 700; color: var(--cream); width: 100%; outline: none; }
+  .stat-input.pl { color: var(--green); }
+  .card.short .stat-input.pl { color: var(--red); }
+  .stat-input.ratio { color: var(--gold); }
+
+  .entry-block { padding: 16px 22px; border-bottom: 1px solid var(--dark4); }
+  .block-title { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+  .entry-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
+  .entry-key { color: var(--muted); }
+  .entry-val { font-family: 'Space Mono'; background: transparent; border: none; color: var(--cream); text-align: right; outline: none; }
+
+  .rationale { padding: 14px 22px 20px; }
+  .rationale textarea { 
+    background: transparent; border: none; color: #8a94a6; 
+    font-family: 'DM Sans'; font-size: 12px; width: 100%; 
+    min-height: 100px; resize: none; outline: none; line-height: 1.6;
+    overflow-y: hidden;
+  }
+
+  .summary-card { max-width: 1200px; margin: 0 auto; background: var(--surface); border: 1px solid var(--dark4); border-radius: 12px; padding: 28px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; }
+  .sum-item { text-align: center; }
+  .sum-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .sum-value { font-family: var(--font-display), sans-serif; font-size: 36px; line-height: 1; color: var(--green); }
+  .sum-sub { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 4px; }
+
+  footer { text-align: center; margin-top: 36px; font-family: 'Space Mono', monospace; font-size: 9px; color: #2e3540; letter-spacing: 0.2em; text-transform: uppercase; }
+
+  /* UI Removal for Download */
+  .no-ui .toolbar, .no-ui .remove-btn { display: none !important; }
+  @media print { .toolbar, .remove-btn { display: none !important; } }
+</style>
+</head>
+<body class="no-ui">
+
+<div class="toolbar" id="main-toolbar">
+  <button class="btn btn-add" onclick="addCard()">+ NEW TRADE</button>
+  <button class="btn" onclick="window.print()">PRINT TO PDF</button>
+  <button class="btn btn-save" onclick="saveData()">DOWNLOAD JOURNAL</button>
+</div>
+
+<header>
+  <input type="text" class="session-label-input" value="RTH Session · MNQ Futures">
+  <h1>TRADE <span>CARDS</span></h1>
+  <input type="text" class="subtitle-input" value="March 24th 2026 · SIRE MAMMAT">
+</header>
+
+<div class="cards-grid" id="log-container">
+  <div class="card">
+    <button class="remove-btn" onclick="this.parentElement.remove(); updateAllStats();">✕ REMOVE</button>
+    <div class="card-header">
+      <input type="text" class="trade-id" value="T01">
+      <div class="trade-type">
+        <select class="side-select" onchange="toggleSide(this)">
+          <option value="long">LONG ▲</option>
+          <option value="short">SHORT ▼</option>
+        </select>
+        <input type="text" class="setup-input" placeholder="SETUP NAME" value="">
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">P&amp;L</div><input type="text" class="stat-input pl" value="+321 Ticks" oninput="updateAllStats()"></div>
+      <div class="stat"><div class="stat-label">R:R</div><input type="text" class="stat-input ratio" value="1:2.5"></div>
+      <div class="stat"><div class="stat-label">Result</div><input type="text" class="stat-input res" value="WIN" oninput="updateAllStats()"></div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row"><span class="entry-key">Trigger</span><input type="text" class="entry-val" placeholder="Signal Bar" value="Bar 43 and Bar 44"></div>
+      <div class="entry-row"><span class="entry-key">Fill Bar</span><input type="text" class="entry-val" placeholder="Bar X" value="Bar 46"></div>
+      <div class="entry-row"><span class="entry-key">Exit Bar</span><input type="text" class="entry-val" placeholder="Bar Y" value="Bar 47"></div>
+    </div>
+
+    <div class="rationale">
+      <textarea placeholder="Trade rationale and market context..." oninput="autoExpand(this)" value="Bar 23 was marked as Green TD9 indicates price exhaustion, this is the beginning of hunting for a move down. 2 bear flags was visually clear starting from Bar 21 and Bar 32. Bar 40 closes below the EMA, Bar 40 and Bar 41 is a Low 2 signal bars, We have bar 42 as a confirmation bear bar to initiate the short. After 2 legs down, B29-B31 and B36-B38 and price moves below the EMA, and cumulative delta are trending down, these are validation for the Short Trade. " style="height: 100px;">Bar 23 was marked as Green TD9 indicates price exhaustion, this is the beginning of hunting for a move down. 2 bear flags was visually clear starting from Bar 21 and Bar 32. Bar 40 closes below the EMA, Bar 40 and Bar 41 is a Low 2 signal bars, We have bar 42 as a confirmation bear bar to initiate the short. After 2 legs down, B29-B31 and B36-B38 and price moves below the EMA, and cumulative delta are trending down, these are validation for the Short Trade. </textarea>
+    </div>
+  </div>
+<div class="card short">
+    <button class="remove-btn" onclick="this.parentElement.remove(); updateAllStats();">✕ REMOVE</button>
+    <div class="card-header">
+      <input type="text" class="trade-id" value="T02">
+      <div class="trade-type">
+        <select class="side-select" onchange="toggleSide(this)">
+          <option value="long">LONG ▲</option>
+          <option value="short">SHORT ▼</option>
+        </select>
+        <input type="text" class="setup-input" placeholder="SETUP NAME" value="">
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">P&amp;L</div><input type="text" class="stat-input pl" value="271" oninput="updateAllStats()"></div>
+      <div class="stat"><div class="stat-label">R:R</div><input type="text" class="stat-input ratio" value="1:1"></div>
+      <div class="stat"><div class="stat-label">Result</div><input type="text" class="stat-input res" value="Win" oninput="updateAllStats()"></div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row"><span class="entry-key">Trigger</span><input type="text" class="entry-val" placeholder="Signal Bar" value="Bar 55 - Bar 56"></div>
+      <div class="entry-row"><span class="entry-key">Fill Bar</span><input type="text" class="entry-val" placeholder="Bar X" value="Bar 59"></div>
+      <div class="entry-row"><span class="entry-key">Exit Bar</span><input type="text" class="entry-val" placeholder="Bar Y" value="Bar 64"></div>
+    </div>
+
+    <div class="rationale">
+      <textarea placeholder="Trade rationale and market context..." oninput="autoExpand(this)" value="Bar 45-Bar 54 established a trading range. Bars were overlapping. This is a TBTL setup. Ten Bar Two Legs. A Buy STOP above Bar 56 expecting a trading range breakout to the upside. Why upside, the cumulative delta is trending up is a good indication for an expected move.
+Bar 52 and Bar 53 is a High 2, with a good follow-through BO Bull Bar 54.  Bar 54 is the confirmation bar as it closes above the EMA. Got filled on the Bar 56 pullback and STOP 1 tick below Bar 55, Target was a 1:1 Measure move up from the trading range.  " style="height: 115px;">Bar 45-Bar 54 established a trading range. Bars were overlapping. This is a TBTL setup. Ten Bar Two Legs. A Buy STOP above Bar 56 expecting a trading range breakout to the upside. Why upside, the cumulative delta is trending up is a good indication for an expected move.
+Bar 52 and Bar 53 is a High 2, with a good follow-through BO Bull Bar 54.  Bar 54 is the confirmation bar as it closes above the EMA. Got filled on the Bar 56 pullback and STOP 1 tick below Bar 55, Target was a 1:1 Measure move up from the trading range.  </textarea>
+    </div>
+  </div></div>
+
+<div class="summary-card">
+  <div class="sum-item"><div class="sum-label">Total Ticks</div><div class="sum-value" id="total-pts" style="color: var(--green);">592</div><div class="sum-sub">pts captured</div></div>
+  <div class="sum-item"><div class="sum-label">Trades</div><div class="sum-value" id="trade-count" style="color:white">2</div><div class="sum-sub">session total</div></div>
+  <div class="sum-item"><div class="sum-label">Win Rate</div><div class="sum-value" id="win-rate" style="color: var(--green);">100%</div><div class="sum-sub">accuracy</div></div>
+  <div class="sum-item"><div class="sum-label">Bias</div><input type="text" class="stat-input" style="text-align:center; font-family:'Bebas Neue'; font-size:36px;" value="BULLISH"></div>
+</div>
+
+<footer>PATIENCE · DISCIPLINE · FEARLESS · EXECUTION &nbsp;·&nbsp; SIRE MAMMAT</footer>
+
+<script>
+  function autoExpand(el) {
+    el.style.height = 'inherit';
+    el.style.height = (el.scrollHeight) + 'px';
+  }
+
+  function toggleSide(select) {
+    const card = select.closest('.card');
+    if(select.value === 'short') {
+      card.classList.add('short');
+    } else {
+      card.classList.remove('short');
+    }
+    updateAllStats();
+  }
+
+  function updateAllStats() {
+    let pts = 0, wins = 0;
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      const pVal = parseFloat(card.querySelector('.pl').value) || 0;
+      const res = card.querySelector('.res').value.toLowerCase();
+      pts += pVal;
+      if (res.includes('win')) wins++;
+    });
+
+    const ptsEl = document.getElementById('total-pts');
+    ptsEl.innerText = pts;
+    ptsEl.style.color = pts >= 0 ? 'var(--green)' : 'var(--red)';
+    
+    document.getElementById('trade-count').innerText = cards.length;
+    document.getElementById('win-rate').innerText = cards.length ? Math.round((wins / cards.length) * 100) + '%' : '0%';
+    document.getElementById('win-rate').style.color = 'var(--green)';
+  }
+
+  function addCard() {
+    const container = document.getElementById('log-container');
+    const cards = document.querySelectorAll('.card');
+    const newCard = cards[0].cloneNode(true);
+    
+    newCard.querySelectorAll('input, textarea').forEach(i => {
+        if(!i.classList.contains('trade-id')) i.value = "";
+        if(i.tagName === 'TEXTAREA') i.style.height = '100px';
+    });
+
+    const lastId = cards[cards.length - 1].querySelector('.trade-id').value;
+    const idNum = parseInt(lastId.replace(/\D/g,'')) || 0;
+    newCard.querySelector('.trade-id').value = "T" + String(idNum + 1).padStart(2, '0');
+    
+    container.appendChild(newCard);
+    updateAllStats();
+  }
+
+  function saveData() {
+    document.querySelectorAll('input, textarea, select').forEach(el => {
+        if(el.tagName === 'SELECT') {
+            const options = el.querySelectorAll('option');
+            options.forEach(o => o.selected = (o.value === el.value));
+        } else {
+            el.setAttribute('value', el.value);
+            if(el.tagName === 'TEXTAREA') {
+                el.innerHTML = el.value;
+                el.style.height = el.scrollHeight + 'px';
+            }
+        }
+    });
+
+    document.body.classList.add('no-ui');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([document.documentElement.outerHTML], {type: 'text/html'}));
+    a.download = `TradeLog_${new Date().toISOString().split('T')[0]}.html`;
+    a.click();
+    document.body.classList.remove('no-ui');
+  }
+
+  window.onload = updateAllStats;
+</script>
+
+</body></html>

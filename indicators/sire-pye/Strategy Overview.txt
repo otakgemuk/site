@@ -1,0 +1,24 @@
+Strategy Overview
+This strategy is a trend-following scalp system designed for Index Futures (MES/ES/NQ). It uses a higher-timeframe "Anchor" to determine market direction and executes on a lower timeframe to capture intraday momentum. The core philosophy is aggressive risk management: it prioritizes capital preservation by utilizing a strict daily "Kill Switch" that prevents overtrading during choppy, non-trending sessions.
+
+The Logic
+Trend Anchor: The strategy utilizes a 30-minute 20 EMA. This acts as the "Line in the Sand."
+
+Entry Trigger: A long position is initiated when price crosses above the 30m EMA on the execution timeframe (e.g., 5-minute). A short position is initiated when price crosses below it.
+
+Strict Risk Control:
+
+Per-Trade Stop: A tight 5.0 point stop loss is applied immediately upon entry to minimize exposure.
+
+Daily Kill Switch: A $100 Daily Max Loss limit is enforced. If the daily equity drops by $100, the script ceases all trading for the remainder of the session.
+
+The "One & Done" Effect: With 5 contracts, a single 5-point stop loss ($125) exceeds the daily limit, effectively turning the strategy into a "Perfect Setup" hunter—if the first trade fails, the strategy stays sidelined to avoid "Chop Death."
+
+### Performance Highlights (MES 1-Year Backtest)
+Net Profit: 8.4%
+
+Max Drawdown: 2.21%
+
+Profit Factor: High efficiency due to the strict daily limit.
+
+Recovery Factor: ~4:1 (Strong ratio of profit to historical drawdown).

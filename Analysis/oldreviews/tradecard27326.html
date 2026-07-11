@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Cards — MNQ | Sat 28 Mar '26</title>
+<style>
+  :root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background-color: var(--dark); color: var(--cream); font-family: 'DM Sans', sans-serif; padding: 40px; }
+  
+  .session-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--dark4); padding-bottom: 15px; }
+  .instrument { font-family: var(--font-display), cursive; font-size: 4rem; line-height: 1; letter-spacing: 2px; color: var(--accent); }
+  .session-date { font-family: 'Space Mono', monospace; color: var(--muted); font-size: 1.1rem; }
+
+  .chart-container { width: 100%; background: var(--surface); border: 1px solid var(--dark4); border-radius: 8px; overflow: hidden; margin-bottom: 30px; position: relative; }
+  .chart-container img { width: 100%; display: block; filter: contrast(1.1) brightness(0.9); }
+  .chart-overlay { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); padding: 5px 12px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.8rem; border: 1px solid var(--dark4); }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 40px; }
+  
+  .card { background: var(--surface); border: 1px solid var(--dark4); border-radius: 12px; padding: 25px; transition: transform 0.2s; }
+  .card:hover { border-color: var(--muted); }
+  
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .trade-id { font-family: var(--font-display), cursive; font-size: 1.8rem; }
+  .badge { font-family: 'Space Mono', monospace; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; font-weight: bold; }
+  .long { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,200,122,0.2); }
+  .short { background: var(--red-dim); color: var(--red); border: 1px solid rgba(232,57,74,0.2); }
+
+  .stats-row { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--surface2); padding-bottom: 15px; }
+  .stat-item { flex: 1; }
+  .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .stat-value { font-family: 'Space Mono', monospace; font-weight: bold; font-size: 1rem; }
+
+  .narrative { font-size: 0.9rem; line-height: 1.6; color: #b0b4be; margin-bottom: 20px; min-height: 100px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { font-size: 0.65rem; padding: 3px 8px; background: var(--surface2); border-radius: 3px; color: var(--muted); border: 1px solid var(--dark4); }
+  .highlight { color: var(--gold); border-color: var(--gold-dim); }
+
+  .summary-bar { background: var(--surface); border: 1px solid var(--dark4); border-radius: 12px; display: flex; padding: 25px; gap: 40px; }
+  .sum-item { flex: 1; border-right: 1px solid var(--surface2); }
+  .sum-item:last-child { border-right: none; }
+  .sum-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .sum-value { font-family: var(--font-display), cursive; font-size: 2.5rem; }
+  .green { color: var(--green); }
+</style>
+</head>
+<body>
+
+<div class="session-header">
+  <div class="instrument">MNQ FUTURES</div>
+  <div class="session-date">FRIDAY, 27 MAR '26 — RTH SESSION</div>
+</div>
+
+<div class="chart-container">
+  <div class="chart-overlay">SESSION CHART: AL BROOKS PRICE ACTION + CVD</div>
+  <img src="EOD 2026-03-27.png" alt="Trading Session Chart">
+</div>
+
+<div class="cards-grid">
+  
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id">TRADE #01</div>
+      <span class="badge long">BUY LIMIT</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-label">Entry</div><div class="stat-value">Bar 22</div></div>
+      <div class="stat-item"><div class="stat-label">Exit</div><div class="stat-value">Bar 23</div></div>
+      <div class="stat-item"><div class="stat-label">Result</div><div class="stat-value green">+331 TICKS</div></div>
+    </div>
+    <div class="narrative">
+      <p>Trading Range behavior identified (Bars 6-14). High risk entry below 20EMA and VWAP. TD9 Red exhaustion supported the reversal thesis despite negative CVD. Exit at 1:2.5 MM based on Bar 15 signal bar.</p>
+    </div>
+    <div class="tags">
+      <span class="tag highlight">TD9 EXHAUSTION</span>
+      <span class="tag">TR BEHAVIOR</span>
+      <span class="tag">BLSH</span>
+      <span class="tag">1:2.5 RR</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id">TRADE #02</div>
+      <span class="badge short">SELL STOP</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-label">Entry</div><div class="stat-value">Bar 31</div></div>
+      <div class="stat-item"><div class="stat-label">Exit</div><div class="stat-value">Bar 39</div></div>
+      <div class="stat-item"><div class="stat-label">Result</div><div class="stat-value green">+379 TICKS</div></div>
+    </div>
+    <div class="narrative">
+      <p>Failed ABC pattern correction (Bar 16-25) led to Low 3 setup. Order Flow confirmation: CVD turned negative and trended down. Captured move from failed bull attempt at 20EMA. Held for full 1:2.5 target.</p>
+    </div>
+    <div class="tags">
+      <span class="tag highlight">LOW 3 SETUP</span>
+      <span class="tag">CVD CONFIRMED</span>
+      <span class="tag">ABC FAILURE</span>
+      <span class="tag">EMA REJECTION</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id">TRADE #03</div>
+      <span class="badge short">SELL STOP</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-label">Entry</div><div class="stat-value">Bar 45</div></div>
+      <div class="stat-item"><div class="stat-label">Exit</div><div class="stat-value">Bar 46</div></div>
+      <div class="stat-item"><div class="stat-label">Result</div><div class="stat-value green">+138 TICKS</div></div>
+    </div>
+    <div class="narrative">
+      <p>L2 signal at 20EMA with CVD crossing below its EMA. Conservative 1:1 exit taken due to price touching -2.0 Standard Deviation band. Avoided mean-reversion risk toward VWAP to protect session profits.</p>
+    </div>
+    <div class="tags">
+      <span class="tag highlight">LOW 2</span>
+      <span class="tag"> -2.0 STD DEV</span>
+      <span class="tag">EMA PULLBACK</span>
+      <span class="tag">SAFE SCALP</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="summary-bar">
+  <div class="sum-item"><div class="sum-label">Total Session Profit</div><div class="sum-value green">848 TICKS</div></div>
+  <div class="sum-item"><div class="sum-label">Trades</div><div class="sum-value">3 / 3</div></div>
+  <div class="sum-item"><div class="sum-label">Win Rate</div><div class="sum-value green">100%</div></div>
+  <div class="sum-item"><div class="sum-label">Status</div><div class="sum-value" style="color:var(--accent)">FUNDED</div></div>
+</div>
+
+</body>
+</html>

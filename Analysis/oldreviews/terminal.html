@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sire Tactical // Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── TERMINAL DESIGN TOKENS ──────────────────────────────── */
+:root {
+  --bg: #06080A; --panel: rgba(12, 16, 21, 0.8); --border: rgba(255, 255, 255, 0.05);
+  --green: #00C896; --green-glow: rgba(0, 200, 150, 0.15);
+  --gold: #B87333; --gold-lt: #E8C46A;
+  --red: #F05252; --text: #E4ECF5; --sub: #617080;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { 
+    background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif;
+    background-image: radial-gradient(circle at 50% 50%, #0D1219 0%, #06080A 100%);
+    min-height: 100vh; padding: 40px;
+}
+
+/* Background Scanline Effect */
+body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    background-size: 100% 4px, 3px 100%; z-index: 100;
+}
+
+.terminal-container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
+
+/* HEADER STYLING */
+.t-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+.t-brand { font-family: 'Bebas Neue', cursive; font-size: 2rem; letter-spacing: 3px; color: var(--text); }
+.t-brand span { color: var(--green); }
+.t-status { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--sub); display: flex; gap: 20px; }
+
+/* HUD CARDS */
+.hud-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+.hud-card { 
+    background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 4px;
+    backdrop-filter: blur(10px); position: relative; overflow: hidden;
+}
+.hud-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--border); }
+.hud-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--sub); text-transform: uppercase; margin-bottom: 10px; }
+.hud-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; line-height: 1; }
+
+/* MAIN CONTENT SPLIT */
+.main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+/* SECTION STYLING */
+.section-box { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 25px; margin-bottom: 20px; }
+.section-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 2px; margin-bottom: 15px; display: block; }
+
+/* DATA ROWS */
+.data-row { 
+    display: grid; grid-template-columns: 1fr 1fr 1fr auto; padding: 15px 0; border-bottom: 1px solid var(--border); 
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; transition: 0.3s;
+}
+.data-row:hover { background: rgba(255,255,255,0.02); padding-left: 10px; }
+.col-label { color: var(--sub); font-size: 10px; margin-bottom: 4px; }
+
+/* THE PSYCH GATE */
+.gate-card { background: linear-gradient(135deg, #10151B 0%, #0C1015 100%); border-left: 3px solid var(--gold); }
+.gate-item { margin-bottom: 15px; }
+.gate-item p { font-size: 0.95rem; font-style: italic; color: var(--cream2); }
+
+.btn-action {
+    display: inline-block; width: 100%; padding: 12px; background: var(--green-glow); border: 1px solid var(--green);
+    color: var(--green); text-decoration: none; text-align: center; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; margin-top: 10px; transition: 0.3s;
+}
+.btn-action:hover { background: var(--green); color: var(--bg); }
+</style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <header class="t-header">
+        <div class="t-brand">SIRE<span>TACTICAL</span></div>
+        <div class="t-status">
+            <div>SYSTEM: <span style="color:var(--green)">CONNECTED</span></div>
+            <div>ACCOUNT: <span style="color:var(--gold-lt)">150K_TPT_EVAL</span></div>
+            <div>PHASE: <span style="color:var(--text)">RECOVERY</span></div>
+        </div>
+    </header>
+
+    <div class="hud-grid">
+        <div class="hud-card">
+            <div class="hud-label">Current Net P/L</div>
+            <div class="hud-val" style="color:var(--red);">-$2,862.50</div>
+        </div>
+        <div class="hud-card">
+            <div class="hud-label">Recovery Goal</div>
+            <div class="hud-val" style="color:var(--gold);">$11,862.50</div>
+        </div>
+        <div class="hud-card">
+            <div class="hud-label">Win Rate</div>
+            <div class="hud-val">24.7%</div>
+        </div>
+        <div class="hud-card">
+            <div class="hud-label">Profit Factor</div>
+            <div class="hud-val" style="color:var(--green);">2.07</div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <div class="left-col">
+            <div class="section-box">
+                <span class="section-tag">// SESSION DATABASE</span>
+                <div class="data-row" style="border-bottom: 2px solid var(--border); color: var(--sub);">
+                    <div>DATE</div><div>PLAYBOOK</div><div>RESULT</div><div>STATUS</div>
+                </div>
+                <div class="data-row">
+                    <div>04/03/26</div><div>PB-VolumeP</div><td style="color:var(--green)">+$39.00</td><td><span style="color:var(--green)">✓</span></td>
+                </div>
+                <div class="data-row">
+                    <div>04/02/26</div><div>PB-SchoolRun</div><td style="color:var(--green)">+$741.00</td><td><span style="color:var(--green)">✓</span></td>
+                </div>
+                <div class="data-row">
+                    <div>04/01/26</div><div>PB-20P</div><td style="color:var(--red)">-$3,642.50</td><td><span style="color:var(--red)">!</span></td>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <div class="section-box gate-card">
+                <span class="section-tag">// MORNING THRESHOLD</span>
+                <div class="gate-item">
+                    <div class="col-label">FOCUS</div>
+                    <p>Mind clear for 2+ hours?</p>
+                </div>
+                <div class="gate-item">
+                    <div class="col-label">CONTEXT</div>
+                    <p>Key levels mapped (POC/VA)?</p>
+                </div>
+                <div class="gate-item" style="border-top: 1px solid var(--dark4); padding-top: 10px;">
+                    <div class="col-label" style="color:var(--gold);">CORE INTENT</div>
+                    <p style="color:var(--text); font-weight: 600;">Trading a setup or just trading?</p>
+                </div>
+            </div>
+
+            <div class="section-box" style="background:transparent; border-style:dashed;">
+                <span class="section-tag">// OPERATIONAL LINKS</span>
+                <a href="playbook-01.html" class="btn-action">Open 20P Blueprint</a>
+                <a href="playbook-02.html" class="btn-action">Open Volume Profile</a>
+                <a href="journal.html" class="btn-action" style="border-color:var(--gold); color:var(--gold); background:transparent;">View Full Case Studies</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

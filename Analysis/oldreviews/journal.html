@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --bg: #05070A; --card: #0A0D14; --border: #161B22;
+  --accent: #4F8EF7; --orange: #FB923C; --green: #00C896;
+  --text: #C9D1D9; --dim: #484F58;
+}
+body { 
+    background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; 
+    padding: 40px; text-transform: uppercase;
+}
+
+.journal-header { margin-bottom: 40px; border-left: 2px solid var(--accent); padding-left: 20px; }
+.journal-title { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; }
+
+/* THE GALLERY GRID */
+.log-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+.log-entry { 
+    background: var(--card); padding: 25px; transition: 0.2s; cursor: pointer;
+    display: flex; flex-direction: column; justify-content: space-between; min-height: 220px;
+}
+.log-entry:hover { background: #0D1117; }
+
+.log-date { font-size: 10px; color: var(--dim); margin-bottom: 5px; }
+.log-setup { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 20px; }
+
+.log-main-stat { font-size: 24px; font-weight: 700; margin-bottom: 15px; }
+
+.log-meta { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 15px; }
+.meta-item { display: flex; flex-direction: column; }
+.meta-label { font-size: 8px; color: var(--dim); margin-bottom: 4px; }
+.meta-val { font-size: 10px; color: var(--text); }
+
+/* STATUS DOTS */
+.status-pill { padding: 2px 8px; font-size: 9px; border: 1px solid currentColor; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="journal-header">
+    <div class="journal-title">SESSION ARCHIVE // CD-RECOVERY</div>
+    <div style="font-size: 10px; color: var(--dim); margin-top: 5px;">ACCOUNT: TPT_150K_PHASE_01</div>
+</div>
+
+<div class="log-grid">
+    <div class="log-entry" onclick="location.href='EODReview/2026-04-03.html'">
+        <div>
+            <div class="log-date">2026.04.03 // FRI</div>
+            <div class="log-setup">PB-VOLUME-P</div>
+            <div class="log-main-stat" style="color:var(--green)">+$39.00</div>
+        </div>
+        <div class="log-meta">
+            <div class="meta-item"><span class="meta-label">TICKS</span><span class="meta-val">39</span></div>
+            <div class="meta-item"><span class="meta-label">QUALITY</span><span class="status-pill" style="color:var(--green)">PRIME</span></div>
+        </div>
+    </div>
+
+    <div class="log-entry" onclick="location.href='EODReview/2026-04-02.html'">
+        <div>
+            <div class="log-date">2026.04.02 // THU</div>
+            <div class="log-setup">PB-SCHOOL-RUN</div>
+            <div class="log-main-stat" style="color:var(--green)">+$741.00</div>
+        </div>
+        <div class="log-meta">
+            <div class="meta-item"><span class="meta-label">TICKS</span><span class="meta-val">741</span></div>
+            <div class="meta-item"><span class="meta-label">QUALITY</span><span class="status-pill" style="color:var(--accent)">BLUEPRINT</span></div>
+        </div>
+    </div>
+
+    <div class="log-entry" onclick="location.href='EODReview/2026-04-01.html'">
+        <div>
+            <div class="log-date">2026.04.01 // WED</div>
+            <div class="log-setup">PB-20P / TILT</div>
+            <div class="log-main-stat" style="color:var(--red)">-$3,642.50</div>
+        </div>
+        <div class="log-meta">
+            <div class="meta-item"><span class="meta-label">TICKS</span><span class="meta-val">N/A</span></div>
+            <div class="meta-item"><span class="meta-label">ERROR</span><span class="status-pill" style="color:var(--orange)">OVER-TRADE</span></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

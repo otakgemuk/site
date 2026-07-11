@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOD Manager — SireMammat</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+:root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+body{background:var(--dark);font-family:'DM Sans',sans-serif;color:var(--cream);display:flex;flex-direction:column;overflow:hidden;}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--dark4);flex-shrink:0;z-index:100;}
+.tb-brand{display:flex;align-items:center;gap:12px;}
+.tb-brand .logo{font-family:var(--font-display);font-size:22px;letter-spacing:.06em;color:var(--green);}
+.tb-brand .ver{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.15em;background:var(--surface2);border:1px solid var(--dark4);padding:2px 7px;border-radius:3px;}
+.tb-actions{display:flex;gap:8px;align-items:center;}
+.btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;padding:7px 16px;border-radius:5px;cursor:pointer;border:1px solid;transition:all .15s;display:flex;align-items:center;gap:6px;text-transform:uppercase;}
+.btn-ghost{background:transparent;border-color:var(--dark4);color:var(--muted);}
+.btn-ghost:hover{border-color:rgba(184,115,51,0.2);color:var(--cream);background:var(--surface2);}
+.btn-green{background:var(--green-dim);border-color:rgba(34,200,122,.3);color:var(--green);}
+.btn-green:hover{background:rgba(34,200,122,.18);}
+.btn-gold{background:var(--gold-dim);border-color:rgba(245,200,66,.3);color:var(--gold);}
+.btn-gold:hover{background:rgba(245,200,66,.18);}
+.btn-blue{background:var(--blue-dim);border-color:rgba(59,130,246,.3);color:var(--blue);}
+.btn-blue:hover{background:rgba(59,130,246,.18);}
+.btn-red{background:var(--red-dim);border-color:rgba(232,57,74,.3);color:var(--red);}
+.btn-red:hover{background:rgba(232,57,74,.2);}
+.tab-group{display:flex;border:1px solid var(--dark4);border-radius:5px;overflow:hidden;}
+.tab-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;padding:6px 16px;border:none;background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .15s;border-right:1px solid var(--dark4);text-transform:uppercase;}
+.tab-btn:last-child{border-right:none;}
+.tab-btn.active{background:var(--cream);color:var(--dark);}
+
+/* WORKSPACE SPLIT */
+.workspace{display:grid;grid-template-columns:420px 1fr;flex:1;overflow:hidden;}
+.editor-panel{background:var(--surface);border-right:1px solid var(--dark4);overflow-y:auto;display:flex;flex-direction:column;}
+.editor-panel::-webkit-scrollbar{width:4px;}
+.editor-panel::-webkit-scrollbar-thumb{background:rgba(184,115,51,0.2);border-radius:2px;}
+.preview-panel{overflow-y:auto;background:var(--dark);}
+.preview-panel::-webkit-scrollbar{width:4px;}
+.preview-panel::-webkit-scrollbar-thumb{background:rgba(184,115,51,0.2);border-radius:2px;}
+
+/* MANAGE PANEL */
+.manage-panel{display:none;flex:1;overflow-y:auto;padding:32px 40px 60px;background:var(--dark);}
+.manage-panel.show{display:block;}
+.manage-panel::-webkit-scrollbar{width:4px;}
+.manage-panel::-webkit-scrollbar-thumb{background:rgba(184,115,51,0.2);border-radius:2px;}
+
+/* FORM */
+.section-head{padding:12px 18px 10px;border-bottom:1px solid var(--dark4);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:var(--surface2);display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:10;}
+.section-head .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);}
+.form-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+label{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:4px;}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;background:var(--surface2);border:1px solid var(--dark4);border-radius:5px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 10px;outline:none;transition:border-color .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);}
+input[readonly]{color:var(--muted);cursor:default;background:var(--dark);}
+textarea{resize:vertical;min-height:70px;line-height:1.6;}
+select option{background:var(--surface2);}
+
+/* result radios */
+.result-group{display:flex;gap:8px;}
+.result-opt{flex:1;}
+.result-opt input{display:none;}
+.result-opt label{display:block;text-align:center;padding:9px;border:1px solid var(--dark4);border-radius:5px;cursor:pointer;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);transition:all .15s;}
+.result-opt input:checked + label.win {background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.result-opt input:checked + label.loss{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.result-opt input:checked + label.be  {background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+
+/* trade blocks */
+.trade-block{border:1px solid var(--dark4);border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.trade-block-head{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--dark4);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.t-label{font-family:var(--font-display);font-size:18px;letter-spacing:.05em;}
+.t-label.long{color:var(--green);}
+.t-label.short{color:var(--red);}
+.chevron{color:var(--muted);font-size:11px;transition:transform .2s;}
+.trade-block-head.collapsed .chevron{transform:rotate(-90deg);}
+.trade-block-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
+.trade-block-body.hidden{display:none;}
+.rm-btn{font-family:'Space Mono',monospace;font-size:9px;color:var(--red);background:var(--red-dim);border:1px solid rgba(232,57,74,.2);border-radius:3px;padding:2px 8px;cursor:pointer;}
+.add-trade-btn{margin:0 18px 16px;font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);background:var(--surface2);border:1px dashed rgba(184,115,51,0.2);border-radius:5px;padding:9px;cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.1em;}
+.add-trade-btn:hover{border-color:var(--green);color:var(--green);}
+
+/* chart upload */
+.chart-drop{border:2px dashed rgba(184,115,51,0.2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
+.chart-drop:hover{border-color:var(--blue);background:var(--blue-dim);}
+.chart-drop.has-img{border-color:var(--green);background:var(--green-dim);}
+.chart-drop.has-img p{color:var(--green);}
+.chart-drop .icon{font-size:24px;margin-bottom:6px;}
+.chart-drop p{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;}
+
+/* ═══ TRADE CARD PREVIEW STYLES ═══ */
+#preview-root{padding:32px 24px 48px;background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(59,130,246,.06) 0%,transparent 70%),repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.015) 40px);min-height:100%;}
+#preview-root header{text-align:center;margin-bottom:32px;}
+.p-session-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+.p-h1{font-family:var(--font-display);font-size:clamp(32px,5vw,56px);letter-spacing:.06em;line-height:1;}
+.p-h1 span{color:var(--green);}
+.p-subtitle{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.13em;margin-top:8px;}
+.p-section-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.p-section-label::after{content:'';flex:1;height:1px;background:var(--dark4);}
+.p-context{background:var(--surface);border:1px solid var(--dark4);border-radius:10px;overflow:hidden;margin-bottom:28px;}
+.p-ctx-header{padding:12px 20px;border-bottom:1px solid var(--dark4);display:flex;align-items:center;gap:8px;background:var(--surface2);}
+.p-ctx-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);}
+.p-ctx-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+.p-ctx-body{display:grid;grid-template-columns:1fr 1fr;}
+.p-chart-pane{background:#080b0e;border-right:1px solid var(--dark4);min-height:200px;display:flex;align-items:center;justify-content:center;}
+.p-chart-pane img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9;}
+.p-no-chart{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:.1em;}
+.p-narrative{padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
+.p-bias-row{display:flex;gap:6px;flex-wrap:wrap;}
+.p-chip{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid;}
+.p-chip.bearish{background:var(--red-dim);color:var(--red);border-color:rgba(232,57,74,.3);}
+.p-chip.range{background:var(--gold-dim);color:var(--gold);border-color:rgba(245,200,66,.3);}
+.p-chip.bullish{background:var(--green-dim);color:var(--green);border-color:rgba(34,200,122,.3);}
+.p-chip.neutral{background:var(--blue-dim);color:var(--blue);border-color:rgba(59,130,246,.3);}
+.p-narrative-text{font-size:11px;line-height:1.75;color:#8a94a6;}
+.p-key-levels{background:var(--surface2);border:1px solid var(--dark4);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;}
+.p-kl-row{display:flex;justify-content:space-between;}
+.p-kl-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;}
+.p-kl-val{font-family:'Space Mono',monospace;font-size:9px;color:var(--cream);}
+.p-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:28px;}
+.p-card{background:var(--surface);border:1px solid var(--dark4);border-radius:10px;overflow:hidden;position:relative;}
+.p-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.p-card.long-c::before{background:var(--green);}
+.p-card.short-c::before{background:var(--red);}
+.p-card-head{padding:16px 18px 12px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--dark4);}
+.p-tid{font-family:var(--font-display);font-size:30px;letter-spacing:.05em;line-height:1;}
+.p-tid.long{color:var(--green);}.p-tid.short{color:var(--red);}
+.p-ttype{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.p-dir{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:3px;}
+.p-dir.long{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,200,122,.3);}
+.p-dir.short{background:var(--red-dim);color:var(--red);border:1px solid rgba(232,57,74,.3);}
+.p-setup{font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;}
+.p-risk{font-family:'Space Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;}
+.p-risk.high{background:var(--red-dim);color:var(--red);border:1px solid rgba(232,57,74,.2);}
+.p-risk.med{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,200,66,.2);}
+.p-risk.low{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,200,122,.2);}
+.p-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--dark4);}
+.p-stat{padding:12px 14px;border-right:1px solid var(--dark4);}
+.p-stat:last-child{border-right:none;}
+.p-stat-label{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.p-stat-value{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;}
+.p-stat-value.green{color:var(--green);}.p-stat-value.red{color:var(--red);}.p-stat-value.gold{color:var(--gold);}
+.p-exec{padding:12px 18px;border-bottom:1px solid var(--dark4);}
+.p-block-title{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.p-erow{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;}
+.p-ekey{color:var(--muted);}
+.p-eval{font-family:'Space Mono',monospace;color:var(--cream);font-size:11px;}
+.p-eval.red{color:var(--red);}.p-eval.green{color:var(--green);}
+.p-bar{margin:0 18px 12px;height:5px;border-radius:3px;background:var(--surface2);}
+.p-bar-fill{height:100%;border-radius:3px;}
+.p-bar-fill.long{background:linear-gradient(90deg,var(--blue),var(--green));}
+.p-bar-fill.short{background:linear-gradient(90deg,var(--blue),var(--red));}
+.p-note{margin:0 18px 10px;padding:9px 12px;border-radius:5px;border-left:3px solid var(--gold);background:var(--gold-dim);font-size:10px;color:#b8a060;line-height:1.6;font-family:'Space Mono',monospace;}
+.p-rationale{padding:10px 18px 14px;}
+.p-rationale p{font-size:11px;line-height:1.75;color:#8a94a6;}
+.p-tags{padding:0 18px 14px;display:flex;flex-wrap:wrap;gap:5px;}
+.p-tag{font-family:'Space Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px;border:1px solid var(--dark4);color:var(--muted);background:var(--surface2);}
+.p-tag.gold{border-color:rgba(245,200,66,.3);color:var(--gold);background:var(--gold-dim);}
+.p-tag.red{border-color:rgba(232,57,74,.3);color:var(--red);background:var(--red-dim);}
+.p-summary{background:var(--surface);border:1px solid var(--dark4);border-radius:10px;padding:22px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;margin-bottom:24px;}
+.p-sum-item{text-align:center;}
+.p-sum-label{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+.p-sum-value{font-family:var(--font-display);font-size:30px;line-height:1;}
+.p-sum-sub{font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);margin-top:3px;}
+.p-footer{text-align:center;font-family:'Space Mono',monospace;font-size:8px;color:#2e3540;letter-spacing:.18em;text-transform:uppercase;}
+
+/* MANAGE */
+.import-zone{border:1px dashed rgba(184,115,51,0.2);border-radius:8px;padding:32px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:28px;}
+.import-zone:hover,.import-zone.over{border-color:var(--muted);background:var(--surface);}
+.import-zone p{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:8px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}
+.stat-card{background:var(--surface);border:1px solid var(--dark4);border-radius:6px;padding:14px 16px;}
+.stat-val{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--cream);line-height:1;margin-bottom:6px;}
+.stat-val.pos{color:var(--green);}.stat-val.neg{color:var(--red);}
+.stat-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.filter-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;padding:5px 11px;border:1px solid var(--dark4);border-radius:3px;background:none;color:var(--muted);cursor:pointer;transition:all .15s;text-transform:uppercase;}
+.filter-btn.active{border-color:var(--muted);color:var(--cream);background:var(--surface2);}
+.review-list{display:flex;flex-direction:column;gap:8px;}
+.review-card{display:flex;align-items:stretch;border:1px solid var(--dark4);border-radius:6px;overflow:hidden;transition:border-color .15s;animation:fadein .2s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.review-card:hover{border-color:rgba(184,115,51,0.2);}
+.review-accent{width:3px;flex-shrink:0;}
+.review-accent.win{background:var(--green);}
+.review-accent.loss{background:var(--red);}
+.review-accent.be{background:var(--gold);}
+.review-body{flex:1;padding:14px 16px;display:flex;align-items:center;gap:20px;background:var(--surface);}
+.review-date{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);min-width:90px;flex-shrink:0;}
+.review-title{font-size:13.5px;font-weight:500;color:var(--cream);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.review-meta{font-family:'Space Mono',monospace;font-size:11px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.review-pts{font-weight:700;}
+.review-pts.win{color:var(--green);}.review-pts.loss{color:var(--red);}.review-pts.be{color:var(--gold);}
+.review-tag{padding:2px 7px;border-radius:3px;font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.06em;}
+.review-tag.win{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,200,122,.25);}
+.review-tag.loss{background:var(--red-dim);color:var(--red);border:1px solid rgba(232,57,74,.25);}
+.review-tag.be{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,200,66,.25);}
+.review-del{width:44px;flex-shrink:0;background:var(--surface);border:none;border-left:1px solid var(--dark4);color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.review-del:hover{background:var(--red-dim);color:var(--red);}
+.empty{text-align:center;padding:48px 24px;border:1px dashed var(--dark4);border-radius:6px;}
+.empty .e-title{font-family:var(--font-display);font-size:28px;letter-spacing:.06em;color:var(--muted2);}
+.empty p{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.04em;}
+.hint{background:var(--surface);border:1px solid var(--dark4);border-radius:6px;padding:16px 20px;margin-top:20px;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+.hint strong{color:#8a94a6;}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:999;}
+.toast{background:var(--surface2);border:1px solid rgba(184,115,51,0.2);border-radius:5px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:12px;color:var(--cream);letter-spacing:.02em;animation:toastin .2s ease;display:flex;align-items:center;gap:8px;}
+@keyframes toastin{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.toast .dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.toast.err .dot{background:var(--red);}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .2s;}
+.overlay.open{opacity:1;pointer-events:all;}
+.dialog{background:var(--surface2);border:1px solid rgba(184,115,51,0.2);border-radius:8px;padding:28px;width:380px;transform:scale(.97);transition:transform .2s;}
+.overlay.open .dialog{transform:scale(1);}
+.dialog-title{font-family:var(--font-display);font-size:24px;letter-spacing:.04em;margin-bottom:8px;}
+.dialog-desc{font-size:13px;color:#8a94a6;line-height:1.6;margin-bottom:24px;}
+.dialog-actions{display:flex;gap:8px;justify-content:flex-end;}
+
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.toolbar,.editor-panel{display:none!important;}.workspace{display:block!important;}.preview-panel{overflow:visible!important;height:auto!important;}#preview-root{padding:20px!important;}.p-cards-grid{grid-template-columns:repeat(3,1fr)!important;}.p-ctx-body{grid-template-columns:1fr 1fr!important;}}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="tb-brand">
+    <div class="logo">EOD Manager</div>
+    <div class="ver">v2.0 · SIREMAMMAT</div>
+  </div>
+  <div class="tb-actions">
+    <div class="tab-group">
+      <button class="tab-btn active" id="tab-new"    onclick="setTab('new')">+ New Review</button>
+      <button class="tab-btn"        id="tab-manage" onclick="setTab('manage')">Manage Reviews</button>
+    </div>
+    <button class="btn btn-ghost"  id="btn-reset"      onclick="resetForm()"    style="display:none">↺ Reset</button>
+    <button class="btn btn-blue"   id="btn-add-trade"  onclick="addTrade()"     style="display:none">+ Trade</button>
+    <button class="btn btn-green"  id="btn-save-card"  onclick="saveCardHTML()" style="display:none">⬇ Save Card</button>
+    <button class="btn btn-gold"   id="btn-dl-js"      onclick="downloadJS()"   style="display:none">⬇ eod-data.js</button>
+  </div>
+</div>
+
+<!-- NEW REVIEW: SPLIT PANE -->
+<div class="workspace" id="ws-new">
+
+  <div class="editor-panel">
+
+    <div class="section-head"><div class="dot"></div>Session Info</div>
+    <div class="form-body">
+      <div class="form-row">
+        <div><label>EOD #</label><input type="text" id="f-eod-num" readonly></div>
+        <div><label>Date</label><input type="date" id="f-date" oninput="syncDay();render()"></div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Day</label>
+          <select id="f-day" onchange="render()">
+            <option value="">—</option>
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option>
+          </select>
+        </div>
+        <div>
+          <label>Instrument</label>
+          <select id="f-instrument" onchange="render()">
+            <option value="">—</option>
+            <option>ES</option><option>NQ</option><option>MES</option><option>MNQ</option><option>Mixed</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label>Result</label>
+        <div class="result-group">
+          <div class="result-opt"><input type="radio" name="result" id="r-win"  value="WIN"  onchange="render()"><label for="r-win"  class="win">WIN</label></div>
+          <div class="result-opt"><input type="radio" name="result" id="r-loss" value="LOSS" onchange="render()"><label for="r-loss" class="loss">LOSS</label></div>
+          <div class="result-opt"><input type="radio" name="result" id="r-be"   value="BE"   onchange="render()"><label for="r-be"   class="be">BE</label></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div><label>Net Points</label><input type="number" id="f-pts" step="0.25" placeholder="e.g. −8.5" oninput="render()"></div>
+        <div>
+          <label>Won / Total Trades</label>
+          <div style="display:flex;gap:6px">
+            <input type="number" id="f-trades-won" min="0" placeholder="Won"   oninput="render()" style="width:50%">
+            <input type="number" id="f-trades"     min="0" placeholder="Total" oninput="render()" style="width:50%">
+          </div>
+        </div>
+      </div>
+      <div><label>Session Title</label><input type="text" id="f-title" placeholder="e.g. Clean M2B on ES opening, hit target in 12 mins" oninput="render()"></div>
+      <div><label>Summary (card text)</label><textarea id="f-summary" rows="2" placeholder="1–2 sentences shown on the performance card..." oninput="render()"></textarea></div>
+      <div><label>Tags (comma separated)</label><input type="text" id="f-tags" placeholder="ES, Opening Drive, VWAP Reclaim" oninput="render()"></div>
+    </div>
+
+    <div class="section-head"><div class="dot"></div>Chart Image</div>
+    <div class="form-body">
+      <div class="chart-drop" id="chart-drop" onclick="document.getElementById('chart-file').click()">
+        <div class="icon">📈</div>
+        <p id="chart-label">CLICK TO UPLOAD EOD CHART</p>
+        <p style="margin-top:4px;font-size:8px;opacity:.6">PNG / JPG / WEBP</p>
+      </div>
+      <input type="file" id="chart-file" accept="image/*" style="display:none" onchange="handleChart(event)">
+      <button class="btn btn-ghost" style="font-size:9px;" onclick="clearChart()">✕ Remove Chart</button>
+    </div>
+
+    <div class="section-head"><div class="dot"></div>Market Context</div>
+    <div class="form-body">
+      <div><label>Bias Tags (comma-separated)</label><input type="text" id="f-bias-tags" placeholder="BEARISH OPEN, TRADING RANGE, LIMIT ORDER MARKET" oninput="render()"></div>
+      <div><label>Context Narrative</label><textarea id="f-context-text" rows="5" placeholder="Session structure, key observations, bar-by-bar context..." oninput="render()"></textarea></div>
+      <div><label>Key Levels (Label | Value — one per line)</label><textarea id="f-key-levels" rows="4" placeholder="Session Bias | BEARISH → RANGE&#10;TD9 Exhaustion | Bar 9 (Red)&#10;VWAP | 5847.25" oninput="render()"></textarea></div>
+    </div>
+
+    <div class="section-head"><div class="dot"></div>Session Timeline</div>
+    <div class="form-body">
+      <div id="sessions-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <button class="btn btn-ghost" style="font-size:9px;" onclick="addSession()">+ Add Timeline Entry</button>
+    </div>
+
+    <div class="section-head"><div class="dot"></div>Trades</div>
+    <div id="trades-container"></div>
+    <div class="add-trade-btn" onclick="addTrade()">+ ADD TRADE</div>
+
+    <div class="section-head"><div class="dot"></div>Reflection</div>
+    <div class="form-body">
+      <div><label>What Worked (one per line)</label><textarea id="f-worked" rows="4" placeholder="Waited for clean entry&#10;Respected stop loss" oninput="render()"></textarea></div>
+      <div><label>Areas to Improve (one per line)</label><textarea id="f-improve" rows="4" placeholder="Entered too early&#10;Moved stop prematurely" oninput="render()"></textarea></div>
+    </div>
+
+    <div class="section-head"><div class="dot"></div>Lessons &amp; Footer</div>
+    <div class="form-body" style="padding-bottom:8px;">
+      <div><label>Key Lessons (one per line)</label><textarea id="f-lessons" rows="4" placeholder="Patience in the opening 30 minutes consistently produces better entries than rushing the first setup." oninput="render()"></textarea></div>
+      <div><label>Session Bias Label</label><input type="text" id="f-sum-bias" placeholder="e.g. BEAR → RANGE" oninput="render()"></div>
+      <div><label>Footer Motto</label><input type="text" id="f-motto" value="PATIENCE · DISCIPLINE · FEARLESS · EXECUTION" oninput="render()"></div>
+    </div>
+
+    <div style="padding:16px 18px 32px;display:flex;gap:8px;">
+      <button class="btn btn-green" style="flex:1;justify-content:center;" onclick="addReview()">✓ Add Review</button>
+      <button class="btn btn-ghost" onclick="resetForm()">↺</button>
+    </div>
+
+  </div><!-- /editor-panel -->
+
+  <div class="preview-panel">
+    <div id="preview-root"></div>
+  </div>
+
+</div><!-- /ws-new -->
+
+<!-- MANAGE PANEL -->
+<div class="manage-panel" id="ws-manage">
+
+  <div class="import-zone" id="import-zone"
+    onclick="document.getElementById('js-inp').click()"
+    ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
+    <div style="font-size:24px">📂</div>
+    <p>Drop your existing <strong>eod-data.js</strong> here to load past reviews — or click to browse</p>
+  </div>
+  <input type="file" id="js-inp" accept=".js" style="display:none" onchange="importFile(this)">
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="s-total">0</div><div class="stat-lbl">Reviews</div></div>
+    <div class="stat-card"><div class="stat-val pos" id="s-wins">0</div><div class="stat-lbl">Wins</div></div>
+    <div class="stat-card"><div class="stat-val neg" id="s-losses">0</div><div class="stat-lbl">Losses</div></div>
+    <div class="stat-card"><div class="stat-val" id="s-pts">—</div><div class="stat-lbl">Net Pts</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('WIN',this)">Win</button>
+    <button class="filter-btn" onclick="setFilter('LOSS',this)">Loss</button>
+    <button class="filter-btn" onclick="setFilter('BE',this)">BE</button>
+    <button class="filter-btn" onclick="setFilter('ES',this)">ES</button>
+    <button class="filter-btn" onclick="setFilter('NQ',this)">NQ</button>
+    <button class="filter-btn" onclick="setFilter('MES',this)">MES</button>
+    <button class="filter-btn" onclick="setFilter('MNQ',this)">MNQ</button>
+  </div>
+
+  <div id="review-list" class="review-list"></div>
+
+  <div style="display:flex;gap:10px;margin-top:24px;">
+    <button class="btn btn-gold"  onclick="downloadJS()">⬇ Download eod-data.js</button>
+    <button class="btn btn-ghost" onclick="clearAll()">Clear All</button>
+  </div>
+
+  <div class="hint">
+    <strong>Workflow:</strong> Load existing eod-data.js · Fill in New Review tab · Delete entries with × ·
+    Click <strong>Download eod-data.js</strong> · Upload to Neocities — your performance page updates instantly.
+  </div>
+
+</div>
+
+<!-- CONFIRM -->
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <div class="dialog-title" id="dlg-title">Delete Review?</div>
+    <div class="dialog-desc"  id="dlg-desc">This removes the entry. Only takes effect when you download and re-upload eod-data.js.</div>
+    <div class="dialog-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-red"   onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ── STATE ── */
+let reviews      = JSON.parse(localStorage.getItem('sm_eod') || '[]');
+let filterMode   = 'all';
+let deleteTarget = null;
+let chartDataUrl = null;
+let tradeCount   = 0;
+let currentTab   = 'new';
+
+/* ── TAB SWITCHING ── */
+function setTab(t) {
+  currentTab = t;
+  document.getElementById('ws-new').style.display    = t === 'new' ? 'grid' : 'none';
+  document.getElementById('ws-manage').classList.toggle('show', t === 'manage');
+  document.getElementById('tab-new').classList.toggle('active',    t === 'new');
+  document.getElementById('tab-manage').classList.toggle('active', t === 'manage');
+  document.getElementById('btn-reset').style.display     = t === 'new' ? 'flex' : 'none';
+  document.getElementById('btn-add-trade').style.display = t === 'new' ? 'flex' : 'none';
+  document.getElementById('btn-save-card').style.display = t === 'new' ? 'flex' : 'none';
+  document.getElementById('btn-dl-js').style.display     = t === 'manage' ? 'flex' : 'none';
+  if (t === 'manage') renderList();
+  if (t === 'new')    syncEodNum();
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('f-date').valueAsDate = new Date();
+  syncDay(); syncEodNum(); setTab('new'); render();
+});
+
+function syncDay() {
+  const val = document.getElementById('f-date').value;
+  if (!val) return;
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('f-day').value = days[new Date(val + 'T12:00:00').getDay()];
+}
+function syncEodNum() {
+  document.getElementById('f-eod-num').value = 'EOD ' + (reviews.length + 1);
+}
+
+/* ── CHART ── */
+function handleChart(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { chartDataUrl = ev.target.result; document.getElementById('chart-label').textContent = '✓ '+file.name; document.getElementById('chart-drop').classList.add('has-img'); render(); };
+  reader.readAsDataURL(file);
+}
+function clearChart() {
+  chartDataUrl = null;
+  document.getElementById('chart-label').textContent = 'CLICK TO UPLOAD EOD CHART';
+  document.getElementById('chart-drop').classList.remove('has-img');
+  document.getElementById('chart-file').value = '';
+  render();
+}
+
+/* ── TRADES ── */
+function addTrade(d = {}) {
+  tradeCount++;
+  const id  = tradeCount;
+  const dir = d.direction || 'long';
+  const container = document.getElementById('trades-container');
+  const block = document.createElement('div');
+  block.className = 'trade-block';
+  block.id = `trade-block-${id}`;
+  block.innerHTML = `
+    <div class="trade-block-head" onclick="toggleTrade(${id})">
+      <div class="t-label ${dir}" id="trade-lbl-${id}">T${String(id).padStart(2,'0')} · ${dir.toUpperCase()}</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="chevron">▼</span>
+        <span class="rm-btn" onclick="event.stopPropagation();removeTrade(${id})">✕ Remove</span>
+      </div>
+    </div>
+    <div class="trade-block-body" id="trade-body-${id}">
+      <div class="form-row">
+        <div>
+          <label>Direction</label>
+          <select id="t${id}-direction" onchange="updateTL(${id});render()">
+            <option value="long"  ${dir==='long'?'selected':''}>LONG ▲</option>
+            <option value="short" ${dir==='short'?'selected':''}>SHORT ▼</option>
+          </select>
+        </div>
+        <div>
+          <label>Risk Level</label>
+          <select id="t${id}-risk" onchange="render()">
+            <option value="high" ${(d.risk||'')==='high'?'selected':''}>HIGH RISK</option>
+            <option value="med"  ${(d.risk||'')==='med'?'selected':''}>MED RISK</option>
+            <option value="low"  ${(d.risk||'')==='low'?'selected':''}>LOW RISK</option>
+          </select>
+        </div>
+      </div>
+      <div><label>Setup Name</label><input type="text" id="t${id}-setup" value="${h(d.setup||'')}" oninput="render()" placeholder="e.g. ABC REVERSAL / HIGH 2"></div>
+      <div class="form-row">
+        <div><label>P&amp;L (ticks/pts)</label><input type="text" id="t${id}-pnl" value="${h(d.pnl||'')}" oninput="render()" placeholder="+345"></div>
+        <div><label>R:R</label><input type="text" id="t${id}-rr" value="${h(d.rr||'')}" oninput="render()" placeholder="1:2.5"></div>
+      </div>
+      <div class="form-row">
+        <div><label>Order Type</label><input type="text" id="t${id}-orderType" value="${h(d.orderType||'')}" oninput="render()" placeholder="BUY LIMIT / SELL STOP"></div>
+        <div><label>Fill Bar</label><input type="text" id="t${id}-fillBar" value="${h(d.fillBar||'')}" oninput="render()" placeholder="Bar 22"></div>
+      </div>
+      <div class="form-row">
+        <div><label>Entry Trigger</label><input type="text" id="t${id}-entry" value="${h(d.entry||'')}" oninput="render()" placeholder="1 tick above Bar 15"></div>
+        <div><label>Stop Loss</label><input type="text" id="t${id}-stop" value="${h(d.stop||'')}" oninput="render()" placeholder="1 tick below Bar 16"></div>
+      </div>
+      <div><label>Exit</label><input type="text" id="t${id}-exit" value="${h(d.exit||'')}" oninput="render()" placeholder="Bar 23 (1:2.5 MM)"></div>
+      <div><label>Rationale</label><textarea id="t${id}-rationale" rows="4" oninput="render()" placeholder="Describe your reasoning...">${h(d.rationale||'')}</textarea></div>
+      <div><label>Warning / Note (leave blank to hide)</label><textarea id="t${id}-note" rows="2" oninput="render()" placeholder="⚠ Optional risk note...">${h(d.note||'')}</textarea></div>
+      <div><label>Tags (comma-separated)</label><input type="text" id="t${id}-tags" value="${h(d.tags||'')}" oninput="render()" placeholder="ABC REVERSAL, HIGH 2, BULLISH DELTA"></div>
+    </div>`;
+  container.appendChild(block);
+  render();
+}
+
+function removeTrade(id) { document.getElementById(`trade-block-${id}`).remove(); render(); }
+function toggleTrade(id) {
+  document.querySelector(`#trade-block-${id} .trade-block-head`).classList.toggle('collapsed');
+  document.getElementById(`trade-body-${id}`).classList.toggle('hidden');
+}
+function updateTL(id) {
+  const dir = document.getElementById(`t${id}-direction`).value;
+  const lbl = document.getElementById(`trade-lbl-${id}`);
+  lbl.textContent = `T${String(id).padStart(2,'0')} · ${dir.toUpperCase()}`;
+  lbl.className   = `t-label ${dir}`;
+}
+
+function addSession() {
+  const list = document.getElementById('sessions-list');
+  const row  = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:8px;';
+  row.innerHTML = `<input type="text" style="flex:1" placeholder="e.g. Pre-market — Identified VWAP as key level..." oninput="render()"><button class="rm-btn" onclick="this.parentElement.remove();render()">✕</button>`;
+  list.appendChild(row);
+}
+
+/* ── HELPERS ── */
+function v(id)  { const el = document.getElementById(id); return el ? el.value : ''; }
+function h(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(str) {
+  if (!str) return '';
+  const d = new Date(str + 'T00:00:00');
+  const days   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} '${String(d.getFullYear()).slice(2)}`;
+}
+function biasClass(tag) {
+  const t = tag.toUpperCase();
+  if (t.includes('BEAR')||t.includes('SHORT')||t.includes('DOWN')) return 'bearish';
+  if (t.includes('BULL')||t.includes('LONG')||t.includes('UP'))    return 'bullish';
+  if (t.includes('RANGE')||t.includes('LIMIT'))                    return 'range';
+  return 'neutral';
+}
+function barW(pnl) { return Math.min(Math.abs(parseFloat(pnl)||0)/800*100, 100); }
+function tradeIds() { return Array.from(document.querySelectorAll('.trade-block')).map(el=>parseInt(el.id.replace('trade-block-',''))); }
+function calcSummary() {
+  const ids = tradeIds(); let total=0, wins=0;
+  ids.forEach(id => { const p=parseFloat(v(`t${id}-pnl`))||0; if(p>0)wins++; total+=p; });
+  return { total, wins, cnt: ids.length, winRate: ids.length>0?Math.round(wins/ids.length*100):0 };
+}
+
+/* ── RENDER ── */
+function render() {
+  const dateStr    = fmtDate(v('f-date'));
+  const instrument = v('f-instrument');
+  const result     = document.querySelector('input[name="result"]:checked')?.value || '—';
+  const pts        = v('f-pts');
+  const title      = v('f-title') || 'EOD Review';
+  const sumBias    = v('f-sum-bias');
+  const motto      = v('f-motto');
+  const biasTags   = v('f-bias-tags').split(',').map(t=>t.trim()).filter(Boolean);
+  const ctx        = v('f-context-text');
+  const klLines    = v('f-key-levels').split('\n').filter(l=>l.includes('|')).map(l=>{const[k,val]=l.split('|');return{k:k.trim(),val:val.trim()};});
+  const { total, wins, cnt, winRate } = calcSummary();
+  const ids = tradeIds();
+
+  const rColor = result==='WIN'?'var(--green)':result==='LOSS'?'var(--red)':'var(--gold)';
+  const chartHTML = chartDataUrl ? `<img src="${chartDataUrl}" alt="Chart">` : `<div class="p-no-chart">NO CHART UPLOADED</div>`;
+  const chipsHTML = biasTags.map(t=>`<span class="p-chip ${biasClass(t)}">${t}</span>`).join('');
+  const klHTML    = klLines.map(({k,val})=>`<div class="p-kl-row"><span class="p-kl-label">${k}</span><span class="p-kl-val">${val}</span></div>`).join('');
+
+  const cardsHTML = ids.map((id, idx) => {
+    const dir=v(`t${id}-direction`), setup=v(`t${id}-setup`), pnl=v(`t${id}-pnl`), rr=v(`t${id}-rr`);
+    const orderType=v(`t${id}-orderType`), entry=v(`t${id}-entry`), fillBar=v(`t${id}-fillBar`);
+    const stop_=v(`t${id}-stop`), exit=v(`t${id}-exit`), rationale=v(`t${id}-rationale`);
+    const note=v(`t${id}-note`), risk=v(`t${id}-risk`);
+    const tagsArr=v(`t${id}-tags`).split(',').map(t=>t.trim()).filter(Boolean);
+    const tNum=String(idx+1).padStart(2,'0'), isLong=dir==='long', dc=isLong?'long':'short';
+    const pnlNum=parseFloat(pnl)||0;
+    const riskMap={high:'HIGH RISK',med:'MED RISK',low:'LOW RISK'};
+    const noteHTML=note?`<div class="p-note">${note}</div>`:'';
+    const tagsHTML=tagsArr.map((t,i)=>`<span class="p-tag ${i<2?'gold':''}">${t}</span>`).join('');
+    return `
+    <div class="p-card ${dc}-c">
+      <div class="p-card-head">
+        <div class="p-tid ${dc}">T${tNum}</div>
+        <div class="p-ttype">
+          <div class="p-dir ${dc}">${isLong?'LONG ▲':'SHORT ▼'}</div>
+          <div class="p-setup">${setup||'—'}</div>
+          <div class="p-risk ${risk}">${riskMap[risk]||''}</div>
+        </div>
+      </div>
+      <div class="p-stats">
+        <div class="p-stat"><div class="p-stat-label">P&amp;L</div><div class="p-stat-value ${pnlNum>=0?'green':'red'}">${pnlNum>0?'+':''}${pnl||'—'}</div></div>
+        <div class="p-stat"><div class="p-stat-label">R:R</div><div class="p-stat-value gold">${rr||'—'}</div></div>
+        <div class="p-stat"><div class="p-stat-label">Result</div><div class="p-stat-value ${pnlNum>=0?'green':'red'}">${pnlNum>=0?'WIN ✓':'LOSS ✗'}</div></div>
+      </div>
+      <div class="p-exec">
+        <div class="p-block-title">Execution</div>
+        <div class="p-erow"><span class="p-ekey">Order Type</span><span class="p-eval ${isLong?'green':'red'}">${orderType||'—'}</span></div>
+        <div class="p-erow"><span class="p-ekey">Entry Trigger</span><span class="p-eval">${entry||'—'}</span></div>
+        <div class="p-erow"><span class="p-ekey">Fill Bar</span><span class="p-eval">${fillBar||'—'}</span></div>
+        <div class="p-erow"><span class="p-ekey">Stop Loss</span><span class="p-eval red">${stop_||'—'}</span></div>
+        <div class="p-erow"><span class="p-ekey">Exit</span><span class="p-eval">${exit||'—'}</span></div>
+      </div>
+      <div class="p-bar"><div class="p-bar-fill ${dc}" style="width:${barW(pnl)}%"></div></div>
+      ${noteHTML}
+      <div class="p-rationale"><p>${rationale||''}</p></div>
+      <div class="p-tags">${tagsHTML}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('preview-root').innerHTML = `
+    <header>
+      <div class="p-session-label">${instrument||'FUTURES'} · EOD Review · ${dateStr||'—'}</div>
+      <div class="p-h1">TRADE <span>CARDS</span></div>
+      <div class="p-subtitle" style="color:${rColor}">${result}</div>
+      <div class="p-subtitle" style="margin-top:6px">${title}</div>
+    </header>
+    <div class="p-section-label">Market Context &amp; Chart</div>
+    <div class="p-context">
+      <div class="p-ctx-header"><div class="p-ctx-dot"></div><div class="p-ctx-label">Session Overview — ${instrument||'FUTURES'} · RTH · ${dateStr||'—'}</div></div>
+      <div class="p-ctx-body">
+        <div class="p-chart-pane">${chartHTML}</div>
+        <div class="p-narrative">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.04em;margin-bottom:8px;">Market Narrative</div>
+          <div class="p-bias-row">${chipsHTML}</div>
+          ${ctx?`<div class="p-narrative-text">${ctx.replace(/\n\n/g,'</div><div class="p-narrative-text" style="margin-top:8px;">').replace(/\n/g,' ')}</div>`:''}
+          ${klHTML?`<div class="p-key-levels">${klHTML}</div>`:''}
+        </div>
+      </div>
+    </div>
+    ${ids.length?`<div class="p-section-label">Trade Log</div><div class="p-cards-grid">${cardsHTML}</div>`:''}
+    <div class="p-summary">
+      <div class="p-sum-item"><div class="p-sum-label">Net Points</div><div class="p-sum-value" style="color:${parseFloat(pts||total)>=0?'var(--green)':'var(--red)'}">${pts||(total>0?'+':'')+total||'—'}</div><div class="p-sum-sub">session total</div></div>
+      <div class="p-sum-item"><div class="p-sum-label">Trades</div><div class="p-sum-value" style="color:white">${cnt||v('f-trades')||'—'}</div><div class="p-sum-sub">${wins} winner${wins!==1?'s':''}</div></div>
+      <div class="p-sum-item"><div class="p-sum-label">Win Rate</div><div class="p-sum-value" style="color:var(--green)">${winRate}%</div><div class="p-sum-sub">${wins} / ${cnt}</div></div>
+      <div class="p-sum-item"><div class="p-sum-label">Session Bias</div><div class="p-sum-value" style="color:var(--text);font-size:${(sumBias||'').length>8?'14px':'22px'};padding-top:6px">${sumBias||'—'}</div><div class="p-sum-sub">market character</div></div>
+    </div>
+    <div class="p-footer">${motto} &nbsp;·&nbsp; SIRE MAMMAT</div>`;
+}
+
+/* ── COLLECT & ADD REVIEW ── */
+function collectReview() {
+  const result = document.querySelector('input[name="result"]:checked')?.value;
+  if (!result)          { toast('Select WIN / LOSS / BE', true); return null; }
+  if (!v('f-title').trim()) { toast('Session title required', true); return null; }
+  if (!v('f-date'))         { toast('Date required', true); return null; }
+  const ids = tradeIds();
+  const tradeLog = ids.map((id, idx) => ({
+    num: idx+1, direction: v(`t${id}-direction`), setup: v(`t${id}-setup`),
+    pnl: v(`t${id}-pnl`), rr: v(`t${id}-rr`), orderType: v(`t${id}-orderType`),
+    entry: v(`t${id}-entry`), fillBar: v(`t${id}-fillBar`), stop: v(`t${id}-stop`),
+    exit: v(`t${id}-exit`), rationale: v(`t${id}-rationale`), note: v(`t${id}-note`),
+    risk: v(`t${id}-risk`), tags: v(`t${id}-tags`).split(',').map(s=>s.trim()).filter(Boolean)
+  }));
+  const sessions = [...document.querySelectorAll('#sessions-list > div')].map(r=>r.querySelector('input')?.value.trim()).filter(Boolean);
+  return {
+    id: Date.now(), eodNum: reviews.length+1,
+    date: v('f-date'), day: v('f-day'), instrument: v('f-instrument'),
+    result, pts: parseFloat(v('f-pts'))||0,
+    trades: parseInt(v('f-trades'))||0, tradesWon: parseInt(v('f-trades-won'))||0,
+    tags: v('f-tags').split(',').map(s=>s.trim()).filter(Boolean),
+    title: v('f-title').trim(), summary: v('f-summary').trim(),
+    sumBias: v('f-sum-bias').trim(), motto: v('f-motto').trim(),
+    biasTags: v('f-bias-tags').split(',').map(s=>s.trim()).filter(Boolean),
+    contextText: v('f-context-text').trim(), keyLevels: v('f-key-levels').trim(),
+    sessions, tradeLog,
+    worked:  v('f-worked').split('\n').map(s=>s.trim()).filter(Boolean),
+    improve: v('f-improve').split('\n').map(s=>s.trim()).filter(Boolean),
+    lessons: v('f-lessons').split('\n').map(s=>s.trim()).filter(Boolean),
+    chartDataUrl: chartDataUrl || null
+  };
+}
+
+function addReview() {
+  const r = collectReview(); if (!r) return;
+  reviews.unshift(r); save(); syncEodNum(); toast('Review added ✓'); setTab('manage');
+}
+
+function resetForm() {
+  if (!confirm('Reset all fields?')) return;
+  tradeCount = 0; chartDataUrl = null;
+  document.getElementById('trades-container').innerHTML = '';
+  document.getElementById('sessions-list').innerHTML    = '';
+  ['f-title','f-summary','f-tags','f-bias-tags','f-context-text','f-key-levels',
+   'f-pts','f-trades','f-trades-won','f-sum-bias','f-worked','f-improve','f-lessons'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f-motto').value = 'PATIENCE · DISCIPLINE · FEARLESS · EXECUTION';
+  document.getElementById('f-instrument').value = '';
+  document.querySelectorAll('input[name="result"]').forEach(r=>r.checked=false);
+  clearChart(); syncEodNum(); render();
+}
+
+/* ── SAVE CARD HTML ── */
+function saveCardHTML() {
+  const html  = document.getElementById('preview-root').innerHTML;
+  const date  = v('f-date') || 'trade-card';
+  const fonts = ``;
+  const css   = `<style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}:root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}body{background:#0a0c0f;font-family:'DM Sans',sans-serif;color:#e8eaf0;padding:32px 24px 60px;background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(59,130,246,.06) 0%,transparent 70%),repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.015) 40px);-webkit-print-color-adjust:exact;print-color-adjust:exact;}header{text-align:center;margin-bottom:32px;}.p-session-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;color:#5a6272;text-transform:uppercase;margin-bottom:6px;}.p-h1{font-family:var(--font-display);font-size:clamp(32px,5vw,56px);letter-spacing:.06em;line-height:1;}.p-h1 span{color:#22c87a;}.p-subtitle{font-family:'Space Mono',monospace;font-size:10px;color:#5a6272;letter-spacing:.13em;margin-top:8px;}.p-section-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#5a6272;display:flex;align-items:center;gap:10px;margin-bottom:12px;}.p-section-label::after{content:'';flex:1;height:1px;background:#232830;}.p-context{background:#111418;border:1px solid #232830;border-radius:10px;overflow:hidden;margin-bottom:28px;}.p-ctx-header{padding:12px 20px;border-bottom:1px solid #232830;display:flex;align-items:center;gap:8px;background:#181c22;}.p-ctx-dot{width:5px;height:5px;border-radius:50%;background:#f5c842;box-shadow:0 0 6px #f5c842;}.p-ctx-label{font-family:'Space Mono',monospace;font-size:9px;color:#5a6272;letter-spacing:.12em;text-transform:uppercase;}.p-ctx-body{display:grid;grid-template-columns:1fr 1fr;}.p-chart-pane{background:#080b0e;border-right:1px solid #232830;min-height:200px;display:flex;align-items:center;justify-content:center;}.p-chart-pane img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9;}.p-no-chart{font-family:'Space Mono',monospace;font-size:9px;color:#3a4252;letter-spacing:.1em;}.p-narrative{padding:18px 20px;display:flex;flex-direction:column;gap:10px;}.p-bias-row{display:flex;gap:6px;flex-wrap:wrap;}.p-chip{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid;}.p-chip.bearish{background:rgba(232,57,74,.12);color:#e8394a;border-color:rgba(232,57,74,.3);}.p-chip.range{background:rgba(245,200,66,.10);color:#f5c842;border-color:rgba(245,200,66,.3);}.p-chip.bullish{background:rgba(34,200,122,.10);color:#22c87a;border-color:rgba(34,200,122,.3);}.p-chip.neutral{background:rgba(59,130,246,.10);color:#3b82f6;border-color:rgba(59,130,246,.3);}.p-narrative-text{font-size:11px;line-height:1.75;color:#8a94a6;}.p-key-levels{background:#181c22;border:1px solid #232830;border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;}.p-kl-row{display:flex;justify-content:space-between;}.p-kl-label{font-family:'Space Mono',monospace;font-size:9px;color:#5a6272;text-transform:uppercase;}.p-kl-val{font-family:'Space Mono',monospace;font-size:9px;color:#e8eaf0;}.p-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:28px;}.p-card{background:#111418;border:1px solid #232830;border-radius:10px;overflow:hidden;position:relative;}.p-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}.p-card.long-c::before{background:#22c87a;}.p-card.short-c::before{background:#e8394a;}.p-card-head{padding:16px 18px 12px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #232830;}.p-tid{font-family:var(--font-display);font-size:30px;letter-spacing:.05em;line-height:1;}.p-tid.long{color:#22c87a;}.p-tid.short{color:#e8394a;}.p-ttype{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}.p-dir{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:3px;}.p-dir.long{background:rgba(34,200,122,.10);color:#22c87a;border:1px solid rgba(34,200,122,.3);}.p-dir.short{background:rgba(232,57,74,.12);color:#e8394a;border:1px solid rgba(232,57,74,.3);}.p-setup{font-size:9px;color:#5a6272;font-family:'Space Mono',monospace;}.p-risk{font-family:'Space Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;}.p-risk.high{background:rgba(232,57,74,.12);color:#e8394a;border:1px solid rgba(232,57,74,.2);}.p-risk.med{background:rgba(245,200,66,.10);color:#f5c842;border:1px solid rgba(245,200,66,.2);}.p-risk.low{background:rgba(34,200,122,.10);color:#22c87a;border:1px solid rgba(34,200,122,.2);}.p-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #232830;}.p-stat{padding:12px 14px;border-right:1px solid #232830;}.p-stat:last-child{border-right:none;}.p-stat-label{font-family:'Space Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:4px;}.p-stat-value{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;}.p-stat-value.green{color:#22c87a;}.p-stat-value.red{color:#e8394a;}.p-stat-value.gold{color:#f5c842;}.p-exec{padding:12px 18px;border-bottom:1px solid #232830;}.p-block-title{font-family:'Space Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:8px;}.p-erow{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;}.p-ekey{color:#5a6272;}.p-eval{font-family:'Space Mono',monospace;color:#e8eaf0;font-size:11px;}.p-eval.red{color:#e8394a;}.p-eval.green{color:#22c87a;}.p-bar{margin:0 18px 12px;height:5px;border-radius:3px;background:#181c22;}.p-bar-fill{height:100%;border-radius:3px;}.p-bar-fill.long{background:linear-gradient(90deg,#3b82f6,#22c87a);}.p-bar-fill.short{background:linear-gradient(90deg,#3b82f6,#e8394a);}.p-note{margin:0 18px 10px;padding:9px 12px;border-radius:5px;border-left:3px solid #f5c842;background:rgba(245,200,66,.10);font-size:10px;color:#b8a060;line-height:1.6;font-family:'Space Mono',monospace;}.p-rationale{padding:10px 18px 14px;}.p-rationale p{font-size:11px;line-height:1.75;color:#8a94a6;}.p-tags{padding:0 18px 14px;display:flex;flex-wrap:wrap;gap:5px;}.p-tag{font-family:'Space Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px;border:1px solid #232830;color:#5a6272;background:#181c22;}.p-tag.gold{border-color:rgba(245,200,66,.3);color:#f5c842;background:rgba(245,200,66,.10);}.p-summary{background:#111418;border:1px solid #232830;border-radius:10px;padding:22px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;margin-bottom:24px;}.p-sum-item{text-align:center;}.p-sum-label{font-family:'Space Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:6px;}.p-sum-value{font-family:var(--font-display);font-size:30px;line-height:1;}.p-sum-sub{font-family:'Space Mono',monospace;font-size:8px;color:#5a6272;margin-top:3px;}.p-footer{text-align:center;font-family:'Space Mono',monospace;font-size:8px;color:#2e3540;letter-spacing:.18em;text-transform:uppercase;}@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}.p-cards-grid{grid-template-columns:repeat(3,1fr)!important;}.p-ctx-body{grid-template-columns:1fr 1fr!important;}}</style>`;
+  const blob = new Blob([`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Trade Cards — ${date}</title>${fonts}${css}</head><body>${html}</body></html>`], {type:'text/html'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`tradecard_${date.replace(/[^a-z0-9]/gi,'_')}.html`; a.click();
+  toast('Trade card HTML saved ✓');
+}
+
+/* ── IMPORT ── */
+function importFile(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const text = e.target.result;
+      const si = text.indexOf('['), ei = text.lastIndexOf(']');
+      if (si===-1||ei<=si) { toast('No array found', true); return; }
+      let parsed;
+      try { parsed = (new Function('return '+text.slice(si,ei+1)))(); }
+      catch { parsed = JSON.parse(text.slice(si,ei+1)); }
+      if (!Array.isArray(parsed)) { toast('Expected an array', true); return; }
+      parsed.forEach((r,i) => { if(!r.id) r.id=Date.now()+i; });
+      reviews = parsed; save(); renderList(); syncEodNum();
+      toast(`Loaded ${reviews.length} review${reviews.length!==1?'s':''} ✓`);
+    } catch(err) { toast('Parse error: '+err.message, true); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+function dzOver(e)  { e.preventDefault(); document.getElementById('import-zone').classList.add('over'); }
+function dzLeave()  { document.getElementById('import-zone').classList.remove('over'); }
+function dzDrop(e)  {
+  e.preventDefault(); dzLeave();
+  const file = e.dataTransfer.files[0]; if (!file) return;
+  const dt = new DataTransfer(); dt.items.add(file);
+  const inp = document.getElementById('js-inp'); inp.files = dt.files; importFile(inp);
+}
+
+/* ── DOWNLOAD ── */
+function downloadJS() {
+  if (!reviews.length) { toast('No reviews to export', true); return; }
+  const js = `// eod-data.js — SireMammat EOD Reviews\n// Generated: ${new Date().toISOString()}\n\nwindow.EOD_DATA = ${JSON.stringify(reviews, null, 2)};\n`;
+  const blob = new Blob([js], {type:'application/javascript'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='eod-data.js'; a.click();
+  toast('eod-data.js downloaded ✓');
+}
+
+/* ── RENDER LIST ── */
+function renderList() {
+  const list = document.getElementById('review-list');
+  const filtered = filterMode==='all' ? reviews : reviews.filter(r=>r.result===filterMode||r.instrument===filterMode||(r.tags&&r.tags.includes(filterMode)));
+  const wins=reviews.filter(r=>r.result==='WIN').length, losses=reviews.filter(r=>r.result==='LOSS').length;
+  const totalPts=reviews.reduce((a,r)=>a+(r.pts||0),0);
+  document.getElementById('s-total').textContent=reviews.length;
+  document.getElementById('s-wins').textContent=wins;
+  document.getElementById('s-losses').textContent=losses;
+  const pEl=document.getElementById('s-pts');
+  pEl.textContent=(totalPts>=0?'+':'')+totalPts.toFixed(2);
+  pEl.className='stat-val '+(totalPts>=0?'pos':'neg');
+  if (!filtered.length) { list.innerHTML=`<div class="empty"><div class="e-title">NO REVIEWS</div><p>${reviews.length?'No reviews match this filter':'No reviews yet — add your first EOD above'}</p></div>`; return; }
+  list.innerHTML='';
+  filtered.forEach(r => {
+    const rc=r.result==='WIN'?'win':r.result==='LOSS'?'loss':'be';
+    const pts=(r.pts>=0?'+':'')+((r.pts||0).toFixed(2));
+    const d=r.date?new Date(r.date+'T00:00:00'):null;
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const ds=d?`${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`:'—';
+    const card=document.createElement('div'); card.className='review-card';
+    card.innerHTML=`
+      <div class="review-accent ${rc}"></div>
+      <div class="review-body">
+        <div class="review-date">${ds}</div>
+        <div class="review-title">${r.title||'Untitled'}</div>
+        <div class="review-meta">
+          <span class="review-pts ${rc}">${pts} pts</span>
+          <span class="review-tag ${rc}">${r.result}</span>
+          ${r.instrument?`<span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)">${r.instrument}</span>`:''}
+        </div>
+      </div>
+      <button class="review-del" onclick="askDelete(${r.id}, ${JSON.stringify(r.title||'Untitled')})">×</button>`;
+    list.appendChild(card);
+  });
+}
+
+function setFilter(f, btn) { filterMode=f; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderList(); }
+
+/* ── DELETE ── */
+function askDelete(id, title) {
+  deleteTarget=id;
+  document.getElementById('dlg-desc').textContent=`Remove "${title}" from your data.`;
+  document.getElementById('overlay').classList.add('open');
+}
+function closeConfirm() { document.getElementById('overlay').classList.remove('open'); deleteTarget=null; }
+function confirmDelete() {
+  if (deleteTarget==='__all__') reviews=[];
+  else reviews=reviews.filter(r=>r.id!==deleteTarget);
+  save(); renderList(); syncEodNum(); closeConfirm();
+  toast(deleteTarget==='__all__'?'All reviews cleared':'Review removed');
+}
+function clearAll() {
+  if (!reviews.length) return;
+  document.getElementById('dlg-title').textContent='Clear All Reviews?';
+  document.getElementById('dlg-desc').textContent='This removes all reviews. Original file unchanged until you download the new one.';
+  deleteTarget='__all__';
+  document.getElementById('overlay').classList.add('open');
+}
+
+/* ── UTILS ── */
+function save() { localStorage.setItem('sm_eod', JSON.stringify(reviews)); }
+function toast(msg, err=false) {
+  const wrap=document.getElementById('toast-wrap');
+  const t=document.createElement('div'); t.className='toast'+(err?' err':'');
+  t.innerHTML=`<div class="dot"></div>${msg}`; wrap.appendChild(t); setTimeout(()=>t.remove(),3000);
+}
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&currentTab==='new') { e.preventDefault(); addReview(); }
+  if (e.key==='Escape') closeConfirm();
+});
+document.getElementById('overlay').addEventListener('click', function(e) { if(e.target===this) closeConfirm(); });
+</script>
+</body>
+</html>

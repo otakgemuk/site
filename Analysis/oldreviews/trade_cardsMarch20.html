@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Cards — Sire Mammat | Fri 20 Mar '26</title>
+<style>
+  :root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--cream);
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(59,130,246,0.06) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .session-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-family: var(--font-display), sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 0.06em;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  header h1 span {
+    color: var(--red);
+  }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-top: 10px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--dark4);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    animation: cardIn 0.5s ease backwards;
+  }
+
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.22s; }
+  .card:nth-child(3) { animation-delay: 0.34s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--red);
+  }
+
+  /* Card Header */
+  .card-header {
+    padding: 20px 22px 14px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--dark4);
+  }
+
+  .trade-id {
+    font-family: var(--font-display), sans-serif;
+    font-size: 34px;
+    letter-spacing: 0.05em;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .trade-type {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .direction-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(232,57,74,0.3);
+  }
+
+  .setup-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Stats Row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--dark4);
+  }
+
+  .stat {
+    padding: 14px 18px;
+    border-right: 1px solid var(--dark4);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .stat-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .stat-value.profit {
+    color: var(--green);
+  }
+
+  .stat-value.ratio {
+    color: var(--gold);
+  }
+
+  /* Entry Block */
+  .entry-block {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--dark4);
+  }
+
+  .block-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .entry-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .entry-row:last-child { margin-bottom: 0; }
+
+  .entry-key {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .entry-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--cream);
+  }
+
+  .entry-val.stop { color: var(--red); }
+  .entry-val.target { color: var(--green); }
+
+  /* Price bar visual */
+  .price-visual {
+    margin: 0 22px 0;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    position: relative;
+    overflow: visible;
+    margin-bottom: 16px;
+  }
+
+  .price-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--red), var(--green));
+    position: relative;
+  }
+
+  .price-fill::after {
+    content: attr(data-r);
+    position: absolute;
+    right: 0;
+    top: -18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+  }
+
+  /* Rationale */
+  .rationale {
+    padding: 14px 22px 20px;
+  }
+
+  .rationale p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #8a94a6;
+    font-weight: 300;
+  }
+
+  .rationale strong {
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  /* Tags */
+  .tags {
+    padding: 0 22px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--dark4);
+    color: var(--muted);
+    background: var(--surface2);
+  }
+
+  .tag.highlight {
+    border-color: rgba(245,200,66,0.3);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* Summary card */
+  .summary-card {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--dark4);
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+    animation: cardIn 0.5s 0.5s ease backwards;
+  }
+
+  .sum-item { text-align: center; }
+
+  .sum-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .sum-value {
+    font-family: var(--font-display), sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .sum-value.green { color: var(--green); }
+  .sum-value.gold  { color: var(--gold); }
+  .sum-value.white { color: var(--cream); }
+
+  .sum-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 36px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: #2e3540;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="session-label">RTH Session · ES Futures</div>
+  <h1>TRADE <span>CARDS</span></h1>
+  <div class="subtitle">FRI 20 MAR '26 &nbsp;·&nbsp; BEAR TREND DAY &nbsp;·&nbsp; SIRE MAMMAT</div>
+</header>
+
+<!-- CARDS -->
+<div class="cards-grid">
+
+  <!-- T01 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id">T01</div>
+      <div class="trade-type">
+        <div class="direction-badge">SHORT ▼</div>
+        <div class="setup-tag">LOW 2 PULLBACK</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">P&amp;L</div>
+        <div class="stat-value profit">+19.5</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">R:R</div>
+        <div class="stat-value ratio">~1:2</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Result</div>
+        <div class="stat-value profit">WIN ✓</div>
+      </div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row">
+        <span class="entry-key">Entry Trigger</span>
+        <span class="entry-val">Sell STOP 1 tick below Bar 2</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Fill Bar</span>
+        <span class="entry-val">Bar 6</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Stop Loss</span>
+        <span class="entry-val stop">1 tick above Bar 2</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Exit</span>
+        <span class="entry-val target">Bar 7 (MM down Bars 3–4)</span>
+      </div>
+    </div>
+
+    <div class="price-visual">
+      <div class="price-fill" style="width:55%" data-r="19.5 pts"></div>
+    </div>
+
+    <div class="rationale">
+      <p>
+        Market <strong>gapped down</strong> at the open and briefly tagged the <strong>200 EMA</strong> before rejecting hard.
+        Bar 1 was a <strong>Huge Breakout</strong> with follow-through Bear Bar 2.
+        Bars 2 &amp; 3 formed a <strong>Low 2 signal</strong>; the failed pullback Bar 3 had no follow-through bull bar.
+        Price action remained below the <strong>20 EMA</strong>, confirming short bias.
+      </p>
+    </div>
+
+    <div class="tags">
+      <span class="tag">200 EMA REJECT</span>
+      <span class="tag">HUGE BO LEG 2</span>
+      <span class="tag highlight">LOW 2</span>
+      <span class="tag">BELOW 20 EMA</span>
+      <span class="tag">BEAR TREND</span>
+    </div>
+  </div>
+
+  <!-- T02 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id">T02</div>
+      <div class="trade-type">
+        <div class="direction-badge">SHORT ▼</div>
+        <div class="setup-tag">BEAR FLAG / TD9</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">P&amp;L</div>
+        <div class="stat-value profit">+29</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">R:R</div>
+        <div class="stat-value ratio">1:2.5R</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Result</div>
+        <div class="stat-value profit">WIN ✓</div>
+      </div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row">
+        <span class="entry-key">Entry Trigger</span>
+        <span class="entry-val">Sell STOP 1 tick below Bar 34</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Fill Bar</span>
+        <span class="entry-val">Bar 37</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Stop Loss</span>
+        <span class="entry-val stop">1 tick above Bar 35</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Exit</span>
+        <span class="entry-val target">Bar 59 (1:2.5 R)</span>
+      </div>
+    </div>
+
+    <div class="price-visual">
+      <div class="price-fill" style="width:72%" data-r="29 pts"></div>
+    </div>
+
+    <div class="rationale">
+      <p>
+        Bars 9–35 formed a <strong>Bear Flag</strong> with overlapping candles — classic consolidation in a downtrend.
+        Bar 34 printed a <strong>Green TD9 exhaustion</strong> signal, strongly indicating price was ready to resume lower.
+        On fill, price immediately moved <strong>below the EMA</strong> — a confirming signal.
+        Clean 1:2.5R exit at Bar 59.
+      </p>
+    </div>
+
+    <div class="tags">
+      <span class="tag">BEAR FLAG</span>
+      <span class="tag highlight">TD9 EXHAUSTION</span>
+      <span class="tag">BARS 9–35 IOI</span>
+      <span class="tag">BELOW EMA ON FILL</span>
+      <span class="tag highlight">1:2.5R</span>
+    </div>
+  </div>
+
+  <!-- T03 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id">T03</div>
+      <div class="trade-type">
+        <div class="direction-badge">SHORT ▼</div>
+        <div class="setup-tag">LOW 2 ADD-ON</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">P&amp;L</div>
+        <div class="stat-value profit">+25</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">R:R</div>
+        <div class="stat-value ratio">1:2.5R</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Result</div>
+        <div class="stat-value profit">WIN ✓</div>
+      </div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row">
+        <span class="entry-key">Entry Trigger</span>
+        <span class="entry-val">Sell STOP 1 tick below Bar 53</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Fill Bar</span>
+        <span class="entry-val">Bar 53 / 54</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Stop Loss</span>
+        <span class="entry-val stop">1 tick above Bar 53</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Exit</span>
+        <span class="entry-val target">Bar 64 (1:2.5 R)</span>
+      </div>
+    </div>
+
+    <div class="price-visual">
+      <div class="price-fill" style="width:65%" data-r="25 pts"></div>
+    </div>
+
+    <div class="rationale">
+      <p>
+        Entered while <strong>T02 was still active</strong> — adding contracts at Bar 53/54 as a <strong>2nd Entry Low 2</strong>.
+        Bar 53/54 presented another high-probability short setup within the same trend,
+        allowing <strong>increased position size</strong> with trend confirmation already established.
+        Exited at Bar 64 for another clean 1:2.5R.
+      </p>
+    </div>
+
+    <div class="tags">
+      <span class="tag highlight">LOW 2 2ND ENTRY</span>
+      <span class="tag">CONCURRENT W/ T02</span>
+      <span class="tag">ADD CONTRACTS</span>
+      <span class="tag highlight">1:2.5R</span>
+      <span class="tag">HUGE BO LEG 2</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUMMARY -->
+<div class="summary-card">
+  <div class="sum-item">
+    <div class="sum-label">Total Points</div>
+    <div class="sum-value green">73.5</div>
+    <div class="sum-sub">pts captured</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Trades Taken</div>
+    <div class="sum-value white">3</div>
+    <div class="sum-sub">all winners</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Win Rate</div>
+    <div class="sum-value green">100%</div>
+    <div class="sum-sub">3 / 3</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Avg R:R</div>
+    <div class="sum-value gold">1:2.3</div>
+    <div class="sum-sub">across all trades</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Session Bias</div>
+    <div class="sum-value white" style="font-size:24px; padding-top:6px;">BEAR</div>
+    <div class="sum-sub">trend day · with bias</div>
+  </div>
+</div>
+
+<footer>
+  PATIENCE · DISCIPLINE · FEARLESS · EXECUTION &nbsp;·&nbsp; SIRE MAMMAT
+</footer>
+
+</body>
+</html>

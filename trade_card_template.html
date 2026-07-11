@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Cards — [DATE]</title>
+<style>
+  :root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--dark);font-family:system-ui,sans-serif;color:var(--cream);min-height:100vh;padding:40px 24px 60px;background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(59,130,246,0.06) 0%,transparent 70%),repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.015) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.015) 40px)}
+
+  [contenteditable]{outline:none;border-radius:3px;transition:background .2s,box-shadow .2s}
+  [contenteditable]:hover{background:rgba(255,255,255,0.04)}
+  [contenteditable]:focus{background:rgba(255,255,255,0.07);box-shadow:0 0 0 1px rgba(184,115,51,0.5)}
+
+  header{text-align:center;margin-bottom:48px}
+  .session-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+  header h1{font-family:var(--font-display),Georgia,serif;font-size:clamp(36px,6vw,64px);letter-spacing:.06em;color:var(--cream);line-height:1}
+  header h1 span{color:var(--red)}
+  .subtitle{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.15em;margin-top:10px}
+
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;max-width:1100px;margin:0 auto 40px}
+
+  .card{background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;overflow:hidden;position:relative}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--dark4)}
+  .card.win::before{background:var(--green)}
+  .card.loss::before{background:var(--red)}
+  .card.be::before{background:var(--gold)}
+
+  .card-header{padding:20px 22px 14px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--dark4)}
+  .trade-id{font-family:var(--font-display),Georgia,serif;font-size:34px;letter-spacing:.05em;color:var(--muted);line-height:1}
+  .card.win .trade-id{color:var(--green)}
+  .card.loss .trade-id{color:var(--red)}
+  .card.be .trade-id{color:var(--gold)}
+
+  .trade-type{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .dir{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.15em;padding:3px 9px;border-radius:4px}
+  .dir.short{background:rgba(176,64,48,0.15);color:var(--red);border:1px solid rgba(176,64,48,0.3)}
+  .dir.long{background:rgba(74,138,101,0.15);color:var(--green);border:1px solid rgba(74,138,101,0.3)}
+  .setup-tag{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.1em}
+
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--dark4)}
+  .stat{padding:14px 18px;border-right:1px solid var(--dark4)}.stat:last-child{border-right:none}
+  .stat-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+  .stat-value{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--cream);line-height:1}
+  .sv-green{color:var(--green)}.sv-red{color:var(--red)}.sv-gold{color:var(--gold)}
+
+  .entry-block{padding:16px 22px;border-bottom:1px solid var(--dark4)}
+  .block-title{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+  .entry-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.entry-row:last-child{margin-bottom:0}
+  .entry-key{font-size:12px;color:var(--muted);font-weight:300}
+  .entry-val{font-family:var(--font-mono);font-size:12px;color:var(--cream);text-align:right}
+  .entry-val.stop{color:var(--red)}.entry-val.target{color:var(--green)}
+
+  .price-visual{margin:0 22px;height:6px;border-radius:3px;background:var(--dark3);position:relative;overflow:visible;margin-bottom:16px}
+  .price-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--green));position:relative}
+  .price-fill::after{content:attr(data-r);position:absolute;right:0;top:-18px;font-family:var(--font-mono);font-size:9px;color:var(--gold)}
+
+  .rationale{padding:14px 22px 20px}
+  .rationale p{font-size:12px;line-height:1.7;color:#8a94a6;font-weight:300}
+  .rationale strong{color:var(--cream);font-weight:500}
+
+  .tags{padding:0 22px 18px;display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;padding:3px 8px;border-radius:3px;border:1px solid var(--dark4);color:var(--muted);background:var(--dark3)}
+  .tag.hl{border-color:rgba(245,200,66,0.3);color:var(--gold);background:var(--gold-dim)}
+
+  .summary-card{max-width:1100px;margin:0 auto;background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:28px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px}
+  .sum-item{text-align:center}
+  .sum-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+  .sum-value{font-family:var(--font-display),Georgia,serif;font-size:36px;letter-spacing:.04em;line-height:1}
+  .sv2-green{color:var(--green)}.sv2-gold{color:var(--gold)}.sv2-white{color:var(--cream)}
+  .sum-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+  footer{text-align:center;margin-top:36px;font-family:var(--font-mono);font-size:9px;color:#2e3540;letter-spacing:.2em;text-transform:uppercase}
+
+  /* ─── HOW-TO (delete this section when done) ─── */
+  .howto{max-width:1100px;margin:0 auto 40px;background:var(--dark3);border:1px solid var(--dark4);border-radius:10px;padding:20px 24px;font-size:12px;line-height:1.8;color:var(--muted)}
+  .howto h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;color:var(--gold);margin-bottom:10px;text-transform:uppercase}
+  .howto code{font-family:var(--font-mono);font-size:11px;background:var(--dark4);padding:1px 5px;border-radius:3px;color:var(--cream)}
+  .howto ol{padding-left:20px}.howto li{margin-bottom:6px}
+  .howto .close-hint{text-align:right;margin-top:10px;font-family:var(--font-mono);font-size:9px;color:var(--muted2)}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HOW TO USE — delete this block when you're comfortable ═══════ -->
+<div class="howto" id="howto">
+  <h3>📖 How to use this template</h3>
+  <ol>
+    <li><b>Click any text</b> to edit it — dates, names, numbers, everything is editable</li>
+    <li><b>Card color / result:</b> Find <code>class="card"</code> in the code and change to:
+      <code>class="card win"</code> &nbsp;|&nbsp; <code>class="card loss"</code> &nbsp;|&nbsp; <code>class="card be"</code></li>
+    <li><b>Direction:</b> Change <code>class="dir short"</code> to <code>class="dir long"</code> and swap text to <code>LONG ▲</code></li>
+    <li><b>P&L color:</b> Change <code>class="stat-value"</code> to <code>class="stat-value sv-green"</code> (or <code>sv-red</code> / <code>sv-gold</code>)</li>
+    <li><b>Result color:</b> Change <code>class="stat-value"</code> to <code>class="stat-value sv-green">WIN ✓</code> or <code>sv-red">LOSS ✗</code> or <code>sv-gold">B/E —</code></li>
+    <li><b>Add a trade:</b> Copy an entire <code>&lt;div class="card"&gt;...&lt;/div&gt;</code> block and paste it inside <code>&lt;div class="cards-grid"&gt;</code></li>
+    <li><b>Add a tag:</b> Copy a <code>&lt;span class="tag"&gt;</code> line. Use <code>class="tag hl"</code> for gold highlight</li>
+    <li><b>Remove a trade:</b> Delete its <code>&lt;div class="card"&gt;...&lt;/div&gt;</code> block</li>
+  </ol>
+  <div class="close-hint">Delete this entire <code>&lt;div class="howto"&gt;</code> block when you're done reading</div>
+</div>
+<!-- ═══════ END HOW-TO ═══════ -->
+
+<header>
+  <div class="session-label">
+    <span contenteditable="true">RTH Session</span> · <span contenteditable="true">ES Futures</span>
+  </div>
+  <h1>TRADE <span>CARDS</span></h1>
+  <div class="subtitle">
+    <span contenteditable="true">DATE</span> &nbsp;·&nbsp;
+    <span contenteditable="true">DAY BIAS</span> &nbsp;·&nbsp;
+    <span contenteditable="true">TRADER NAME</span>
+  </div>
+</header>
+
+<div class="cards-grid">
+
+  <!-- ═══════ TRADE 1 ═══════ -->
+  <!-- CHANGE class="card" TO: class="card win" OR class="card loss" OR class="card be" -->
+  <div class="card win">
+    <div class="card-header">
+      <div class="trade-id" contenteditable="true">T01</div>
+      <div class="trade-type">
+        <!-- CHANGE TO class="dir long" AND TEXT "LONG ▲" FOR LONG TRADES -->
+        <div class="dir short">SHORT ▼</div>
+        <div class="setup-tag" contenteditable="true">SETUP NAME</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">P&amp;L</div>
+        <!-- ADD sv-green OR sv-red OR sv-gold AFTER stat-value -->
+        <div class="stat-value sv-green" contenteditable="true">+19.5</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">R:R</div>
+        <div class="stat-value sv-gold" contenteditable="true">1:2</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Result</div>
+        <!-- sv-green = WIN, sv-red = LOSS, sv-gold = B/E -->
+        <div class="stat-value sv-green" contenteditable="true">WIN ✓</div>
+      </div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row">
+        <span class="entry-key">Entry Trigger</span>
+        <span class="entry-val" contenteditable="true">Sell STOP 1 tick below Bar 2</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Fill Bar</span>
+        <span class="entry-val" contenteditable="true">Bar 6</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Stop Loss</span>
+        <span class="entry-val stop" contenteditable="true">1 tick above Bar 2</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Exit</span>
+        <span class="entry-val target" contenteditable="true">Bar 7 (MM down Bars 3–4)</span>
+      </div>
+    </div>
+
+    <div class="price-visual">
+      <!-- CHANGE width % AND data-r TEXT -->
+      <div class="price-fill" style="width:55%" data-r="19.5 pts"></div>
+    </div>
+
+    <div class="rationale">
+      <p contenteditable="true">Market <strong>gapped down</strong> at the open and briefly tagged the <strong>200 EMA</strong> before rejecting hard. Bar 1 was a <strong>Huge Breakout</strong> with follow-through Bear Bar 2. Bars 2 &amp; 3 formed a <strong>Low 2 signal</strong>.</p>
+    </div>
+
+    <div class="tags">
+      <span class="tag" contenteditable="true">200 EMA REJECT</span>
+      <span class="tag" contenteditable="true">HUGE BO LEG 2</span>
+      <!-- USE class="tag hl" FOR GOLD HIGHLIGHT -->
+      <span class="tag hl" contenteditable="true">LOW 2</span>
+      <span class="tag" contenteditable="true">BELOW 20 EMA</span>
+    </div>
+  </div>
+
+  <!-- ═══════ TRADE 2 ═══════ -->
+  <div class="card win">
+    <div class="card-header">
+      <div class="trade-id" contenteditable="true">T02</div>
+      <div class="trade-type">
+        <div class="dir short">SHORT ▼</div>
+        <div class="setup-tag" contenteditable="true">BEAR FLAG / TD9</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">P&amp;L</div>
+        <div class="stat-value sv-green" contenteditable="true">+29</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">R:R</div>
+        <div class="stat-value sv-gold" contenteditable="true">1:2.5R</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Result</div>
+        <div class="stat-value sv-green" contenteditable="true">WIN ✓</div>
+      </div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row">
+        <span class="entry-key">Entry Trigger</span>
+        <span class="entry-val" contenteditable="true">Sell STOP 1 tick below Bar 34</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Fill Bar</span>
+        <span class="entry-val" contenteditable="true">Bar 37</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Stop Loss</span>
+        <span class="entry-val stop" contenteditable="true">1 tick above Bar 35</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Exit</span>
+        <span class="entry-val target" contenteditable="true">Bar 59 (1:2.5 R)</span>
+      </div>
+    </div>
+
+    <div class="price-visual">
+      <div class="price-fill" style="width:72%" data-r="29 pts"></div>
+    </div>
+
+    <div class="rationale">
+      <p contenteditable="true">Bars 9–35 formed a <strong>Bear Flag</strong> with overlapping candles. Bar 34 printed a <strong>Green TD9 exhaustion</strong> signal. On fill, price immediately moved <strong>below the EMA</strong>. Clean 1:2.5R exit.</p>
+    </div>
+
+    <div class="tags">
+      <span class="tag" contenteditable="true">BEAR FLAG</span>
+      <span class="tag hl" contenteditable="true">TD9 EXHAUSTION</span>
+      <span class="tag" contenteditable="true">BARS 9–35 IOI</span>
+      <span class="tag hl" contenteditable="true">1:2.5R</span>
+    </div>
+  </div>
+
+  <!-- ═══════ TRADE 3 — DUPLICATE THIS BLOCK TO ADD MORE ═══════ -->
+  <div class="card">
+    <div class="card-header">
+      <div class="trade-id" contenteditable="true">T03</div>
+      <div class="trade-type">
+        <div class="dir long">LONG ▲</div>
+        <div class="setup-tag" contenteditable="true">SETUP NAME</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">P&amp;L</div>
+        <div class="stat-value" contenteditable="true">+0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">R:R</div>
+        <div class="stat-value sv-gold" contenteditable="true">1:2</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Result</div>
+        <div class="stat-value" contenteditable="true">WIN ✓</div>
+      </div>
+    </div>
+
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row">
+        <span class="entry-key">Entry Trigger</span>
+        <span class="entry-val" contenteditable="true">entry here</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Fill Bar</span>
+        <span class="entry-val" contenteditable="true">Bar #</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Stop Loss</span>
+        <span class="entry-val stop" contenteditable="true">stop here</span>
+      </div>
+      <div class="entry-row">
+        <span class="entry-key">Exit</span>
+        <span class="entry-val target" contenteditable="true">exit here</span>
+      </div>
+    </div>
+
+    <div class="price-visual">
+      <div class="price-fill" style="width:0%" data-r="0 pts"></div>
+    </div>
+
+    <div class="rationale">
+      <p contenteditable="true">Write your trade thesis here.</p>
+    </div>
+
+    <div class="tags">
+      <span class="tag" contenteditable="true">TAG 1</span>
+      <span class="tag hl" contenteditable="true">KEY TAG</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════ SESSION SUMMARY ═══════ -->
+<div class="summary-card">
+  <div class="sum-item">
+    <div class="sum-label">Total Points</div>
+    <div class="sum-value sv2-green" contenteditable="true">73.5</div>
+    <div class="sum-sub">pts captured</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Trades Taken</div>
+    <div class="sum-value sv2-white" contenteditable="true">3</div>
+    <div class="sum-sub" contenteditable="true">all winners</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Win Rate</div>
+    <div class="sum-value sv2-green" contenteditable="true">100%</div>
+    <div class="sum-sub" contenteditable="true">3 / 3</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Avg R:R</div>
+    <div class="sum-value sv2-gold" contenteditable="true">1:2.3</div>
+    <div class="sum-sub">across all trades</div>
+  </div>
+  <div class="sum-item">
+    <div class="sum-label">Session Bias</div>
+    <div class="sum-value sv2-white" contenteditable="true" style="font-size:24px;padding-top:6px">BEAR</div>
+    <div class="sum-sub" contenteditable="true">trend day · with bias</div>
+  </div>
+</div>
+
+<footer>
+  <span contenteditable="true">PATIENCE · DISCIPLINE · EXECUTION</span> &nbsp;·&nbsp; <span contenteditable="true">YOUR NAME</span>
+</footer>
+
+</body>
+</html>

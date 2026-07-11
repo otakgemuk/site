@@ -1,0 +1,37 @@
+Context
+
+Market was bearish however after the news.
+I was looking for a reversal from the big drop.
+At bar 46 finally, I see a price exhaustion signal
+which is also a bullish inside bar
+I expected the volatility on the Open so 
+I was only expecting 1:1 RR
+
+Trade1
+Inside bar follows by a doji
+is a high probability signal to go Long.
+Entry : Stop Buy above Bar 46
+Exit : Exit at 1:1 MM up of Inside bar Filled at Bar 49
+gives 129 ticks
+
+Trade 2
+The pullback at Bar 2 gives opportunity for Re-Entry
+Entry: STOP buy above Bar 46 Filled at Bar 2
+Exit: I Use Bar 47/48 MM up - Filled at Bar 3
+gives 241 ticks
+
+Trade 3
+I re-Enter at Bar 4 expecting bullish moves to continue and expecting 2nd leg up
+Leg 1 is from Bar46-Bar1, Bar 2 is the pullback
+I expect 1:1 move up from the 1st leg
+Entry: Limit Buy 1 tick above Bar 46 filled at Bar 4
+Exit : I targeted 1:1 but I move my STOP to after Bar 7 breakout Bar to low of Bar 5
+I was Stopped out Bar 9
+gives 70 ticks
+
+Lessons Learnt:
+I do not regret moving my STOP because Bar 8's delta was very negative. 
+Bar 5- Bar 7 was the 2nd Leg I expected, so moving the STOP after seeing Bar 8 make sense to me.
+Overall I got all the points/ticks I can get from the 3 trades and its a Friday.
+
+

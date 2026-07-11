@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EOD Trade Card — 01/05/2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d0f;
+    color: #e8e6df;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .card {
+    width: 720px;
+    background: #131316;
+    border: 0.5px solid #2a2a30;
+    border-radius: 16px;
+    padding: 2rem 2rem;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid #222228;
+  }
+  .header-left .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  .header-left .date {
+    font-size: 26px;
+    font-weight: 600;
+    font-family: 'Georgia', serif;
+    color: #f0ede6;
+    letter-spacing: -0.02em;
+  }
+  .header-left .instrument {
+    font-size: 12px;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .header-right { text-align: right; }
+  .header-right .session-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 4px;
+  }
+  .header-right .session-val {
+    font-size: 13px;
+    color: #888;
+    font-family: 'Georgia', serif;
+  }
+  .header-right .bias {
+    font-size: 11px;
+    color: #1D9E75;
+    margin-top: 3px;
+  }
+
+  /* Summary stats */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .stat {
+    background: #1a1a1f;
+    border: 0.5px solid #252528;
+    border-radius: 10px;
+    padding: 14px 14px;
+  }
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .stat-val {
+    font-size: 24px;
+    font-weight: 600;
+    font-family: 'Georgia', serif;
+    color: #e8e6df;
+  }
+  .stat-val.green { color: #1D9E75; }
+
+  /* Trade cards */
+  .trades { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+  .trade {
+    background: #16161b;
+    border: 0.5px solid #252528;
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .trade-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+  }
+  .trade-id {
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    letter-spacing: 0.08em;
+  }
+  .badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+  }
+  .badge-long { background: #0f2e1a; color: #1D9E75; border: 0.5px solid #1D9E7555; }
+  .badge-short { background: #2e1010; color: #e05a3a; border: 0.5px solid #e05a3a55; }
+  .badge-dir {
+    font-size: 9px;
+    color: #555;
+    background: #1e1e24;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 0.5px solid #2a2a30;
+    letter-spacing: 0.04em;
+  }
+  .badge-managed {
+    font-size: 9px;
+    color: #BA7517;
+    background: #2a1f08;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 0.5px solid #BA751755;
+    letter-spacing: 0.04em;
+  }
+  .trade-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .field-label {
+    font-size: 9px;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .field-val {
+    font-size: 12px;
+    color: #bbb;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+  }
+  .field-val.tick { color: #1D9E75; font-weight: 600; }
+  .trade-divider {
+    border: none;
+    border-top: 0.5px solid #222228;
+    margin-bottom: 10px;
+  }
+  .trade-notes {
+    font-size: 11px;
+    color: #555;
+    line-height: 1.65;
+    font-family: 'Georgia', serif;
+  }
+
+  /* Footer notes */
+  .footer {
+    background: #1a1a1f;
+    border: 0.5px solid #252528;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .footer-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.7;
+    font-family: 'Georgia', serif;
+  }
+
+  /* Accent bar on left of trade */
+  .trade.long { border-left: 2px solid #1D9E7555; }
+  .trade.short { border-left: 2px solid #e05a3a55; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="eyebrow">EOD Trade Review</div>
+      <div class="date">01 / 05 / 2026</div>
+      <div class="instrument">ES Futures &nbsp;·&nbsp; 5-Min Chart</div>
+    </div>
+    <div class="header-right">
+      <div class="session-label">Session</div>
+      <div class="session-val">RTH Open</div>
+      <div class="bias">↑ Bias: Long above EMA</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="stat">
+      <div class="stat-label">Total Ticks</div>
+      <div class="stat-val green">+199</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Trades</div>
+      <div class="stat-val">3</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Win Rate</div>
+      <div class="stat-val green">100%</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Avg Ticks</div>
+      <div class="stat-val">66.3</div>
+    </div>
+  </div>
+
+  <div class="trades">
+
+    <div class="trade long">
+      <div class="trade-header">
+        <span class="trade-id">T01</span>
+        <span class="badge badge-long">Long</span>
+        <span class="badge-dir">Buy Stop</span>
+      </div>
+      <div class="trade-grid">
+        <div>
+          <div class="field-label">Entry</div>
+          <div class="field-val">1t above Bar 61 Pre</div>
+        </div>
+        <div>
+          <div class="field-label">Stop</div>
+          <div class="field-val">Below Bar 68 Low</div>
+        </div>
+        <div>
+          <div class="field-label">Target RR</div>
+          <div class="field-val">1 : 2</div>
+        </div>
+        <div>
+          <div class="field-label">Result</div>
+          <div class="field-val tick">+101 ticks ✓</div>
+        </div>
+      </div>
+      <hr class="trade-divider">
+      <div class="trade-notes">
+        Range breakout above Bar 61 Pre (motherbar). Pre-market gap-up off EMA signalled continuation. MM taken from pre-market range — exhaustion at Bar 64 Pre high. Exit at Bar 7 for 1:2 RR.
+      </div>
+    </div>
+
+    <div class="trade short">
+      <div class="trade-header">
+        <span class="trade-id">T02</span>
+        <span class="badge badge-short">Short</span>
+        <span class="badge-dir">Sell Stop</span>
+      </div>
+      <div class="trade-grid">
+        <div>
+          <div class="field-label">Entry</div>
+          <div class="field-val">1t below Bar 10</div>
+        </div>
+        <div>
+          <div class="field-label">Stop</div>
+          <div class="field-val">Bar 10/11 High</div>
+        </div>
+        <div>
+          <div class="field-label">Target RR</div>
+          <div class="field-val">1 : 2.5</div>
+        </div>
+        <div>
+          <div class="field-label">Result</div>
+          <div class="field-val tick">+71 ticks ✓</div>
+        </div>
+      </div>
+      <hr class="trade-divider">
+      <div class="trade-notes">
+        L2 reversal after 2-leg spike up. Leg 1: Bar 5–7 · Leg 2: Bar 9–11. Low 1: Bar 8/9 · Low 2: Bar 10/11. Confirmed after Bar 12 closes at its low. Market printed 2 legs down as expected. Exit at Bar 14.
+      </div>
+    </div>
+
+    <div class="trade long">
+      <div class="trade-header">
+        <span class="trade-id">T03</span>
+        <span class="badge badge-long">Long</span>
+        <span class="badge-dir">Buy Stop</span>
+        <span class="badge-managed">Managed</span>
+      </div>
+      <div class="trade-grid">
+        <div>
+          <div class="field-label">Entry</div>
+          <div class="field-val">1t above Bar 21</div>
+        </div>
+        <div>
+          <div class="field-label">Stop</div>
+          <div class="field-val">1t below Bar 20</div>
+        </div>
+        <div>
+          <div class="field-label">Target RR</div>
+          <div class="field-val">1:1 (→ 1:2.5)</div>
+        </div>
+        <div>
+          <div class="field-label">Result</div>
+          <div class="field-val tick">+27 ticks ✓</div>
+        </div>
+      </div>
+      <hr class="trade-divider">
+      <div class="trade-notes">
+        H2 signal at Bar 21 — price closes above EMA after 2-leg pullback. Bar 29 printed TD9 exhaustion; noise pullback invalidated 1:2.5 target. Downgraded to 1:1 RR, exit at Bar 30. CVD declining post-noise — correct decision to walk away for the session.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-label">Session Notes</div>
+    <div class="footer-text">
+      Process adherence was solid across all three setups. T03 managed correctly — stop moved at 1:1 before noise invalidated the extended target. Decision to stop trading after T03 was justified: Friday session, surprise macro headlines, and declining CVD all reduced edge. Discipline preserved capital for the next session.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

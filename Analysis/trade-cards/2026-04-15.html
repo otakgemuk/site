@@ -1,0 +1,514 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Trade Cards — NQ1! · 2026-04-08</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+body{background:#0a0c0f;font-family:'DM Sans',sans-serif;color:#e8eaf0;padding:32px 24px 60px;background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(59,130,246,.06) 0%,transparent 70%),repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.015) 40px);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+header{text-align:center;margin-bottom:32px;}
+.p-session-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:#5a6272;text-transform:uppercase;margin-bottom:6px;}
+.p-h1{font-family:var(--font-display);font-size:clamp(32px,5vw,56px);letter-spacing:.06em;line-height:1;}
+.p-h1 span{color:#22c87a;}
+.p-subtitle{font-family:'DM Mono',monospace;font-size:10px;color:#5a6272;letter-spacing:.13em;margin-top:8px;}
+.p-section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#5a6272;display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.p-section-label::after{content:'';flex:1;height:1px;background:#232830;}
+.p-context{background:#111418;border:1px solid #232830;border-radius:10px;overflow:hidden;margin-bottom:28px;}
+.p-ctx-header{padding:12px 20px;border-bottom:1px solid #232830;display:flex;align-items:center;gap:8px;background:#181c22;}
+.p-ctx-dot{width:5px;height:5px;border-radius:50%;background:#f5c842;box-shadow:0 0 6px #f5c842;}
+.p-ctx-label{font-family:'DM Mono',monospace;font-size:9px;color:#5a6272;letter-spacing:.12em;text-transform:uppercase;}
+.p-ctx-body{display:grid;grid-template-columns:1fr 1fr;}
+.p-chart-pane{background:#080b0e;border-right:1px solid #232830;min-height:200px;display:flex;align-items:center;justify-content:center;}
+.p-chart-pane img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9;}
+.p-no-chart{font-family:'DM Mono',monospace;font-size:9px;color:#3a4252;letter-spacing:.1em;}
+.p-narrative{padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
+.p-bias-row{display:flex;gap:6px;flex-wrap:wrap;}
+.p-chip{font-family:'DM Mono',monospace;font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid;}
+.p-chip.bearish{background:rgba(232,57,74,.12);color:#e8394a;border-color:rgba(232,57,74,.3);}
+.p-chip.range{background:rgba(245,200,66,.10);color:#f5c842;border-color:rgba(245,200,66,.3);}
+.p-chip.bullish{background:rgba(34,200,122,.10);color:#22c87a;border-color:rgba(34,200,122,.3);}
+.p-chip.neutral{background:rgba(59,130,246,.10);color:#3b82f6;border-color:rgba(59,130,246,.3);}
+.p-narrative-text{font-size:11px;line-height:1.75;color:#8a94a6;}
+.p-key-levels{background:#181c22;border:1px solid #232830;border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;}
+.p-kl-row{display:flex;justify-content:space-between;}
+.p-kl-label{font-family:'DM Mono',monospace;font-size:9px;color:#5a6272;text-transform:uppercase;}
+.p-kl-val{font-family:'DM Mono',monospace;font-size:9px;color:#e8eaf0;}
+.p-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:28px;}
+.p-card{background:#111418;border:1px solid #232830;border-radius:10px;overflow:hidden;position:relative;}
+.p-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.p-card.long-c::before{background:#22c87a;}
+.p-card.short-c::before{background:#e8394a;}
+.p-card-head{padding:16px 18px 12px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #232830;}
+.p-tid{font-family:var(--font-display);font-size:30px;letter-spacing:.05em;line-height:1;}
+.p-tid.long{color:#22c87a;}
+.p-tid.short{color:#e8394a;}
+.p-ttype{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.p-dir{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:3px;}
+.p-dir.long{background:rgba(34,200,122,.10);color:#22c87a;border:1px solid rgba(34,200,122,.3);}
+.p-dir.short{background:rgba(232,57,74,.12);color:#e8394a;border:1px solid rgba(232,57,74,.3);}
+.p-setup{font-size:9px;color:#5a6272;font-family:'DM Mono',monospace;}
+.p-risk{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;}
+.p-risk.high{background:rgba(232,57,74,.12);color:#e8394a;border:1px solid rgba(232,57,74,.2);}
+.p-risk.med{background:rgba(245,200,66,.10);color:#f5c842;border:1px solid rgba(245,200,66,.2);}
+.p-risk.low{background:rgba(34,200,122,.10);color:#22c87a;border:1px solid rgba(34,200,122,.2);}
+.p-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #232830;}
+.p-stat{padding:12px 14px;border-right:1px solid #232830;}
+.p-stat:last-child{border-right:none;}
+.p-stat-label{font-family:'DM Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:4px;}
+.p-stat-value{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;}
+.p-stat-value.green{color:#22c87a;}
+.p-stat-value.red{color:#e8394a;}
+.p-stat-value.gold{color:#f5c842;}
+.p-exec{padding:12px 18px;border-bottom:1px solid #232830;}
+.p-block-title{font-family:'DM Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:8px;}
+.p-erow{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;}
+.p-ekey{color:#5a6272;}
+.p-eval{font-family:'DM Mono',monospace;color:#e8eaf0;font-size:11px;}
+.p-eval.red{color:#e8394a;}
+.p-eval.green{color:#22c87a;}
+.p-bar{margin:0 18px 12px;height:5px;border-radius:3px;background:#181c22;}
+.p-bar-fill{height:100%;border-radius:3px;}
+.p-bar-fill.long{background:linear-gradient(90deg,#3b82f6,#22c87a);}
+.p-bar-fill.short{background:linear-gradient(90deg,#3b82f6,#e8394a);}
+.p-note{margin:0 18px 10px;padding:9px 12px;border-radius:5px;border-left:3px solid #f5c842;background:rgba(245,200,66,.10);font-size:10px;color:#b8a060;line-height:1.6;font-family:'DM Mono',monospace;}
+.p-note.warn{border-left-color:#e8394a;background:rgba(232,57,74,.08);color:#c87080;}
+.p-note.info{border-left-color:#3b82f6;background:rgba(59,130,246,.08);color:#7090c8;}
+.p-rationale{padding:10px 18px 14px;}
+.p-rationale p{font-size:11px;line-height:1.75;color:#8a94a6;}
+.p-lesson{padding:0 18px 12px;}
+.p-lesson-title{font-family:'DM Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:6px;}
+.p-lesson-text{font-size:10px;line-height:1.7;color:#7a8499;}
+.p-tags{padding:0 18px 14px;display:flex;flex-wrap:wrap;gap:5px;}
+.p-tag{font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px;border:1px solid #232830;color:#5a6272;background:#181c22;}
+.p-tag.gold{border-color:rgba(245,200,66,.3);color:#f5c842;background:rgba(245,200,66,.10);}
+.p-tag.red{border-color:rgba(232,57,74,.3);color:#e8394a;background:rgba(232,57,74,.08);}
+.p-summary{background:#111418;border:1px solid #232830;border-radius:10px;padding:22px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;margin-bottom:24px;}
+.p-sum-item{text-align:center;}
+.p-sum-label{font-family:'DM Mono',monospace;font-size:8px;color:#5a6272;text-transform:uppercase;margin-bottom:6px;}
+.p-sum-value{font-family:var(--font-display);font-size:30px;line-height:1;}
+.p-sum-sub{font-family:'DM Mono',monospace;font-size:8px;color:#5a6272;margin-top:3px;}
+.p-footer{text-align:center;font-family:'DM Mono',monospace;font-size:8px;color:#2e3540;letter-spacing:.18em;text-transform:uppercase;}
+.p-card.stopped::before{background:#e8394a;}
+.p-card.stopped .p-card-head{border-bottom-color:#2a1218;}
+.p-card.stopped{border-color:#2a1218;}
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  .p-cards-grid{grid-template-columns:repeat(2,1fr)!important;}
+  .p-ctx-body{grid-template-columns:1fr 1fr!important;}
+}
+</style>
+</head><body>
+
+<header>
+  <div class="p-session-label">NQ1! · E-mini NASDAQ 100 · EOD Review · WED 08 APR '26</div>
+  <div class="p-h1">TRADE <span>CARDS</span></div>
+  <div class="p-subtitle" style="color:#22c87a">NET WIN · +807 TICKS</div>
+  <div class="p-subtitle" style="margin-top:6px">Pre-Market Wedge → Trend Day Up → EMA Reclaims</div>
+</header>
+
+<!-- ══ SESSION SUMMARY ══ -->
+<div class="p-summary">
+  <div class="p-sum-item">
+    <div class="p-sum-label">Trades</div>
+    <div class="p-sum-value" style="color:#f5c842">6</div>
+  </div>
+  <div class="p-sum-item">
+    <div class="p-sum-label">Wins</div>
+    <div class="p-sum-value" style="color:#22c87a">5</div>
+  </div>
+  <div class="p-sum-item">
+    <div class="p-sum-label">Losses</div>
+    <div class="p-sum-value" style="color:#e8394a">1</div>
+  </div>
+  <div class="p-sum-item">
+    <div class="p-sum-label">Win Rate</div>
+    <div class="p-sum-value" style="color:#22c87a">83%</div>
+  </div>
+  <div class="p-sum-item">
+    <div class="p-sum-label">Net Ticks</div>
+    <div class="p-sum-value" style="color:#22c87a">+807</div>
+    <div class="p-sum-sub">Avg +134.5 / trade</div>
+  </div>
+  <div class="p-sum-item">
+    <div class="p-sum-label">Best Trade</div>
+    <div class="p-sum-value" style="color:#22c87a">+259</div>
+    <div class="p-sum-sub">T06</div>
+  </div>
+</div>
+
+<!-- ══ MARKET CONTEXT ══ -->
+<div class="p-section-label">Market Context</div>
+<div class="p-context">
+  <div class="p-ctx-header">
+    <div class="p-ctx-dot"></div>
+    <div class="p-ctx-label">Session Overview — NQ1! · RTH · WED 08 APR '26</div>
+  </div>
+  <div class="p-ctx-body">
+    <div class="p-chart-pane">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQI12P4z8BQDwAEhAFcMzXQAAAAABJRU5ErkJggg==" alt="NQ1! chart">
+      <div class="p-no-chart" style="position:absolute;">CHART PLACEHOLDER</div>
+    </div>
+    <div class="p-narrative">
+      <div class="p-bias-row">
+        <div class="p-chip bullish">TREND DAY</div>
+        <div class="p-chip bullish">BULLISH</div>
+        <div class="p-chip neutral">NEWS VOLATILITY B55</div>
+      </div>
+      <div class="p-narrative-text">
+        <strong>Pre-market:</strong> 3 pushes down forming a wedge prior to Market Open. Price closes below 20EMA at Bar 3 briefly, then reverses and moves above. Bar 4/5 is a High 2 gapped away from 20EMA.<br><br>
+        <strong>Intraday:</strong> Strong bullish trend day with multiple EMA reclaim setups. TD9 exhaustion counts at B12, B35, and B51 flagged pullbacks. Price consistently held above 20EMA after initial break above. News volatility at B55 created a brief shakeout before continuation higher.<br><br>
+        <strong>Session discipline:</strong> Stopped trading after T06 — "earned enough points for the day."
+      </div>
+      <div class="p-key-levels">
+        <div class="p-kl-row">
+          <div class="p-kl-label">20EMA</div>
+          <div class="p-kl-val">Dynamic support / trend filter</div>
+        </div>
+        <div class="p-kl-row">
+          <div class="p-kl-label">B10 High / B14 Low</div>
+          <div class="p-kl-val">Re-test level (B42 buy signal)</div>
+        </div>
+        <div class="p-kl-row">
+          <div class="p-kl-label">TD9 Exhaustion</div>
+          <div class="p-kl-val">B12, B35, B51</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TRADE CARDS ══ -->
+<div class="p-section-label">Trade Cards</div>
+<div class="p-cards-grid">
+
+  <!-- T01 -->
+  <div class="p-card long-c">
+    <div class="p-card-head">
+      <div class="p-tid long">T01</div>
+      <div class="p-ttype">
+        <div class="p-dir long">LONG</div>
+        <div class="p-setup">High 2 + EMA Gap</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat">
+        <div class="p-stat-label">Entry</div>
+        <div class="p-stat-value">+1 B5</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Exit</div>
+        <div class="p-stat-value">B11</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Result</div>
+        <div class="p-stat-value green">+230</div>
+      </div>
+    </div>
+    <div class="p-exec">
+      <div class="p-block-title">Execution</div>
+      <div class="p-erow"><span class="p-ekey">Direction</span><span class="p-eval green">BUY — 1 tick above B5</span></div>
+      <div class="p-erow"><span class="p-ekey">Setup</span><span class="p-eval">High 2 gapped away from 20EMA</span></div>
+      <div class="p-erow"><span class="p-ekey">Confirmation</span><span class="p-eval">B4 bullish Inside Bar</span></div>
+      <div class="p-erow"><span class="p-ekey">Measured Move</span><span class="p-eval">B4 (up)</span></div>
+      <div class="p-erow"><span class="p-ekey">Exit</span><span class="p-eval green">B11 — Target hit</span></div>
+    </div>
+    <div class="p-bar"><div class="p-bar-fill long" style="width:88%"></div></div>
+    <div class="p-rationale">
+      <p>Bullish continuation play. B4 was a bullish inside bar providing tight risk. EMA gap away from price confirmed bullish momentum. Measured move from B4 high achieved at B11.</p>
+    </div>
+    <div class="p-tags">
+      <div class="p-tag gold">HIGH 2</div>
+      <div class="p-tag gold">INSIDE BAR</div>
+      <div class="p-tag">EMA GAP</div>
+      <div class="p-tag">MM UP</div>
+    </div>
+  </div>
+
+  <!-- T02 -->
+  <div class="p-card long-c">
+    <div class="p-card-head">
+      <div class="p-tid long">T02</div>
+      <div class="p-ttype">
+        <div class="p-dir long">LONG</div>
+        <div class="p-setup">Inside Bar Play</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat">
+        <div class="p-stat-label">Entry</div>
+        <div class="p-stat-value">+1 B15</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Exit</div>
+        <div class="p-stat-value">B21</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Result</div>
+        <div class="p-stat-value green">+145</div>
+      </div>
+    </div>
+    <div class="p-exec">
+      <div class="p-block-title">Execution</div>
+      <div class="p-erow"><span class="p-ekey">Direction</span><span class="p-eval green">BUY — 1 tick above B15</span></div>
+      <div class="p-erow"><span class="p-ekey">Setup</span><span class="p-eval">Inside bar play, expecting 1:1 RR</span></div>
+      <div class="p-erow"><span class="p-ekey">Confirmation</span><span class="p-eval">B12 Green TD9 exhaustion, B14 close below B12, B15 inside bar</span></div>
+      <div class="p-erow"><span class="p-ekey">Measured Move</span><span class="p-eval">B15 (up)</span></div>
+      <div class="p-erow"><span class="p-ekey">Exit</span><span class="p-eval green">B21 — Target hit</span></div>
+    </div>
+    <div class="p-bar"><div class="p-bar-fill long" style="width:56%"></div></div>
+    <div class="p-note info">TD9 exhaustion at B12 followed by B14 close below — pullback setup confirmed before entry.</div>
+    <div class="p-rationale">
+      <p>Green TD9 count at B12 signaled exhaustion. B14 closing below B12 confirmed pullback. B15 inside bar provided the entry trigger with defined risk. 1:1 RR target achieved at B21.</p>
+    </div>
+    <div class="p-tags">
+      <div class="p-tag gold">INSIDE BAR</div>
+      <div class="p-tag gold">TD9</div>
+      <div class="p-tag">1:1 RR</div>
+      <div class="p-tag">MM UP</div>
+    </div>
+  </div>
+
+  <!-- T03 -->
+  <div class="p-card short-c">
+    <div class="p-card-head">
+      <div class="p-tid short">T03</div>
+      <div class="p-ttype">
+        <div class="p-dir short">SHORT</div>
+        <div class="p-setup">Low 2 + 2 Legs PB</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat">
+        <div class="p-stat-label">Entry</div>
+        <div class="p-stat-value">-1 B34</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Exit</div>
+        <div class="p-stat-value">B39</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Result</div>
+        <div class="p-stat-value green">+180</div>
+      </div>
+    </div>
+    <div class="p-exec">
+      <div class="p-block-title">Execution</div>
+      <div class="p-erow"><span class="p-ekey">Direction</span><span class="p-eval red">SELL STOP — 1 tick below B34</span></div>
+      <div class="p-erow"><span class="p-ekey">Setup</span><span class="p-eval">2 legs pullback, Low 2 signal</span></div>
+      <div class="p-erow"><span class="p-ekey">Confirmation</span><span class="p-eval">B35 Green TD9, B36 close below B35, B37 breakout bear bar</span></div>
+      <div class="p-erow"><span class="p-ekey">Measured Move</span><span class="p-eval">B34/35 (down)</span></div>
+      <div class="p-erow"><span class="p-ekey">Fill / Exit</span><span class="p-eval green">Filled B38, exited B39</span></div>
+    </div>
+    <div class="p-bar"><div class="p-bar-fill short" style="width:70%"></div></div>
+    <div class="p-rationale">
+      <p>Only short of the session. B35 Green TD9 exhaustion, B36 closing below B35 confirmed bearish intent. B37 breakout bear bar validated the Low 2 signal. Sell stop below B34 filled at B38. Measured move from B34/35 achieved at B39.</p>
+    </div>
+    <div class="p-tags">
+      <div class="p-tag red">LOW 2</div>
+      <div class="p-tag gold">TD9</div>
+      <div class="p-tag">2 LEGS PB</div>
+      <div class="p-tag">MM DOWN</div>
+    </div>
+  </div>
+
+  <!-- T04 -->
+  <div class="p-card long-c">
+    <div class="p-card-head">
+      <div class="p-tid long">T04</div>
+      <div class="p-ttype">
+        <div class="p-dir long">LONG</div>
+        <div class="p-setup">H1 → H2 Continuation</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat">
+        <div class="p-stat-label">Entry</div>
+        <div class="p-stat-value">+1 B48</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Exit</div>
+        <div class="p-stat-value">B49</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Result</div>
+        <div class="p-stat-value green">+73</div>
+      </div>
+    </div>
+    <div class="p-exec">
+      <div class="p-block-title">Execution</div>
+      <div class="p-erow"><span class="p-ekey">Direction</span><span class="p-eval green">BUY — 1 tick above B48</span></div>
+      <div class="p-erow"><span class="p-ekey">Setup</span><span class="p-eval">H1 → H2 continuation, price closes above 20EMA</span></div>
+      <div class="p-erow"><span class="p-ekey">Signal</span><span class="p-eval">B42 buy signal (re-test B10 high / B14 low)</span></div>
+      <div class="p-erow"><span class="p-ekey">Confirmation</span><span class="p-eval">B42/43 H1, B46/47 H2</span></div>
+      <div class="p-erow"><span class="p-ekey">Measured Move</span><span class="p-eval">B46/47 (up)</span></div>
+      <div class="p-erow"><span class="p-ekey">Exit</span><span class="p-eval green">B49 — Target hit</span></div>
+    </div>
+    <div class="p-bar"><div class="p-bar-fill long" style="width:28%"></div></div>
+    <div class="p-note info">B42 was a key buy signal — re-test of B10 high and B14 low confluence zone.</div>
+    <div class="p-rationale">
+      <p>Classic H1 to H2 continuation. B42 buy signal at confluence of B10 high and B14 low. Price closing above 20EMA at B48 confirmed bullish bias. Smaller measured move target — conservative win.</p>
+    </div>
+    <div class="p-tags">
+      <div class="p-tag gold">H1 → H2</div>
+      <div class="p-tag">EMA RECLAIM</div>
+      <div class="p-tag">RE-TEST</div>
+      <div class="p-tag">MM UP</div>
+    </div>
+  </div>
+
+  <!-- T05 — STOPPED -->
+  <div class="p-card stopped">
+    <div class="p-card-head">
+      <div class="p-tid long">T05</div>
+      <div class="p-ttype">
+        <div class="p-dir long">LONG</div>
+        <div class="p-setup">Inside Bar Play</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat">
+        <div class="p-stat-label">Entry</div>
+        <div class="p-stat-value">+1 B52</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Stop</div>
+        <div class="p-stat-value">-1 B52</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Result</div>
+        <div class="p-stat-value red">-80</div>
+      </div>
+    </div>
+    <div class="p-exec">
+      <div class="p-block-title">Execution</div>
+      <div class="p-erow"><span class="p-ekey">Direction</span><span class="p-eval green">BUY — 1 tick above B52</span></div>
+      <div class="p-erow"><span class="p-ekey">Stop</span><span class="p-eval red">STOP — 1 tick below B52</span></div>
+      <div class="p-erow"><span class="p-ekey">Setup</span><span class="p-eval">Inside bar play, expecting 1:1 RR</span></div>
+      <div class="p-erow"><span class="p-ekey">Confirmation</span><span class="p-eval">B51 TD9 exhaustion, B52 bullish IB (held above B51 low)</span></div>
+      <div class="p-erow"><span class="p-ekey">Measured Move</span><span class="p-eval">B52 (up)</span></div>
+      <div class="p-erow"><span class="p-ekey">Exit</span><span class="p-eval red">STOPPED at B55</span></div>
+    </div>
+    <div class="p-bar"><div class="p-bar-fill long" style="width:30%"></div></div>
+    <div class="p-note warn">B55 was a news bar — price was very volatile. B55 closed above 20EMA. Accepted loss, risk was managed.</div>
+    <div class="p-rationale">
+      <p>Valid inside bar setup after B51 TD9 exhaustion. B52 bullish inside bar did not close below B51 — good indication for continuation. However, news-driven volatility at B55 spiked through stop. Loss contained to defined risk.</p>
+    </div>
+    <div class="p-tags">
+      <div class="p-tag gold">INSIDE BAR</div>
+      <div class="p-tag gold">TD9</div>
+      <div class="p-tag red">STOPPED</div>
+      <div class="p-tag red">NEWS BAR</div>
+    </div>
+  </div>
+
+  <!-- T06 -->
+  <div class="p-card long-c">
+    <div class="p-card-head">
+      <div class="p-tid long">T06</div>
+      <div class="p-ttype">
+        <div class="p-dir long">LONG</div>
+        <div class="p-setup">H2 + EMA Reclaim</div>
+      </div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat">
+        <div class="p-stat-label">Entry</div>
+        <div class="p-stat-value">+1 B55</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Exit</div>
+        <div class="p-stat-value">B66</div>
+      </div>
+      <div class="p-stat">
+        <div class="p-stat-label">Result</div>
+        <div class="p-stat-value green">+259</div>
+      </div>
+    </div>
+    <div class="p-exec">
+      <div class="p-block-title">Execution</div>
+      <div class="p-erow"><span class="p-ekey">Direction</span><span class="p-eval green">BUY STOP — 1 tick above B55</span></div>
+      <div class="p-erow"><span class="p-ekey">Setup</span><span class="p-eval">Bullish continuation, expecting 1:1 RR</span></div>
+      <div class="p-erow"><span class="p-ekey">Confirmation</span><span class="p-eval">B55 closes above 20EMA, B55/56 H2 signal, B56 inside bar</span></div>
+      <div class="p-erow"><span class="p-ekey">Measured Move</span><span class="p-eval">B55 (up)</span></div>
+      <div class="p-erow"><span class="p-ekey">Exit</span><span class="p-eval green">B66 — Target hit</span></div>
+    </div>
+    <div class="p-bar"><div class="p-bar-fill long" style="width:100%"></div></div>
+    <div class="p-note">Post-news re-entry. B55 was volatile but closed above 20EMA — reclaim confirmed. B55/56 H2 signal with B56 inside bar. Best trade of the session.</div>
+    <div class="p-rationale">
+      <p>Re-entry after T05 stopped out. B55 news bar closed above 20EMA — bullish reclaim. B55/56 formed H2 signal with B56 as inside bar. Buy stop 1 tick above B55 captured the continuation move. Largest win of the day at +259 ticks.</p>
+    </div>
+    <div class="p-tags">
+      <div class="p-tag gold">H2</div>
+      <div class="p-tag gold">INSIDE BAR</div>
+      <div class="p-tag">EMA RECLAIM</div>
+      <div class="p-tag">1:1 RR</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PATTERNS & LESSONS ══ -->
+<div class="p-section-label">Session Patterns & Lessons</div>
+<div class="p-context" style="margin-bottom:0;">
+  <div class="p-ctx-header">
+    <div class="p-ctx-dot"></div>
+    <div class="p-ctx-label">What Worked & What Didn't</div>
+  </div>
+  <div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div class="p-block-title" style="margin-bottom:10px;">Setups Used</div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">HIGH 2 / LOW 2</div>
+        <div class="p-lesson-text">Pullback signals in trend direction. High 2 (T01) and Low 2 (T03) both produced strong moves.</div>
+      </div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">H1 → H2 CONTINUATION</div>
+        <div class="p-lesson-text">T04 used B42/43 H1 then B46/47 H2 for continuation entry. Classic two-legged pullback.</div>
+      </div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">INSIDE BAR PLAYS</div>
+        <div class="p-lesson-text">Used in T01, T02, T05, T06. IB provides tight stop with defined risk. 3 of 4 were winners.</div>
+      </div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">EMA RECLAIMS</div>
+        <div class="p-lesson-text">T04 and T06 both entered on price closing back above 20EMA. Key trend filter.</div>
+      </div>
+    </div>
+    <div>
+      <div class="p-block-title" style="margin-bottom:10px;">Key Takeaways</div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">TD9 EXHAUSTION</div>
+        <div class="p-lesson-text">Green TD9 at B12, B35, B51 flagged pullbacks. Combined with PA (inside bars, closes below) for confirmation.</div>
+      </div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">NEWS VOLATILITY (B55)</div>
+        <div class="p-lesson-text">T05 stopped on news bar. Waited for B55 to close above 20EMA before re-entering at T06. Patience after loss.</div>
+      </div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">SESSION DISCIPLINE</div>
+        <div class="p-lesson-text">Stopped after T06 — "earned enough points for the day." No overtrading on a trend day.</div>
+      </div>
+      <div class="p-lesson">
+        <div class="p-lesson-title">RISK MANAGEMENT</div>
+        <div class="p-lesson-text">Only 1 loss (-80 ticks) vs. 5 wins (+807 net). Defined stops on every trade. T05 loss was expected and contained.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-footer" style="margin-top:24px;">
+  Pre-market wedge → Trend day confirmed → EMA reclaims → Stopped after sufficient gains · SESSION COMPLETE
+</div>
+
+</body>
+</html>

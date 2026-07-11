@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside Bar Breakout — Pattern Visual</title>
+<style>
+  :root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 60px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: var(--font-display), sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  h2 {
+    font-family: var(--font-display), sans-serif;
+    font-size: 38px;
+    letter-spacing: 3px;
+    color: var(--cream);
+    margin-bottom: 40px;
+  }
+
+  h2 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  /* CHART WRAPPER */
+  .chart-wrap {
+    width: 100%;
+    max-width: 820px;
+    background: var(--panel);
+    border: 1px solid var(--dark4);
+    border-radius: 12px;
+    padding: 32px 40px 24px;
+    position: relative;
+  }
+
+  .chart-label-top {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .live-dot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+    font-size: 10px;
+  }
+
+  .live-dot::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* SVG CHART */
+  .chart-svg-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  svg {
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* ANNOTATIONS */
+  .annotations {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .ann-card {
+    background: var(--dim);
+    border: 1px solid var(--dark4);
+    border-radius: 8px;
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .ann-card:hover {
+    border-color: var(--bar-color);
+  }
+
+  .ann-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--bar-color);
+  }
+
+  .ann-card.b1 { --bar-color: var(--blue); }
+  .ann-card.b2 { --bar-color: var(--purple); }
+  .ann-card.b3 { --bar-color: var(--purple); }
+  .ann-card.b4 { --bar-color: var(--green); }
+
+  .ann-bar-num {
+    font-family: var(--font-display), sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: var(--bar-color);
+    line-height: 1;
+  }
+
+  .ann-bar-name {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+    margin-bottom: 10px;
+  }
+
+  .ann-rule {
+    font-size: 11px;
+    color: #8896aa;
+    line-height: 1.6;
+  }
+
+  .ann-rule strong {
+    color: var(--bar-color);
+    font-weight: 500;
+  }
+
+  /* LEVELS LEGEND */
+  .levels-legend {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .legend-line {
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+  }
+
+  .legend-dash {
+    width: 20px;
+    height: 0;
+    border-top: 2px dashed;
+    opacity: 0.7;
+  }
+
+  /* SCENARIO TABS */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .tab {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--dark4);
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .tab.active.long {
+    background: rgba(0,214,143,0.1);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .tab.active.short {
+    background: rgba(255,61,90,0.1);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .tab:hover { border-color: #3a4255; color: var(--cream); }
+
+  /* hide short by default */
+  #short-content { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Price Action Strategy</h1>
+<h2>INSIDE BAR <em>BREAKOUT</em> PATTERN</h2>
+
+<div class="tabs">
+  <button class="tab active long" onclick="showScenario('long', this)">▲ LONG Setup</button>
+  <button class="tab short" onclick="showScenario('short', this)">▼ SHORT Setup</button>
+</div>
+
+<div id="long-content">
+  <div class="chart-wrap">
+    <div class="chart-label-top">
+      <span>4-Bar Pattern · LONG Breakout</span>
+      <span class="live-dot">Bar 4 Triggered</span>
+    </div>
+
+    <!-- LONG SVG CHART -->
+    <div class="chart-svg-wrap">
+      <svg viewBox="0 0 740 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid lines -->
+        <line x1="0" y1="60"  x2="740" y2="60"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="110" x2="740" y2="110" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="160" x2="740" y2="160" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="210" x2="740" y2="210" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="260" x2="740" y2="260" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+        <!-- PRE-CONTEXT bars (faded, before Bar 1) -->
+        <g opacity="0.2">
+          <!-- ctx bar A -->
+          <line x1="40" y1="165" x2="40" y2="230" stroke="#888" stroke-width="1.5"/>
+          <rect x="32" y="180" width="16" height="34" rx="1" fill="#3a4a6a"/>
+          <!-- ctx bar B -->
+          <line x1="90" y1="150" x2="90" y2="225" stroke="#888" stroke-width="1.5"/>
+          <rect x="82" y="160" width="16" height="44" rx="1" fill="#3a4a6a"/>
+          <!-- ctx bar C -->
+          <line x1="140" y1="145" x2="140" y2="220" stroke="#888" stroke-width="1.5"/>
+          <rect x="132" y="155" width="16" height="40" rx="1" fill="#3a4a6a"/>
+        </g>
+
+        <!-- ============ BAR 1 — MOTHER BAR ============ -->
+        <!-- Wick top -->
+        <line x1="215" y1="80" x2="215" y2="108" stroke="#5b9cf6" stroke-width="1.5"/>
+        <!-- Body bullish -->
+        <rect x="196" y="108" width="38" height="118" rx="2" fill="#1a2a4a" stroke="#5b9cf6" stroke-width="1.5"/>
+        <!-- Wick bottom -->
+        <line x1="215" y1="226" x2="215" y2="252" stroke="#5b9cf6" stroke-width="1.5"/>
+
+        <!-- Bar 1 HIGH line (extended) -->
+        <line x1="196" y1="108" x2="540" y2="108" stroke="#5b9cf6" stroke-width="1" stroke-dasharray="5,4" opacity="0.5"/>
+        <!-- Bar 1 LOW line (extended) -->
+        <line x1="196" y1="226" x2="540" y2="226" stroke="#5b9cf6" stroke-width="1" stroke-dasharray="5,4" opacity="0.5"/>
+
+        <!-- B1 label -->
+        <text x="215" y="270" text-anchor="middle" fill="#5b9cf6" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B1</text>
+        <text x="215" y="283" text-anchor="middle" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">MOTHER</text>
+
+        <!-- B1 range brace left -->
+        <text x="178" y="115" text-anchor="end" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">HIGH</text>
+        <text x="178" y="230" text-anchor="end" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">LOW</text>
+
+        <!-- ============ BAR 2 — INSIDE BAR ============ -->
+        <line x1="310" y1="130" x2="310" y2="148" stroke="#a78bfa" stroke-width="1.5"/>
+        <rect x="292" y="148" width="36" height="60" rx="2" fill="#1e1a35" stroke="#a78bfa" stroke-width="1.5"/>
+        <line x1="310" y1="208" x2="310" y2="220" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="310" y="270" text-anchor="middle" fill="#a78bfa" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B2</text>
+        <text x="310" y="283" text-anchor="middle" fill="#a78bfa" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">INSIDE</text>
+
+        <!-- B2 range indicator (small braces) -->
+        <line x1="330" y1="148" x2="336" y2="148" stroke="#a78bfa" stroke-width="1" opacity="0.5"/>
+        <line x1="330" y1="208" x2="336" y2="208" stroke="#a78bfa" stroke-width="1" opacity="0.5"/>
+        <line x1="336" y1="148" x2="336" y2="208" stroke="#a78bfa" stroke-width="1" opacity="0.5"/>
+
+        <!-- ============ BAR 3 — INSIDE BAR ============ -->
+        <line x1="398" y1="142" x2="398" y2="156" stroke="#a78bfa" stroke-width="1.5"/>
+        <rect x="380" y="156" width="36" height="46" rx="2" fill="#1e1a35" stroke="#a78bfa" stroke-width="1.5"/>
+        <line x1="398" y1="202" x2="398" y2="214" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="398" y="270" text-anchor="middle" fill="#a78bfa" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B3</text>
+        <text x="398" y="283" text-anchor="middle" fill="#a78bfa" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">COMPRESSION</text>
+
+        <!-- B3 HIGH line — trigger reference -->
+        <line x1="380" y1="156" x2="510" y2="156" stroke="#f0b429" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+
+        <!-- ============ BAR 4 — TRIGGER / BREAKOUT ============ -->
+        <!-- Glow effect -->
+        <ellipse cx="502" cy="165" rx="30" ry="60" fill="rgba(0,214,143,0.04)"/>
+
+        <line x1="502" y1="90" x2="502" y2="108" stroke="#00d68f" stroke-width="1.5"/>
+        <rect x="484" y="108" width="36" height="80" rx="2" fill="rgba(0,214,143,0.15)" stroke="#00d68f" stroke-width="2"/>
+        <line x1="502" y1="188" x2="502" y2="200" stroke="#00d68f" stroke-width="1.5"/>
+        <text x="502" y="270" text-anchor="middle" fill="#00d68f" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B4</text>
+        <text x="502" y="283" text-anchor="middle" fill="#00d68f" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">TRIGGER</text>
+
+        <!-- BREAKOUT arrow -->
+        <line x1="502" y1="108" x2="502" y2="72" stroke="#00d68f" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+        <polygon points="502,60 496,76 508,76" fill="#00d68f" opacity="0.8"/>
+
+        <!-- "CLOSE HERE" marker -->
+        <line x1="520" y1="108" x2="560" y2="108" stroke="#00d68f" stroke-width="1" opacity="0.6"/>
+        <text x="563" y="112" fill="#00d68f" font-family="'DM Mono', monospace" font-size="10" opacity="0.9">ENTRY CLOSE</text>
+
+        <!-- ============ STOP LOSS zone ============ -->
+        <!-- Stop level (B1 low) -->
+        <rect x="150" y="226" width="490" height="26" rx="0" fill="rgba(255,61,90,0.06)"/>
+        <line x1="150" y1="226" x2="640" y2="226" stroke="#ff3d5a" stroke-width="1.2" opacity="0.5"/>
+        <text x="648" y="230" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="10" opacity="0.9">STOP</text>
+        <text x="648" y="243" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="9" opacity="0.5">(B1 low)</text>
+
+        <!-- Tight stop (B3 low) -->
+        <line x1="380" y1="202" x2="640" y2="202" stroke="#ff3d5a" stroke-width="1" stroke-dasharray="4,3" opacity="0.35"/>
+        <text x="648" y="206" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="9" opacity="0.45">tight stop (B3)</text>
+
+        <!-- ============ PROFIT TARGET ZONES ============ -->
+        <!-- B1 range height = 118px (108 to 226). Target 1 = 108 - 118 = -10 (but visual: above entry at 108, up by ~range) -->
+        <!-- Let's show targets relative to B4 close which is at 108 -->
+        <!-- T1 at 1:1 — B1 range above breakout -->
+        <line x1="484" y1="44" x2="680" y2="44" stroke="#f0b429" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <rect x="680" y="36" width="56" height="16" rx="3" fill="rgba(240,180,41,0.15)"/>
+        <text x="708" y="47" text-anchor="middle" fill="#f0b429" font-family="'DM Mono', monospace" font-size="10" font-weight="500">T1 · 1:1</text>
+
+        <!-- T2 at 2:1 - higher, a bit above the viewbox - place near top -->
+        <line x1="484" y1="14" x2="680" y2="14" stroke="#f0b429" stroke-width="1" stroke-dasharray="4,3" opacity="0.35"/>
+        <rect x="680" y="6" width="56" height="16" rx="3" fill="rgba(240,180,41,0.08)"/>
+        <text x="708" y="17" text-anchor="middle" fill="#f0b429" font-family="'DM Mono', monospace" font-size="10" opacity="0.7">T2 · 2:1</text>
+
+        <!-- B1 range bracket on right -->
+        <line x1="540" y1="108" x2="546" y2="108" stroke="#5b9cf6" stroke-width="1" opacity="0.5"/>
+        <line x1="540" y1="226" x2="546" y2="226" stroke="#5b9cf6" stroke-width="1" opacity="0.5"/>
+        <line x1="546" y1="108" x2="546" y2="226" stroke="#5b9cf6" stroke-width="1" opacity="0.4"/>
+        <line x1="546" y1="167" x2="556" y2="167" stroke="#5b9cf6" stroke-width="1" opacity="0.4"/>
+        <text x="560" y="171" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">B1 range</text>
+
+        <!-- B3 trigger high label -->
+        <text x="420" y="152" fill="#f0b429" font-family="'DM Mono', monospace" font-size="9" opacity="0.8">B3 high → trigger</text>
+
+        <!-- B4 close "enters above" annotation -->
+        <text x="502" y="304" text-anchor="middle" fill="#00d68f" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">closes above B3 high</text>
+
+        <!-- Pre-context label -->
+        <text x="90" y="295" text-anchor="middle" fill="#3a4255" font-family="'DM Mono', monospace" font-size="9">prior context</text>
+
+      </svg>
+    </div>
+
+    <div class="levels-legend">
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #5b9cf6;"></div>
+        Bar 1 high/low
+      </div>
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #f0b429;"></div>
+        B3 trigger level
+      </div>
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #ff3d5a;"></div>
+        Stop loss
+      </div>
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #f0b429; opacity:0.5;"></div>
+        Profit targets (T1, T2)
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card b1">
+      <div class="ann-bar-num">B1</div>
+      <div class="ann-bar-name">Mother Bar</div>
+      <div class="ann-rule">
+        <strong>Wide range bar.</strong> Sets the high/low boundaries for the entire pattern. All subsequent bars must remain inside.
+      </div>
+    </div>
+    <div class="ann-card b2">
+      <div class="ann-bar-num">B2</div>
+      <div class="ann-bar-name">First Inside Bar</div>
+      <div class="ann-rule">
+        <strong>High and low</strong> are contained within B1's range. Signals initial consolidation and indecision.
+      </div>
+    </div>
+    <div class="ann-card b3">
+      <div class="ann-bar-num">B3</div>
+      <div class="ann-bar-name">Compression Bar</div>
+      <div class="ann-rule">
+        <strong>Further compression</strong> inside B1 (and usually B2). Builds energy. Its high becomes the breakout trigger.
+      </div>
+    </div>
+    <div class="ann-card b4">
+      <div class="ann-bar-num">B4</div>
+      <div class="ann-bar-name">Trigger Bar</div>
+      <div class="ann-rule">
+        <strong>Closes above B3 high</strong> (long) or below B3 low (short). Enter on this close. Breakout confirmed.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SHORT VERSION -->
+<div id="short-content">
+  <div class="chart-wrap">
+    <div class="chart-label-top">
+      <span>4-Bar Pattern · SHORT Breakout</span>
+      <span class="live-dot" style="color:var(--red)">Bar 4 Triggered</span>
+    </div>
+
+    <div class="chart-svg-wrap">
+      <svg viewBox="0 0 740 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid -->
+        <line x1="0" y1="60"  x2="740" y2="60"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="110" x2="740" y2="110" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="160" x2="740" y2="160" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="210" x2="740" y2="210" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="0" y1="260" x2="740" y2="260" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+        <!-- ctx bars (bearish context) -->
+        <g opacity="0.2">
+          <line x1="40" y1="80" x2="40" y2="160" stroke="#888" stroke-width="1.5"/>
+          <rect x="32" y="90" width="16" height="40" rx="1" fill="#4a2a2a"/>
+          <line x1="90" y1="90" x2="90" y2="170" stroke="#888" stroke-width="1.5"/>
+          <rect x="82" y="100" width="16" height="44" rx="1" fill="#4a2a2a"/>
+          <line x1="140" y1="95" x2="140" y2="175" stroke="#888" stroke-width="1.5"/>
+          <rect x="132" y="110" width="16" height="46" rx="1" fill="#4a2a2a"/>
+        </g>
+
+        <!-- BAR 1 — bearish mother bar -->
+        <line x1="215" y1="70" x2="215" y2="95" stroke="#5b9cf6" stroke-width="1.5"/>
+        <rect x="196" y="95" width="38" height="110" rx="2" fill="#2a1a1a" stroke="#5b9cf6" stroke-width="1.5"/>
+        <line x1="215" y1="205" x2="215" y2="228" stroke="#5b9cf6" stroke-width="1.5"/>
+
+        <!-- B1 HIGH dashed -->
+        <line x1="196" y1="95"  x2="540" y2="95"  stroke="#5b9cf6" stroke-width="1" stroke-dasharray="5,4" opacity="0.5"/>
+        <!-- B1 LOW dashed -->
+        <line x1="196" y1="205" x2="540" y2="205" stroke="#5b9cf6" stroke-width="1" stroke-dasharray="5,4" opacity="0.5"/>
+
+        <text x="215" y="250" text-anchor="middle" fill="#5b9cf6" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B1</text>
+        <text x="215" y="263" text-anchor="middle" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">MOTHER</text>
+        <text x="178" y="100" text-anchor="end" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">HIGH</text>
+        <text x="178" y="210" text-anchor="end" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">LOW</text>
+
+        <!-- BAR 2 — inside -->
+        <line x1="310" y1="118" x2="310" y2="132" stroke="#a78bfa" stroke-width="1.5"/>
+        <rect x="292" y="132" width="36" height="62" rx="2" fill="#1e1a35" stroke="#a78bfa" stroke-width="1.5"/>
+        <line x1="310" y1="194" x2="310" y2="204" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="310" y="250" text-anchor="middle" fill="#a78bfa" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B2</text>
+        <text x="310" y="263" text-anchor="middle" fill="#a78bfa" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">INSIDE</text>
+
+        <!-- BAR 3 — compression -->
+        <line x1="398" y1="130" x2="398" y2="144" stroke="#a78bfa" stroke-width="1.5"/>
+        <rect x="380" y="144" width="36" height="50" rx="2" fill="#1e1a35" stroke="#a78bfa" stroke-width="1.5"/>
+        <line x1="398" y1="194" x2="398" y2="202" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="398" y="250" text-anchor="middle" fill="#a78bfa" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B3</text>
+        <text x="398" y="263" text-anchor="middle" fill="#a78bfa" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">COMPRESSION</text>
+
+        <!-- B3 LOW line — short trigger -->
+        <line x1="380" y1="194" x2="510" y2="194" stroke="#f0b429" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <text x="390" y="188" fill="#f0b429" font-family="'DM Mono', monospace" font-size="9" opacity="0.8">B3 low → trigger</text>
+
+        <!-- BAR 4 — bearish breakout -->
+        <ellipse cx="502" cy="225" rx="30" ry="55" fill="rgba(255,61,90,0.04)"/>
+        <line x1="502" y1="196" x2="502" y2="208" stroke="#ff3d5a" stroke-width="1.5"/>
+        <rect x="484" y="208" width="36" height="72" rx="2" fill="rgba(255,61,90,0.15)" stroke="#ff3d5a" stroke-width="2"/>
+        <line x1="502" y1="280" x2="502" y2="296" stroke="#ff3d5a" stroke-width="1.5"/>
+
+        <!-- DOWN arrow -->
+        <line x1="502" y1="280" x2="502" y2="314" stroke="#ff3d5a" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.5"/>
+        <polygon points="502,325 496,310 508,310" fill="#ff3d5a" opacity="0.8"/>
+
+        <text x="502" y="250" text-anchor="middle" fill="#ff3d5a" font-family="'Bebas Neue', sans-serif" font-size="14" letter-spacing="1">B4</text>
+        <text x="520" y="281" text-anchor="middle" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="9" opacity="0.7">TRIGGER</text>
+
+        <!-- Entry close marker -->
+        <line x1="520" y1="280" x2="560" y2="280" stroke="#ff3d5a" stroke-width="1" opacity="0.6"/>
+        <text x="563" y="284" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="10" opacity="0.9">ENTRY CLOSE</text>
+
+        <!-- STOP LOSS (B1 high for shorts) -->
+        <rect x="150" y="85" width="490" height="20" rx="0" fill="rgba(255,61,90,0.05)"/>
+        <line x1="150" y1="95" x2="640" y2="95" stroke="#ff3d5a" stroke-width="1.2" opacity="0.5"/>
+        <text x="648" y="99" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="10" opacity="0.9">STOP</text>
+        <text x="648" y="112" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="9" opacity="0.5">(B1 high)</text>
+
+        <!-- Tight stop B3 high -->
+        <line x1="380" y1="144" x2="640" y2="144" stroke="#ff3d5a" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
+        <text x="648" y="148" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="9" opacity="0.4">tight (B3 high)</text>
+
+        <!-- PROFIT TARGETS (below entry) -->
+        <line x1="484" y1="295" x2="680" y2="295" stroke="#f0b429" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+        <rect x="680" y="287" width="56" height="16" rx="3" fill="rgba(240,180,41,0.15)"/>
+        <text x="708" y="298" text-anchor="middle" fill="#f0b429" font-family="'DM Mono', monospace" font-size="10" font-weight="500">T1 · 1:1</text>
+
+        <line x1="484" y1="320" x2="680" y2="320" stroke="#f0b429" stroke-width="1" stroke-dasharray="4,3" opacity="0.35"/>
+        <rect x="680" y="313" width="56" height="16" rx="3" fill="rgba(240,180,41,0.08)"/>
+        <text x="708" y="324" text-anchor="middle" fill="#f0b429" font-family="'DM Mono', monospace" font-size="10" opacity="0.7">T2 · 2:1</text>
+
+        <!-- B1 range bracket -->
+        <line x1="540" y1="95"  x2="546" y2="95"  stroke="#5b9cf6" stroke-width="1" opacity="0.5"/>
+        <line x1="540" y1="205" x2="546" y2="205" stroke="#5b9cf6" stroke-width="1" opacity="0.5"/>
+        <line x1="546" y1="95"  x2="546" y2="205" stroke="#5b9cf6" stroke-width="1" opacity="0.4"/>
+        <line x1="546" y1="150" x2="556" y2="150" stroke="#5b9cf6" stroke-width="1" opacity="0.4"/>
+        <text x="560" y="154" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">B1 range</text>
+
+        <text x="502" y="337" text-anchor="middle" fill="#ff3d5a" font-family="'DM Mono', monospace" font-size="9" opacity="0.6">closes below B3 low</text>
+
+        <text x="90" y="295" text-anchor="middle" fill="#3a4255" font-family="'DM Mono', monospace" font-size="9">prior context</text>
+      </svg>
+    </div>
+
+    <div class="levels-legend">
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #5b9cf6;"></div>
+        Bar 1 high/low
+      </div>
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #f0b429;"></div>
+        B3 trigger level
+      </div>
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #ff3d5a;"></div>
+        Stop loss
+      </div>
+      <div class="legend-item">
+        <div class="legend-dash" style="border-color: #f0b429; opacity:0.5;"></div>
+        Profit targets (T1, T2)
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <div class="ann-card b1">
+      <div class="ann-bar-num">B1</div>
+      <div class="ann-bar-name">Mother Bar</div>
+      <div class="ann-rule">
+        <strong>Wide range bar.</strong> Sets the high/low boundaries. Stop goes 1 tick above B1 high for short trades.
+      </div>
+    </div>
+    <div class="ann-card b2">
+      <div class="ann-bar-num">B2</div>
+      <div class="ann-bar-name">First Inside Bar</div>
+      <div class="ann-rule">
+        <strong>High and low</strong> contained within B1. Market consolidating after the initial move lower.
+      </div>
+    </div>
+    <div class="ann-card b3">
+      <div class="ann-bar-num">B3</div>
+      <div class="ann-bar-name">Compression Bar</div>
+      <div class="ann-rule">
+        <strong>Tighter range.</strong> Its low becomes the key breakdown trigger. Tight stop: 1 tick above B3 high.
+      </div>
+    </div>
+    <div class="ann-card b4" style="--bar-color: var(--red);">
+      <div class="ann-bar-num" style="color:var(--red)">B4</div>
+      <div class="ann-bar-name">Trigger Bar</div>
+      <div class="ann-rule">
+        <strong style="color:var(--red)">Closes below B3 low.</strong> Enter short on the close. Stop above B1 high. Targets below entry.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showScenario(type, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active', 'long', 'short'));
+    btn.classList.add('active', type);
+    document.getElementById('long-content').style.display = type === 'long' ? 'block' : 'none';
+    document.getElementById('short-content').style.display = type === 'short' ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>

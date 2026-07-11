@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sire-SchoolFishing Indicator — SireMammat</title>
+<meta name="description" content="School Run + Fishing Technique — stop-run detection and RTH bracketing for index futures. Three independent modules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;--gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;--cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;--white:#FFFFFF;--red:#C04030;--green:#3A7A50;--blue:#6B8EC4;--purple:#9B7CF8;--orange:#C8854A;--font-display:'EB Garamond',Georgia,serif;--font-body:'Libre Baskerville',Georgia,serif;--font-mono:'DM Mono','Courier New',monospace;--radius:4px;--radius-lg:10px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:var(--dark);color:var(--cream);font-family:var(--font-body);font-size:16px;line-height:1.7;overflow-x:hidden;}a{color:var(--gold-lt);text-decoration:none;}a:hover{color:var(--gold);}ul{list-style:none;}
+
+.ticker-bar{background:var(--dark2);border-bottom:1px solid var(--gold-dim);overflow:hidden;height:32px;display:flex;align-items:center;}.ticker-track{display:flex;gap:0;white-space:nowrap;animation:ticker 30s linear infinite;}.ticker-item{font-family:var(--font-mono);font-size:11px;font-weight:400;padding:0 28px;color:var(--muted);letter-spacing:.04em;border-right:1px solid var(--dark4);display:flex;align-items:center;gap:8px;height:32px;}.ticker-item .sym{color:var(--cream2);font-weight:500;}.ticker-item .up{color:var(--green);}.ticker-item .dn{color:var(--red);}@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(14,10,4,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--dark4);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:64px;}.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none;}.nav-logo svg{flex-shrink:0;}.nav-logo-text{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--cream);letter-spacing:.02em;line-height:1;}.nav-logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-top:2px;}.nav-links{display:flex;gap:2rem;align-items:center;}.nav-links a{font-family:var(--font-mono);font-size:11px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s;}.nav-links a:hover{color:var(--gold-lt);}.nav-cta{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--dark)!important;background:var(--gold);padding:8px 18px;border-radius:var(--radius);transition:background .2s;}.nav-cta:hover{background:var(--gold-lt)!important;color:var(--dark)!important;}
+
+.divider{display:flex;align-items:center;gap:1.5rem;padding:0 4rem;max-width:1200px;margin:0 auto;}.divider-line{flex:1;height:1px;background:var(--dark4);}
+section{padding:6rem 4rem;}.section-inner{max-width:1200px;margin:0 auto;}.section-eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:flex;align-items:center;gap:10px;}.section-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}.section-title{font-family:var(--font-display);font-size:clamp(2rem,3.5vw,3rem);font-weight:500;color:var(--cream);margin-bottom:1rem;line-height:1.15;}.section-sub{font-family:var(--font-body);font-size:1rem;color:var(--muted);max-width:560px;line-height:1.8;margin-bottom:3rem;}
+
+.ind-hero{background:var(--dark);padding:6rem 4rem;position:relative;overflow:hidden;}.ind-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 70% 50%,rgba(184,115,51,.06) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(184,115,51,.03) 0%,transparent 60%);pointer-events:none;}.ind-hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(184,115,51,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,115,51,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;mask-image:radial-gradient(ellipse at 70% 50%,black 30%,transparent 70%);}.ind-hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;z-index:2;}.ind-badge{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-dim);padding:6px 14px;border-radius:var(--radius);display:inline-block;margin-bottom:1.5rem;}.ind-title{font-family:var(--font-display);font-size:clamp(3rem,5vw,4.5rem);font-weight:500;line-height:1.08;color:var(--cream);margin-bottom:1rem;}.ind-title em{font-style:italic;color:var(--gold-lt);}.ind-sub{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;}.ind-desc{font-family:var(--font-body);font-size:1rem;color:var(--muted);line-height:1.8;max-width:520px;margin-bottom:2rem;}.ind-desc strong{color:var(--cream2);}.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:560px;}.stat-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);padding:1rem 1.2rem;text-align:center;transition:border-color .2s;}.stat-card:hover{border-color:var(--gold-dim);}.stat-num{font-family:var(--font-display);font-size:1.9rem;font-weight:600;color:var(--gold-lt);line-height:1;margin-bottom:4px;}.stat-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}.ind-hero-right{display:flex;align-items:center;justify-content:center;}.ind-hero-symbol{display:flex;flex-direction:column;align-items:center;gap:2rem;}.ind-hero-symbol svg{filter:drop-shadow(0 0 60px rgba(184,115,51,.25));animation:float 6s ease-in-out infinite;}@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+.content-grid{display:grid;grid-template-columns:1fr 340px;gap:3rem;max-width:1200px;margin:0 auto;}.block{margin-bottom:3rem;}.block-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;display:flex;align-items:center;gap:10px;}.block-tag::before{content:'';display:block;width:24px;height:1px;background:var(--gold);}.block-title{font-family:var(--font-display);font-size:1.8rem;font-weight:500;color:var(--cream);margin-bottom:1rem;line-height:1.15;}.block-body{font-size:.95rem;color:var(--muted);line-height:1.85;}.block-body p{margin-bottom:1rem;}.block-body p:last-child{margin-bottom:0;}.block-body strong{color:var(--cream2);}
+
+.signal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1.5rem;margin-bottom:1rem;}.signal-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);padding:1.6rem;position:relative;overflow:hidden;transition:border-color .2s;}.signal-card:hover{border-color:var(--gold-dim);}.signal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}.signal-card.ema::before{background:var(--orange);}.signal-card.sr::before{background:var(--gold);}.signal-card.fish::before{background:var(--green);}.signal-icon{font-size:2rem;margin-bottom:.8rem;}.signal-name{font-family:var(--font-display);font-size:1.3rem;font-weight:500;color:var(--cream);margin-bottom:4px;}.signal-type{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}.signal-desc{font-size:.85rem;color:var(--muted);line-height:1.7;}.signal-desc p{margin-bottom:.5rem;}.signal-desc p:last-child{margin-bottom:0;}
+
+.logic-item{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);padding:1.4rem 1.6rem;margin-bottom:1rem;border-left:3px solid var(--green);transition:border-color .2s;}.logic-item:hover{border-left-color:var(--gold);}.logic-item.gold{border-left-color:var(--gold);}.logic-item.blue{border-left-color:var(--blue);}.logic-item.red{border-left-color:var(--red);}.logic-item.orange{border-left-color:var(--orange);}.logic-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;color:var(--gold);}.logic-item.red .logic-label{color:var(--red);}.logic-item.orange .logic-label{color:var(--orange);}.logic-val{font-size:.88rem;color:var(--muted);line-height:1.7;}.logic-val strong{color:var(--cream2);}
+
+.param-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.5rem;}.param-table th{text-align:left;font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);padding:.6rem .8rem;border-bottom:1px solid var(--dark4);}.param-table td{padding:.7rem .8rem;border-bottom:1px solid var(--dark4);color:var(--muted);vertical-align:top;}.param-table td:first-child{color:var(--cream2);font-weight:500;font-family:var(--font-mono);font-size:11px;}.param-table td:nth-child(2){color:var(--gold);font-family:var(--font-mono);font-size:11px;}.param-table tr:last-child td{border-bottom:none;}
+
+.workflow-step{display:flex;gap:1.25rem;align-items:flex-start;margin-bottom:1.5rem;}.step-num{font-family:var(--font-display);font-size:1.8rem;color:var(--gold);line-height:1;flex-shrink:0;width:32px;}.step-content{flex:1;}.step-title{font-size:.95rem;color:var(--cream);font-weight:500;margin-bottom:.3rem;}.step-desc{font-size:.85rem;color:var(--muted);line-height:1.7;}
+
+.warning-box{background:rgba(240,180,41,.06);border:1px solid rgba(240,180,41,.2);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;margin-top:1.5rem;}.warning-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:.5rem;}.warning-text{font-size:.82rem;color:var(--muted);line-height:1.6;}
+
+.side-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:var(--radius-lg);padding:1.6rem;margin-bottom:1rem;transition:border-color .2s;}.side-card:hover{border-color:var(--gold-dim);}.side-card-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--dark4);}.side-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--dark4);font-size:.82rem;}.side-row:last-child{border-bottom:none;}.side-lbl{color:var(--muted);}.side-val{font-weight:500;color:var(--cream);}.btn-p{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--dark);background:var(--gold);padding:12px 20px;border-radius:var(--radius);transition:background .2s;display:inline-flex;align-items:center;gap:8px;width:100%;justify-content:center;text-decoration:none;border:none;cursor:pointer;}.btn-p:hover{background:var(--gold-lt);color:var(--dark);}.btn-ghost{font-family:var(--font-mono);font-size:11px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-lt);border:1px solid var(--gold-dim);padding:12px 20px;border-radius:var(--radius);transition:border-color .2s,color .2s;display:inline-flex;align-items:center;gap:8px;width:100%;justify-content:center;text-decoration:none;margin-top:.75rem;}.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}.tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:var(--muted);border:1px solid var(--dark4);padding:4px 10px;border-radius:2px;display:inline-block;margin:2px;}.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:.5rem;}
+
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}.fade-up.visible{opacity:1;transform:translateY(0);}
+
+footer{background:var(--dark2);border-top:1px solid var(--dark4);padding:3rem 4rem 2rem;}.footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--dark4);}.footer-brand{display:flex;align-items:center;gap:14px;margin-bottom:1rem;}.footer-brand-name{font-family:var(--font-display);font-size:1.3rem;font-weight:500;color:var(--cream);}.footer-tagline{font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:.06em;max-width:300px;line-height:1.6;}.footer-links{display:flex;gap:3rem;}.footer-col-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}.footer-col-links{display:flex;flex-direction:column;gap:.6rem;}.footer-col-links a{font-family:var(--font-mono);font-size:11px;color:var(--muted);transition:color .2s;}.footer-col-links a:hover{color:var(--gold-lt);}.footer-bottom{display:flex;justify-content:space-between;align-items:center;}.footer-copy{font-family:var(--font-mono);font-size:10px;color:var(--muted2);letter-spacing:.04em;}.footer-disclaimer{font-family:var(--font-mono);font-size:10px;color:var(--muted2);max-width:400px;text-align:right;line-height:1.6;}
+
+@media(max-width:900px){nav{padding:0 1.5rem;}.nav-links{display:none;}.ind-hero-inner{grid-template-columns:1fr;}.ind-hero-right{display:none;}section{padding:4rem 1.5rem;}.content-grid{grid-template-columns:1fr;}.signal-grid{grid-template-columns:1fr;}.stat-strip{grid-template-columns:1fr 1fr;}.divider{padding:0 1.5rem;}.footer-top{flex-direction:column;gap:2rem;}.footer-links{flex-wrap:wrap;gap:2rem;}.footer-bottom{flex-direction:column;gap:1rem;text-align:center;}.footer-disclaimer{text-align:center;}}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar" aria-hidden="true"><div class="ticker-track"><div class="ticker-item"><span class="sym">ES</span> 5,847.25 <span class="up">+12.50</span></div><div class="ticker-item"><span class="sym">NQ</span> 20,934.00 <span class="up">+67.25</span></div><div class="ticker-item"><span class="sym">MES</span> 5,847.25 <span class="up">+12.50</span></div><div class="ticker-item"><span class="sym">MNQ</span> 20,934.00 <span class="dn">−18.75</span></div><div class="ticker-item"><span class="sym">VIX</span> 18.24 <span class="dn">−0.84</span></div><div class="ticker-item"><span class="sym">DXY</span> 104.32 <span class="up">+0.21</span></div><div class="ticker-item"><span class="sym">GOLD</span> 2,341.40 <span class="up">+8.60</span></div><div class="ticker-item"><span class="sym">10Y</span> 4.328% <span class="dn">−0.012</span></div><div class="ticker-item"><span class="sym">ES</span> 5,847.25 <span class="up">+12.50</span></div><div class="ticker-item"><span class="sym">NQ</span> 20,934.00 <span class="up">+67.25</span></div><div class="ticker-item"><span class="sym">MES</span> 5,847.25 <span class="up">+12.50</span></div><div class="ticker-item"><span class="sym">MNQ</span> 20,934.00 <span class="dn">−18.75</span></div><div class="ticker-item"><span class="sym">VIX</span> 18.24 <span class="dn">−0.84</span></div><div class="ticker-item"><span class="sym">DXY</span> 104.32 <span class="up">+0.21</span></div><div class="ticker-item"><span class="sym">GOLD</span> 2,341.40 <span class="up">+8.60</span></div><div class="ticker-item"><span class="sym">10Y</span> 4.328% <span class="dn">−0.012</span></div></div></div>
+
+<nav>
+  <a href="../../index.html" class="nav-logo">
+    <svg width="28" height="36" viewBox="0 0 56 72" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+    <div><div class="nav-logo-text">SireMammat</div><div class="nav-logo-sub">Free Futures Education</div></div>
+  </a>
+  <ul class="nav-links"><li><a href="../../index.html#hub">Hub</a></li><li><a href="../../index.html#about">About</a></li><li><a href="../index.html">Indicators</a></li><li><a href="../../index.html#tools">Tools</a></li><li><a href="../../index.html#contact">Contact</a></li><li><a href="https://youtube.com/@SireMammat" class="nav-cta">Subscribe →</a></li></ul>
+</nav>
+
+<section class="ind-hero">
+  <div class="ind-hero-inner">
+    <div class="fade-up">
+      <div class="ind-badge">Opening Range · Stop-Run Detection · RTH Brackets</div>
+      <h1 class="ind-title">Sire-<em>SchoolFishing</em></h1>
+      <div class="ind-sub">School Run + Fishing Technique · MNQ / MES / ES / NQ · Pine Script v6</div>
+      <p class="ind-desc">Combines <strong>Tom Hougaard's School Run</strong> (30-minute opening range bracketing) with the <strong>Fishing Technique</strong> (stop-run mean reversion) and a <strong>9/20 EMA foundation</strong> for trend bias. Three independent modules that work together.</p>
+      <div class="stat-strip">
+        <div class="stat-card"><div class="stat-num" style="color:var(--green)">3</div><div class="stat-lbl">Modules</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--gold)">30 min</div><div class="stat-lbl">Opening Range</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--blue)">5m–15m</div><div class="stat-lbl">Timeframe</div></div>
+        <div class="stat-card"><div class="stat-num">v6</div><div class="stat-lbl">Pine Script</div></div>
+      </div>
+    </div>
+    <div class="ind-hero-right fade-up">
+      <div class="ind-hero-symbol">
+        <svg width="180" height="240" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="72" width="60" height="78" rx="4" stroke="#E8C46A" stroke-width="4" fill="none"/>
+          <line x1="30" y1="108" x2="90" y2="108" stroke="#E8C46A" stroke-width="2" opacity="0.3"/>
+          <line x1="60" y1="72" x2="60" y2="54" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="16" y1="54" x2="28" y2="64" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="28" y1="64" x2="46" y2="40" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="46" y1="40" x2="60" y2="56" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="60" y1="56" x2="74" y2="40" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="74" y1="40" x2="92" y2="64" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="92" y1="64" x2="104" y2="54" stroke="#E8C46A" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="16" cy="54" r="5" fill="#E8C46A"/><circle cx="60" cy="56" r="5" fill="#E8C46A"/><circle cx="104" cy="54" r="5" fill="#E8C46A"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<section style="padding-top:3rem;padding-bottom:6rem;">
+  <div class="content-grid">
+    <div class="content-body">
+
+      <div class="block fade-up">
+        <div class="block-tag">Overview</div>
+        <h2 class="block-title">What Is Sire-SchoolFishing?</h2>
+        <div class="block-body">
+          <p>Sire-SchoolFishing is a multi-strategy indicator built around three proven trading methodologies from Tom Hougaard's price-action playbook. Each module operates independently but they're designed to complement each other.</p>
+          <p>The indicator is designed for <strong>index futures traders</strong> who trade the NY cash session (09:30 – 16:00 ET). It works best on 5-minute or 15-minute charts.</p>
+        </div>
+      </div>
+
+      <div class="block fade-up">
+        <div class="block-tag">Modules</div>
+        <h2 class="block-title">The Three Modules</h2>
+        <div class="block-body"><p>Each module serves a specific purpose. You can enable or disable any of them independently in the settings.</p></div>
+        <div class="signal-grid">
+          <div class="signal-card ema">
+            <div class="signal-icon">📈</div>
+            <div class="signal-name" style="color:var(--orange)">EMA Foundation</div>
+            <div class="signal-type">Trend Bias</div>
+            <div class="signal-desc"><p>A <strong style="color:var(--cream2)">9 EMA</strong> (fast, orange) and <strong style="color:var(--cream2)">20 EMA</strong> (slow, blue) define the directional bias.</p><p><strong style="color:var(--green)">Fast above Slow</strong> = Bullish<br><strong style="color:var(--red)">Fast below Slow</strong> = Bearish</p></div>
+          </div>
+          <div class="signal-card sr">
+            <div class="signal-icon">🏫</div>
+            <div class="signal-name" style="color:var(--gold)">School Run</div>
+            <div class="signal-type">30-Min Opening Range</div>
+            <div class="signal-desc"><p>Brackets the <strong style="color:var(--cream2)">highest high and lowest low of the first 30 minutes</strong> at RTH open (09:30 – 10:00 ET).</p><p><strong style="color:var(--green)">Breakout</strong> = Trend day<br><strong style="color:var(--red)">Breakdown</strong> = Reversal<br><strong style="color:var(--gold)">Inside</strong> = Range day</p></div>
+          </div>
+          <div class="signal-card fish">
+            <div class="signal-icon">🎣</div>
+            <div class="signal-name" style="color:var(--green)">Fishing Technique</div>
+            <div class="signal-type">Stop-Run Detector</div>
+            <div class="signal-desc"><p>Mean reversion signals that catch <strong style="color:var(--cream2)">liquidity grabs</strong> — when price dips below a swing low then snaps back.</p><p><strong style="color:var(--green)">▲ Triangle</strong> = Buy<br><strong style="color:var(--red)">▼ Triangle</strong> = Sell</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block fade-up">
+        <div class="block-tag">Logic</div>
+        <h2 class="block-title">How Each Module Works</h2>
+        <div class="logic-item orange">
+          <div class="logic-label">● Module 1 — EMA Foundation</div>
+          <div class="logic-val">The <strong>9 EMA</strong> tracks short-term momentum. The <strong>20 EMA</strong> tracks the intermediate trend. When the 9 crosses above the 20, bullish momentum is building. The dashboard shows the current bias as BULLISH, BEARISH, or NEUTRAL.</div>
+        </div>
+        <div class="logic-item gold">
+          <div class="logic-label">● Module 2 — School Run</div>
+          <div class="logic-val">At RTH open (09:30 ET), the indicator tracks the <strong>highest high and lowest low across the entire first 30 minutes</strong> (09:30 – 10:00 ET). This creates two horizontal bracket lines. <strong>Breakout above</strong> = buyers in control. <strong>Breakdown below</strong> = sellers active. <strong>Stays inside</strong> = range day.</div>
+        </div>
+        <div class="logic-item">
+          <div class="logic-label">● Module 3 — Fishing Technique</div>
+          <div class="logic-val">The indicator finds the <strong>lowest low and highest high</strong> of the last N bars (configurable, default 20). A <strong>buy signal</strong> fires when price dips below the recent low then closes back above the previous bar's high. A <strong>sell signal</strong> fires when price spikes above the recent high then closes back below the previous bar's low.</div>
+        </div>
+      </div>
+
+      <div class="block fade-up">
+        <div class="block-tag">Reading Guide</div>
+        <h2 class="block-title">How to Use Sire-SchoolFishing</h2>
+        <div class="block-body">
+          <p><strong>Step 1 —</strong> Check the EMA bias. Note whether the 9 EMA is above or below the 20 EMA.</p>
+          <p><strong>Step 2 —</strong> Wait for the School Run. At 09:30 ET, the indicator begins tracking the opening range. After 30 minutes (10:00 ET), the bracket lines are set.</p>
+          <p><strong>Step 3 —</strong> Read the day type. Breakout above = trend day. Breakdown below = trend day short. Bouncing off edges = range day.</p>
+          <p><strong>Step 4 —</strong> Watch for Fishing signals. In range days, Fishing signals are high-conviction. Best when EMA bias aligns.</p>
+          <p><strong>Step 5 —</strong> Use the dashboard. Glance at EMA bias, School Run levels, and Fishing status before every trade.</p>
+        </div>
+      </div>
+
+      <div class="block fade-up">
+        <div class="block-tag">Conditions</div>
+        <h2 class="block-title">When It Works Best</h2>
+        <div class="logic-item">
+          <div class="logic-label">● Ideal Conditions</div>
+          <div class="logic-val"><strong>RTH session (09:30 – 16:00 ET)</strong><br><strong>5-minute or 15-minute chart</strong><br><strong>Index futures</strong> — MNQ, MES, ES, NQ<br><strong>Range days</strong> — Fishing signals most reliable<br><strong>Trend days</strong> — School Run confirms direction early</div>
+        </div>
+        <div class="logic-item red">
+          <div class="logic-label">● Avoid</div>
+          <div class="logic-val"><strong>Extended hours</strong> — bracket meaningless pre/post RTH<br><strong>Low volume days</strong> — holidays, half-days<br><strong>1-minute chart</strong> — too noisy<br><strong>Fighting the EMA</strong> — don't take buys when EMAs are falling</div>
+        </div>
+      </div>
+
+      <div class="block fade-up">
+        <div class="block-tag">Configuration</div>
+        <h2 class="block-title">Default Parameters</h2>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Fast EMA Length</td><td>9</td><td>Short-term trend momentum</td></tr>
+            <tr><td>Slow EMA Length</td><td>20</td><td>Intermediate trend direction</td></tr>
+            <tr><td>Fast EMA Color</td><td>Orange</td><td>9 EMA line color</td></tr>
+            <tr><td>Slow EMA Color</td><td>Blue</td><td>20 EMA line color</td></tr>
+            <tr><td>RTH Session Time</td><td>0930-1600</td><td>New York cash session</td></tr>
+            <tr><td>Exchange Timezone</td><td>America/New_York</td><td>Timezone for session detection</td></tr>
+            <tr><td>Bracket Color</td><td>Gold</td><td>School Run bracket line color</td></tr>
+            <tr><td>Bracket Width</td><td>2</td><td>School Run bracket line thickness</td></tr>
+            <tr><td>Swing Lookback</td><td>20</td><td>Bars back for Fishing stop-run detection</td></tr>
+            <tr><td>Buy Signal Color</td><td>Green</td><td>Fishing buy triangle color</td></tr>
+            <tr><td>Sell Signal Color</td><td>Red</td><td>Fishing sell triangle color</td></tr>
+            <tr><td>Dashboard Position</td><td>Bottom Right</td><td>Where the status table appears</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="block fade-up">
+        <div class="block-tag">Setup Guide</div>
+        <h2 class="block-title">How to Load It</h2>
+        <div class="block-body">
+          <div class="workflow-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Open TradingView</div><div class="step-desc">Load MNQ1!, MES1!, ES1!, or NQ1! on a 5-minute or 15-minute chart.</div></div></div>
+          <div class="workflow-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Search the Script</div><div class="step-desc">Search <strong style="color:var(--cream2)">"Sire-SchoolFishing"</strong> in the TradingView public scripts library.</div></div></div>
+          <div class="workflow-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Leave Defaults</div><div class="step-desc">The 9/20 EMA, RTH session, and 20-bar lookback are pre-configured.</div></div></div>
+          <div class="workflow-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Watch the Dashboard</div><div class="step-desc">Check EMA bias, School Run levels, and Fishing status before every trade.</div></div></div>
+          <div class="workflow-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Paper Trade First</div><div class="step-desc">Trade on paper for at least 2 weeks before committing capital.</div></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="content-side">
+      <div class="side-card fade-up">
+        <div class="side-card-title">Quick Stats</div>
+        <div class="side-row"><span class="side-lbl">Modules</span><span class="side-val">3</span></div>
+        <div class="side-row"><span class="side-lbl">EMA Pair</span><span class="side-val">9 / 20</span></div>
+        <div class="side-row"><span class="side-lbl">Opening Range</span><span class="side-val">30 min (09:30-10:00)</span></div>
+        <div class="side-row"><span class="side-lbl">Fishing Lookback</span><span class="side-val">20 bars</span></div>
+        <div class="side-row"><span class="side-lbl">Instrument</span><span class="side-val">MNQ / MES / ES / NQ</span></div>
+        <div class="side-row"><span class="side-lbl">Timeframe</span><span class="side-val">5m – 15m</span></div>
+        <div class="side-row"><span class="side-lbl">Version</span><span class="side-val">Pine Script v6</span></div>
+        <div class="side-row"><span class="side-lbl">License</span><span class="side-val" style="color:var(--green)">Free & Open</span></div>
+      </div>
+      <div class="side-card fade-up">
+        <div class="side-card-title">Get the Script</div>
+        <a href="https://www.tradingview.com/u/SireMammat/#published-scripts" target="_blank" class="btn-p">▶ Open on TradingView</a>
+        <a href="https://wise.com/pay/me/muhammads5009?utm_source=request_flow" target="_blank" rel="noopener" class="btn-ghost">☕ Buy Me a Coffee</a>
+      </div>
+      <div class="side-card fade-up">
+        <div class="side-card-title">Signal Legend</div>
+        <div class="side-row"><span class="side-lbl">▲ Green Triangle</span><span class="side-val" style="color:var(--green)">Fishing Buy</span></div>
+        <div class="side-row"><span class="side-lbl">▼ Red Triangle</span><span class="side-val" style="color:var(--red)">Fishing Sell</span></div>
+        <div class="side-row"><span class="side-lbl">Gold Lines</span><span class="side-val" style="color:var(--gold)">School Run Bracket</span></div>
+        <div class="side-row"><span class="side-lbl">Orange Line</span><span class="side-val" style="color:var(--orange)">9 EMA (Fast)</span></div>
+        <div class="side-row"><span class="side-lbl">Blue Line</span><span class="side-val" style="color:var(--blue)">20 EMA (Slow)</span></div>
+      </div>
+      <div class="side-card fade-up">
+        <div class="side-card-title">Day Type Guide</div>
+        <div class="side-row"><span class="side-lbl">Breakout Above</span><span class="side-val" style="color:var(--green)">Trend Day Long</span></div>
+        <div class="side-row"><span class="side-lbl">Breakdown Below</span><span class="side-val" style="color:var(--red)">Trend Day Short</span></div>
+        <div class="side-row"><span class="side-lbl">Bounces Off Edges</span><span class="side-val" style="color:var(--gold)">Range Day</span></div>
+      </div>
+      <div class="side-card fade-up">
+        <div class="side-card-title">Based On</div>
+        <div class="side-row"><span class="side-lbl">Author</span><span class="side-val">Tom Hougaard</span></div>
+        <div class="side-row"><span class="side-lbl">Method</span><span class="side-val">Price Action Playbook</span></div>
+        <div class="side-row"><span class="side-lbl">Focus</span><span class="side-val">Index Futures</span></div>
+      </div>
+      <div class="side-card fade-up">
+        <div class="side-card-title">Tags</div>
+        <div class="tags"><span class="tag">School Run</span><span class="tag">Fishing</span><span class="tag">EMA</span><span class="tag">Stop Run</span><span class="tag">Liquidity Grab</span><span class="tag">Tom Hougaard</span><span class="tag">Index Futures</span><span class="tag">MNQ</span><span class="tag">ES</span><span class="tag">RTH</span><span class="tag">Pine Script v6</span><span class="tag">Free</span></div>
+      </div>
+      <div class="side-card fade-up">
+        <div class="side-card-title">Share</div>
+        <a href="https://x.com/SireMuhammat" target="_blank" class="btn-ghost">𝕏 Share on X</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><svg width="22" height="28" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="divider-line"></div></div>
+
+<footer>
+  <div class="footer-top">
+    <div><div class="footer-brand"><svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg><div class="footer-brand-name">SireMammat</div></div><div class="footer-tagline">Free futures trading education built on Al Brooks price action methodology. ES · NQ · MES · MNQ</div></div>
+    <div class="footer-links">
+      <div><div class="footer-col-title">Education</div><ul class="footer-col-links"><li><a href="https://siremammat.neocities.org/Learn_Price_Action.html">Learn Price Action</a></li><li><a href="https://siremammat.neocities.org/playbooks.html">Playbooks</a></li><li><a href="https://siremammat.neocities.org/strategies.html">Strategies</a></li><li><a href="https://siremammat.neocities.org/ES_Trading_Plan.html">Trading Plan</a></li></ul></div>
+      <div><div class="footer-col-title">Analysis</div><ul class="footer-col-links"><li><a href="https://siremammat.neocities.org/case-studies.html">Case Studies</a></li><li><a href="https://siremammat.neocities.org/analysis.html">Market Analysis</a></li><li><a href="https://siremammat.neocities.org/tools.html">Tools &amp; Brokers</a></li></ul></div>
+      <div><div class="footer-col-title">Connect</div><ul class="footer-col-links"><li><a href="https://youtube.com/@SireMammat">YouTube</a></li><li><a href="https://x.com/SireMammat">X / Twitter</a></li><li><a href="https://instagram.com/SireMammat">Instagram</a></li><li><a href="mailto:siremammat@gmail.com">Email</a></li></ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">© 2025 Sire Mammat · All rights reserved</div><div class="footer-disclaimer">Trading involves substantial risk of loss. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</div></div>
+</footer>
+
+<script>
+const observer=new IntersectionObserver(entries=>{entries.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible');});},{threshold:0.1});document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

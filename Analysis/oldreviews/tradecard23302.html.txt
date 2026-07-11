@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Cards — MNQ | Mon 23 Mar '26</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111418;
+    --surface2: #181c22;
+    --border: #232830;
+    --red: #e8394a;
+    --red-dim: rgba(232,57,74,0.12);
+    --green: #22c87a;
+    --green-dim: rgba(34,200,122,0.10);
+    --gold: #f5c842;
+    --gold-dim: rgba(245,200,66,0.10);
+    --text: #e8eaf0;
+    --muted: #5a6272;
+    --accent: #3b82f6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(59,130,246,0.06) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
+  }
+
+  header { text-align: center; margin-bottom: 48px; }
+  .session-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  header h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 6vw, 64px); letter-spacing: 0.06em; color: var(--text); line-height: 1; }
+  header h1 span { color: var(--green); }
+  .subtitle { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.15em; margin-top: 10px; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto 40px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; position: relative; animation: cardIn 0.5s ease backwards; }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card.profit::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green); }
+  .card.short::before { background: var(--red); }
+
+  .card-header { padding: 20px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .trade-id { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 0.05em; color: var(--green); line-height: 1; }
+  .trade-id.short-id { color: var(--red); }
+  .trade-type { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  
+  .direction-badge { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 4px; background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,200,122,0.3); }
+  .direction-badge.short { background: var(--red-dim); color: var(--red); border: 1px solid rgba(232,57,74,0.3); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
+  .stat { padding: 14px 18px; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+  .stat-value { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--text); }
+  .stat-value.profit { color: var(--green); }
+  .stat-value.ratio { color: var(--gold); }
+
+  .entry-block { padding: 16px 22px; border-bottom: 1px solid var(--border); }
+  .block-title { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+  .entry-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+  .entry-key { color: var(--muted); }
+  .entry-val { font-family: 'Space Mono', monospace; color: var(--text); }
+
+  .price-visual { margin: 0 22px 16px; height: 6px; border-radius: 3px; background: var(--surface2); position: relative; }
+  .price-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--green)); position: relative; }
+  .price-fill.short-fill { background: linear-gradient(90deg, var(--accent), var(--red)); }
+  .price-fill::after { content: attr(data-r); position: absolute; right: 0; top: -18px; font-family: 'Space Mono', monospace; font-size: 9px; color: var(--gold); }
+
+  .rationale { padding: 14px 22px 20px; }
+  .rationale p { font-size: 12px; line-height: 1.7; color: #8a94a6; }
+  .rationale strong { color: var(--text); font-weight: 500; }
+
+  .tags { padding: 0 22px 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-family: 'Space Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 3px; border: 1px solid var(--border); color: var(--muted); background: var(--surface2); }
+  .tag.highlight { border-color: rgba(245,200,66,0.3); color: var(--gold); background: var(--gold-dim); }
+
+  .summary-card { max-width: 1100px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px; }
+  .sum-item { text-align: center; }
+  .sum-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .sum-value { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; }
+  .sum-value.green { color: var(--green); }
+  .sum-value.gold { color: var(--gold); }
+  
+  footer { text-align: center; margin-top: 36px; font-family: 'Space Mono', monospace; font-size: 9px; color: #2e3540; letter-spacing: 0.2em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="session-label">RTH Session · MNQ Futures</div>
+  <h1>TRADE <span>CARDS</span></h1>
+  <div class="subtitle">MON 23 MAR '26 &nbsp;·&nbsp; TREND FROM OPEN &nbsp;·&nbsp; SIRE MAMMAT</div>
+</header>
+
+<div class="cards-grid">
+
+  <div class="card profit">
+    <div class="card-header">
+      <div class="trade-id">T01</div>
+      <div class="trade-type">
+        <div class="direction-badge">LONG ▲</div>
+        <div class="setup-tag">ABC PATTERN REVERSAL</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">P&L</div><div class="stat-value profit">+355</div></div>
+      <div class="stat"><div class="stat-label">R:R</div><div class="stat-value ratio">1:1</div></div>
+      <div class="stat"><div class="stat-label">Result</div><div class="stat-value profit">WIN ✓</div></div>
+    </div>
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row"><span class="entry-key">Entry Trigger</span><span class="entry-val">1 tick above Bar 1 (Buy STOP)</span></div>
+      <div class="entry-row"><span class="entry-key">Fill Bar</span><span class="entry-val">Bar 3</span></div>
+      <div class="entry-row"><span class="entry-key">Exit Bar</span><span class="entry-val">Bar 7(MM from Bar 1) </span></div>
+    </div>
+    <div class="price-visual"><div class="price-fill" style="width:45%" data-r="345 Ticks"></div></div>
+    <div class="rationale">
+      <p>The <strong>Spike Bull Bar</strong> pre-market pullback created a textbook <strong>ABC pattern</strong>. Bar 1 & 2 is a <strong>High 2 Signal Bar</strong> after 2 major legs down. <strong>Cumulative delta</strong> was rising, showing buyer interest. As Brooks says: if you have 2+ reasons, take the trade. I was Expecting at leasst 2 legs up since the price never close below the price exhaustion Red TD9</p>
+    </div>
+    <div class="tags">
+      <span class="tag">ABC REVERSAL</span>
+      <span class="tag highlight">HIGH 2</span>
+      <span class="tag">BULLISH DELTA</span>
+      <span class="tag">SPIKE & CHANNEL</span>
+    </div>
+  </div>
+
+  <div class="card profit short">
+    <div class="card-header">
+      <div class="trade-id short-id">T02</div>
+      <div class="trade-type">
+        <div class="direction-badge short">SHORT ▼</div>
+        <div class="setup-tag">ABC REVERSAL / LOW 2</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">P&L</div><div class="stat-value profit">+668</div></div>
+      <div class="stat"><div class="stat-label">R:R</div><div class="stat-value ratio">1:4R</div></div>
+      <div class="stat"><div class="stat-label">Result</div><div class="stat-value profit">WIN ✓</div></div>
+    </div>
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row"><span class="entry-key">Entry Trigger</span><span class="entry-val">1 tick below Bar 20</span></div>
+      <div class="entry-row"><span class="entry-key">Fill Bar</span><span class="entry-val">Bar 23</span></div>
+      <div class="entry-row"><span class="entry-key">Stop Loss</span><span class="entry-val" style="color:var(--red)">1 tick above Bar 21</span></div>
+    </div>
+    <div class="price-visual"><div class="price-fill short-fill" style="width:85%" data-r="668 Ticks"></div></div>
+    <div class="rationale">
+      <p>Clear <strong>ABC reversal</strong> with 2 legs up. Price never closed above the spike bar. Bar 20/21 formed a <strong>Low 2</strong>. The follow-through bear <strong>Bar 22</strong> was the deciding factor. After closing below the <strong>20EMA</strong> at Bar 24, a larger move to 1:4R became likely.</p>
+    </div>
+    <div class="tags">
+      <span class="tag">ABC PATTERN</span>
+      <span class="tag highlight">LOW 2</span>
+      <span class="tag">EMA REJECTION</span>
+      <span class="tag highlight">1:4R TARGET</span>
+    </div>
+  </div>
+
+  <div class="card profit">
+    <div class="card-header">
+      <div class="trade-id">T03</div>
+      <div class="trade-type">
+        <div class="direction-badge">LONG ▲</div>
+        <div class="setup-tag">MEAN REVERSION / TBTL</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-label">P&L</div><div class="stat-value profit">+307</div></div>
+      <div class="stat"><div class="stat-label">R:R</div><div class="stat-value ratio">1:1R</div></div>
+      <div class="stat"><div class="stat-label">Result</div><div class="stat-value profit">WIN ✓</div></div>
+    </div>
+    <div class="entry-block">
+      <div class="block-title">Execution</div>
+      <div class="entry-row"><span class="entry-key">Entry Trigger</span><span class="entry-val">1 tick above Bar 37</span></div>
+      <div class="entry-row"><span class="entry-key">Fill Bar</span><span class="entry-val">Bar 38</span></div>
+      <div class="entry-row"><span class="entry-key">Stop Loss</span><span class="entry-val" style="color:var(--red)">1 tick below Bar 36</span></div>
+    </div>
+    <div class="price-visual"><div class="price-fill" style="width:40%" data-r="307 Ticks"></div></div>
+    <div class="rationale">
+      <p>Bar 31 marked a <strong>Red TD9 exhaustion</strong> after 2 strong bear legs. Bar 37 was a <strong>Bullish Inside Bar</strong>. Held through drawdown as <strong>Cumulative Delta</strong> trended up. Bar 36-48 showed <strong>TBTL behavior</strong> (Ten Bar, Two Legs). Bar 49 confirmed the trendline break.</p>
+    </div>
+    <div class="tags">
+      <span class="tag highlight">TD9 EXHAUSTION</span>
+      <span class="tag">TBTL PATTERN</span>
+      <span class="tag">50% RETRACEMENT</span>
+      <span class="tag">HIGH 2 ADD-ON</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="summary-card">
+  <div class="sum-item"><div class="sum-label">Total Ticks</div><div class="sum-value green">1320</div><div class="sum-sub">pts captured</div></div>
+  <div class="sum-item"><div class="sum-label">Trades Taken</div><div class="sum-value" style="color:white">3</div><div class="sum-sub">all winners</div></div>
+  <div class="sum-item"><div class="sum-label">Win Rate</div><div class="sum-value green">100%</div><div class="sum-sub">3 / 3</div></div>
+  <div class="sum-item"><div class="sum-label">Avg R:R</div><div class="sum-value gold">1:2.1</div><div class="sum-sub">across all trades</div></div>
+  <div class="sum-item"><div class="sum-label">Session Bias</div><div class="sum-value" style="color:white; font-size:24px; padding-top:6px;">BULLISH</div><div class="sum-sub">reversal day</div></div>
+</div>
+
+<footer>PATIENCE · DISCIPLINE · FEARLESS · EXECUTION &nbsp;·&nbsp; SIRE MAMMAT</footer>
+
+</body>
+</html>

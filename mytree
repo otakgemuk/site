@@ -1,0 +1,26 @@
+
++---caseStudies
+¦   +---CD01
+¦   +---CD02
+¦   +---Cd03
+¦   +---IOI Pattern — Case Study_files
++---EODReview
++---indicators
+¦   +---sire-pye
+¦   ¦   +---data
+¦   +---Sire-SF
+¦   +---SireGLCore
++---Learn
+¦   +---LearnMarketP
+¦   +---LearnPriceAction
+¦   +---LearnVolumeP
+¦   +---LearnVWAP
++---Performance
++---Playbooks
+¦   +---PB-20P
+¦   +---PB-SchoolRun
+¦   +---PB-VolumeP
+¦       +---Slide 01 — What Is Volume Profile · Playbook 02 · Sire Mammat_files
++---Strategies
++---TradePlan
+    +---ES_Trading_Plan_files

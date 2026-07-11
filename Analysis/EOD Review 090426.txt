@@ -1,0 +1,50 @@
+EOD Review 09/04/26
+
+Pre-Market the market is in a trading range then a breakout bar at E198.
+Bar E197/198 is a bad High2 with no follow-up bull bar at the open, however
+price closes above the 20EMA and Bar 2 closes at the upper half of Bar 1.
+A long 1 tick above Bar E198 makes sense because 1. Its a breakout from
+the premarket trading range, Bar 1 closing on its high and a high probability
+of 2nd leg up.
+I didn't take the trade as I need more information before making a decision.
+Two legs up (Bar E198 - Bar 3 )then two legs down (Bar 8 - Bar 13)
+
+Bar 3 and Bar 4 is a Low 1 and Bar 7 and Bar8 is a Low 2.
+A short 1 tick below Bar 7 make sense with Bar 9 as a confirmation Bear Bar.
+Market was so volatile at the open, too late to decide.
+
+Bar 20 & Bar 21 is a High 2 with a good follow-through Bull Bar 18.
+Bar 21 is also a breakout bar.
+
+T01
+Entry Buy STOP 1 tick above Bar 21 and filled at bar 24.
+STOP place 1 tick below Bar 19.
+Using Bar 20 & 21 as MM up for 1:1 RR 
+Exit at bar 25 gives 11 points.
+
+Bar 26 is a bullish inside bar. 
+
+T02
+Entry 1 tick above Bar 26 filled at Bar 28.
+STOP 1 tick below Bar 26.
+using Bar 26 as MM up for 1:1 RR
+Exit at Bar 31 gives 11 points.
+
+ABC Pattern develop from Bar 31 to Bar 40
+Bar 40 & 41 is a High 2.
+
+T03
+Entry 1 tick above Bar 41 filled at Bar 45
+STOP 1 tick below Bar 40
+using Bar 40 & 41 as 1:1 MM up
+Exit at Bar 50 gives 6 points
+
+Lessons: Bar 31 is a Higher High. The high becomes resistance.
+Price reverse down at Bar 46 and bar 47.
+Bar 41 to Bar 46 is a 2 leg up but did not reach the 1:1 RR target
+Price then reverses down got rejected at the resistance i.e. the High of Bar 31
+Market pullback hard at Bar 49 then reverses back up. Took the Long exit at Bar 50
+upon reaching the resistance line, as 2nd leg down is expected and risk is manage
+by selling on the 2nd test of resistance line.
+
+STOP trading as market is reacting to IRAN war's random headlines at Bar 50.

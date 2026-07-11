@@ -1,0 +1,44 @@
+siremammat.neocities.org/
+├── index.html                          (Your main landing page - siremammat.neocities.org)
+├── analysis/
+│   ├── index.html                      (Analysis dashboard - siremammat.neocities.org/analysis/)
+│   ├── trade-cards/
+│   │   ├── index.json                  (Card metadata list)
+│   │   ├── 2026-04-08.html            (Individual trade card)
+│   │   ├── 2026-04-07.html
+│   │   └── template.html
+│   └── upload/
+│       ├── index.html                  (Upload hub)
+│       ├── template.html              (Template builder)
+│       ├── paste.html                 (Paste & convert)
+│       └── html.html                  (File upload)
+├── indicators/
+│   └── index.html
+│   ├── Sire-SF/
+│   │   ├── sire-sf.html
+│   ├── SireGLCore/
+│   │   ├── sire-gl.html
+│   ├── TD9/
+│   │   ├── TD-Seq.html
+│   ├── sire=pye/
+│   │   ├── index.html
+│   ├── raschkerule/
+│   │   ├── raschkerule.html
+├── about/
+│   └── index.html
+└── Tools/
+│     ── tools.html
+│   
+├── Learn/
+│   └── index.html
+├── Playbooks/
+│   └── index.html
+└── Strategies/
+    └── index.html
+└── casestudies/
+    └── index.html
+└── TradePlan/
+    └── trading-plan.html
+
+
+https://dashboard.smartpropfirm.com/wp-login.php?action=register&ref=SIREMAMMAT

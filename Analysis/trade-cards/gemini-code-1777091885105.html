@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SM VENTURES | Session Terminal</title>
+    <style>
+        :root {
+            --bg-deep: #08080a;
+            --panel-bg: #111114;
+            --accent-green: #00ff9d;
+            --accent-blue: #00d1ff;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-dim: #1e293b;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .terminal-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-dim);
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .brand-block {
+            border-bottom: 2px solid var(--accent-green);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .brand-block h1 { font-size: 1.1rem; margin: 0; color: var(--accent-green); }
+
+        .stat-group { margin-bottom: 20px; }
+        .stat-label { font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; display: block; }
+        .stat-value { font-size: 1rem; color: var(--accent-blue); font-weight: bold; }
+
+        .main-view { display: flex; flex-direction: column; gap: 20px; }
+
+        .chart-window {
+            background: #000;
+            border: 1px solid var(--border-dim);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .chart-window img { width: 100%; display: block; }
+
+        .log-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-dim);
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            color: var(--accent-green);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 5px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        th { text-align: left; font-size: 0.65rem; color: var(--text-secondary); padding: 10px; border-bottom: 1px solid var(--border-dim); }
+        td { padding: 12px 10px; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .taken { color: var(--accent-green); font-weight: bold; }
+        .not-taken { color: #f87171; font-style: italic; opacity: 0.8; }
+        .pts { color: var(--accent-blue); font-weight: bold; }
+
+        .narrative-block {
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .narrative-block strong { color: var(--text-primary); }
+    </style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <aside class="sidebar">
+        <div class="brand-block">
+            <h1>SM VENTURES</h1>
+            <div style="font-size: 0.6rem; color: var(--text-secondary);">SIREMAMMAT'S EDITION</div>
+        </div>
+        <div class="stat-group">
+            <span class="stat-label">Session ID</span>
+            <span class="stat-value">ES EOD 24/4</span>
+        </div>
+        <div class="stat-group">
+            <span class="stat-label">Secured Points</span>
+            <span class="stat-value" style="color: var(--accent-green);">+30.00</span>
+        </div>
+        <div class="stat-group">
+            <span class="stat-label">Potential Points</span>
+            <span class="stat-value">+36.00</span>
+        </div>
+        <div class="stat-group">
+            <span class="stat-label">Market State</span>
+            <span class="stat-value">TR Breakout</span>
+        </div>
+    </aside>
+
+    <main class="main-view">
+        <div class="chart-window">
+            <img src="image_432c08.png" alt="ES Trading Review Chart">
+        </div>
+
+        <div class="log-panel">
+            <div class="section-header">Trade Narrative & Execution Log</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Status</th>
+                        <th>Narrative / Setup Logic</th>
+                        <th>Outcome</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>T01</td>
+                        <td class="taken">TAKEN</td>
+                        <td>Entry 1 tick above Bar 14 (H2). Used Bar 13/14 for Measured Move. Exit @ Bar 28.</td>
+                        <td class="pts">+30 PTS</td>
+                    </tr>
+                    <tr>
+                        <td>T02</td>
+                        <td class="not-taken">POTENTIAL</td>
+                        <td>Buy Limit @ .21 MFR (Bar 34). Exit Sell Limit @ .79 MFR (Bar 37).</td>
+                        <td class="pts">+9 PTS</td>
+                    </tr>
+                    <tr>
+                        <td>T03</td>
+                        <td class="not-taken">POTENTIAL</td>
+                        <td>Sell Limit @ .79 MFR (Bar 42). Exit Buy Limit @ .21 MFR (Bar 47).</td>
+                        <td class="pts">+9 PTS</td>
+                    </tr>
+                    <tr>
+                        <td>T04</td>
+                        <td class="not-taken">POTENTIAL</td>
+                        <td>Buy Limit @ .21 MFR (Bar 49). Exit Sell Limit @ .79 MFR (Bar 53).</td>
+                        <td class="pts">+9 PTS</td>
+                    </tr>
+                    <tr>
+                        <td>T05</td>
+                        <td class="not-taken">POTENTIAL</td>
+                        <td>Sell Limit @ .79 MFR (Bar 54). Exit Buy Limit @ .21 MFR (Bar 59).</td>
+                        <td class="pts">+9 PTS</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-header">Market Contextual Review</div>
+            <div class="narrative-block">
+                <strong>Session Start:</strong> Gap up with overlapping bars (1-12). Low of Bar 1 held support near the <strong>Green TD9</strong> floor (price exhaustion).<br><br>
+                <strong>The Shift:</strong> Bar 8/9 (H1) and 13/14 (H2) signaled a move higher. Bar 15 closed above Bar 1 high, confirming the breakout. After Bar 28, market returned to TR behavior (Mother Bar).<br><br>
+                <strong>Conclusion:</strong> After Bar 59, orders at .21 MFR stopped filling—a clear sign TR behavior paused. With 4 good potential trades and 30 points secured, the Friday session ended with discipline.
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

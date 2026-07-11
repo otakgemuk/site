@@ -1,0 +1,44 @@
+
+Chart: 5 Min TimeFrame
+The first 8 bars we see 2 legs down from Pre-Market
+High Probability we seen the low of the day at Bar 4
+Bar 5 closes above VWAP and Bar 6 closes at its high
+and its a H2 Failure however Bar 7 closes higher
+So there is no valid short signal.
+After Bar 7 re-test Pre-Market Price Exhaustion High (Bar 84 Pre)
+Long Entry Make Sense
+
+Trade01
+Place Entry 1 tick above Bar 7
+Uses B7 to measure move up at least 1:1R
+Exit at Bar11 for 1:1R gives 77 ticks
+I took this trade because CVD shows a strong positive deltas
+shows buyers are winning on Bar 8, expecting at least a 1:1 move up
+The STOP is below Bar 7 and its a very wide so I only want 1:1R
+
+Bar 12 and 13 is a L1 after 2 strong bull legs
+Strong Negative CVD at Bar 13, I expect sellers continue to sell
+Bar 14 signals price exhaustion
+Selling 1 tick below Bar 12 make sense
+expecting 2 leg pull-back
+
+Trade02
+Entry SHORT 1 tick below Bar 12 filled at Bar 14
+Using Bar 11/12 to Measure move down
+Exit at Bar 16 gives 47 ticks
+I see L1 signal was solid, and CVD was showing sellers are winning the battle
+Trend was still bullish so I only expect at least 1:1 move down
+
+Bar 16 is a Pin Bar, also a 3bar reversal pattern
+Good Buy Signal Bar and Bar 17 gives good Follow-through
+Entry Buy 1 tick above Bar 17 make sense
+Using Bar 16/17 to measure move up 
+Exit at Bar 19 for 1:1R gives 50 ticks
+Took this trade because B16/17 is a solid H1, CVD shows buyers winning
+and trending up. Expecting 1:1R since pre-market so that thinking stays.
+
+Market starts to move sideways from Bar 25-26-27
+Although there are trade opportunities but decide to walk away
+
+Lessons Learned:
+Deciding to stop taking trades after seeing sideway move was hard but save from papercuts. 

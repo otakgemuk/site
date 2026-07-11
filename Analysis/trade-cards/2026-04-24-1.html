@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♛ SM · EOD Review — 24 April</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root {
+    --bg: #080808;
+    --surface: #101010;
+    --surface-2: #171717;
+    --surface-3: #1e1e1e;
+    --border: #232323;
+    --border-light: #2e2e2e;
+    --gold: #c9a84c;
+    --gold-bright: #e2c66a;
+    --gold-dark: #8a7234;
+    --gold-dim: rgba(201,168,76,0.10);
+    --gold-border: rgba(201,168,76,0.22);
+    --green: #4caf7a;
+    --green-dim: rgba(76,175,122,0.10);
+    --green-border: rgba(76,175,122,0.18);
+    --red: #d4545e;
+    --red-dim: rgba(212,84,94,0.10);
+    --red-border: rgba(212,84,94,0.18);
+    --blue: #6b9eff;
+    --blue-dim: rgba(107,158,255,0.08);
+    --blue-border: rgba(107,158,255,0.15);
+    --text: #e8e4dc;
+    --text-secondary: #9a9590;
+    --text-muted: #5a5550;
+    --text-dim: #3a3632;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 32px 16px 80px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 1060px;
+    animation: enter 0.5s ease both;
+  }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+  }
+
+  .toolbar button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+
+  .toolbar button svg { flex-shrink: 0; }
+
+  .btn-save-html {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .btn-save-html:hover {
+    border-color: var(--gold-border);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .btn-save-img {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .btn-save-img:hover {
+    border-color: var(--green-border);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .btn-publish {
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    color: #080808;
+  }
+
+  .btn-publish:hover {
+    background: var(--gold-bright);
+    border-color: var(--gold-bright);
+  }
+
+  .btn-publish.saving {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface-3);
+    border: 1px solid var(--gold-border);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 100;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── Brand Header ── */
+  .brand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 0 4px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-mark .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .brand-mark .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+
+  .brand-mark .brand-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .session-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+
+  .hero-left .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-left .date em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-left .subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+
+  .hero-left .subtitle .prefix {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    margin-right: 4px;
+  }
+
+  .hero-right {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .metric { text-align: right; }
+
+  .metric .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .metric .val.positive { color: var(--green); }
+  .metric .val.gold { color: var(--gold); }
+
+  .metric .lbl {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .sep {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  /* ── Context Panel ── */
+  .context-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .context-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    border-bottom: 1px solid transparent;
+  }
+
+  .context-toggle:hover { background: var(--surface-2); }
+  .context-toggle.open { border-bottom-color: var(--border); }
+
+  .context-toggle .arrow {
+    font-size: 10px;
+    color: var(--gold);
+    transition: transform 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .context-toggle.open .arrow { transform: rotate(90deg); }
+
+  .context-toggle .toggle-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .context-toggle .toggle-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  .context-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .context-body.open { max-height: 900px; }
+
+  .context-inner { padding: 24px; }
+
+  .cs { margin-bottom: 20px; }
+  .cs:last-child { margin-bottom: 0; }
+
+  .cs-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cs-label .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .cs-label .dot.green { background: var(--green); }
+  .cs-label .dot.blue { background: var(--blue); }
+
+  .cs p {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+
+  .cs p strong { color: var(--text); font-weight: 600; }
+  .cs p .hl-g { color: var(--gold); font-weight: 500; }
+  .cs p .hl-gr { color: var(--green); font-weight: 500; }
+  .cs p .hl-b { color: var(--blue); font-weight: 500; }
+  .cs p .hl-y { color: #e2c66a; font-weight: 500; }
+
+  .context-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .ctag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  .ctag.gold { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+  .ctag.green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+  .ctag.blue { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
+  .ctag.dim { background: rgba(255,255,255,0.02); color: var(--text-muted); border: 1px solid var(--border); }
+
+  /* ── Chart Drop Zone ── */
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .chart-header .ch-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .chart-header .ch-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  .chart-dropzone {
+    position: relative;
+    border: 2px dashed var(--border-light);
+    border-radius: 8px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    overflow: hidden;
+  }
+
+  .chart-dropzone:hover {
+    border-color: var(--gold-dark);
+    background: rgba(201,168,76,0.02);
+  }
+
+  .chart-dropzone.has-image {
+    border-style: solid;
+    border-color: var(--border);
+    cursor: default;
+    min-height: auto;
+  }
+
+  .chart-dropzone.has-image:hover {
+    border-color: var(--border);
+    background: transparent;
+  }
+
+  .dropzone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 20px;
+  }
+
+  .has-image .dropzone-content { display: none; }
+
+  .dropzone-icon {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+  }
+
+  .dropzone-text { text-align: center; }
+
+  .dropzone-text .dt-main {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .dropzone-text .dt-sub {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .dropzone-text .dt-sub kbd {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--surface-3);
+    border: 1px solid var(--border-light);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 9px;
+  }
+
+  .chart-image {
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+  }
+
+  .chart-actions {
+    display: none;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+
+  .has-image ~ .chart-actions { display: flex; }
+
+  .chart-actions button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .chart-actions button:hover {
+    color: var(--red);
+    border-color: var(--red-border);
+  }
+
+  /* ── Trades ── */
+  .trades-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .trades-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .trade-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .trade-row:last-child { margin-bottom: 0; }
+  .trade-row:hover { border-color: var(--border-light); }
+
+  .trade-row::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .trade-row.t-buy::before { background: var(--green); }
+  .trade-row.t-sell::before { background: var(--red); }
+  .trade-row.featured { border-color: var(--gold-border); background: rgba(201,168,76,0.03); }
+  .trade-row.featured::before { background: var(--gold); }
+
+  .tr-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .tr-id .dir {
+    display: inline-block;
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+
+  .dir.buy { background: var(--green-dim); color: var(--green); }
+  .dir.sell { background: var(--red-dim); color: var(--red); }
+
+  .tr-details .tr-context {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .tr-details .tr-context .em { color: var(--text); font-weight: 600; }
+  .tr-details .tr-context .em-g { color: var(--gold); font-weight: 500; }
+  .tr-details .tr-context .em-b { color: var(--blue); font-weight: 500; }
+  .tr-details .tr-context .em-y { color: var(--gold-bright); font-weight: 500; }
+
+  .tr-details .tr-bars {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .tr-pnl { text-align: right; }
+
+  .tr-pnl .amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .tr-pnl .amount.positive { color: var(--green); }
+
+  .tr-pnl .rr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* ── Takeaway ── */
+  .takeaway {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .takeaway .tk-mark { flex-shrink: 0; opacity: 0.3; }
+
+  .takeaway .tk-text {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+
+  .takeaway .tk-text strong { color: var(--text); }
+  .takeaway .tk-text .em-g { color: var(--gold); font-weight: 500; }
+  .takeaway .tk-text .em-gr { color: var(--green); font-weight: 500; }
+
+  /* ── Bottom Bar ── */
+  .bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  .bottom-bar .bb-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bottom-bar .bb-left svg { opacity: 0.25; }
+
+  .bottom-bar .bb-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .bottom-bar .bb-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Print Styles ── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar, .chart-actions, .dropzone-content, .context-toggle .arrow,
+    .chart-header .ch-hint { display: none !important; }
+    .context-body { max-height: none !important; }
+    .context-body.open { max-height: none; }
+    .card { max-width: 100%; animation: none; }
+    .hero, .context-panel, .chart-wrap, .trades-wrap, .takeaway {
+      border-color: #ddd;
+      background: #fff;
+      break-inside: avoid;
+    }
+    .hero::before { display: none; }
+    .brand-mark .brand-name { color: #8a7234; }
+    .hero-left .date { color: #111; }
+    .hero-left .date em { color: #8a7234; }
+    .metric .val.positive { color: #2d7a4e; }
+    .metric .val.gold { color: #8a7234; }
+    .cs p { color: #444; }
+    .cs p strong { color: #111; }
+    .trade-row { background: #f9f9f9; border-color: #eee; }
+    .tr-pnl .amount.positive { color: #2d7a4e; }
+    .toast { display: none !important; }
+  }
+
+  @media (max-width: 680px) {
+    .toolbar { flex-wrap: wrap; }
+    .toolbar button { font-size: 8px; padding: 6px 10px; }
+    .hero { flex-direction: column; align-items: flex-start; gap: 20px; padding: 24px; }
+    .hero-right { gap: 16px; }
+    .hero-left .date { font-size: 36px; }
+    .metric .val { font-size: 20px; }
+    .context-inner { padding: 16px; }
+    .chart-wrap { padding: 14px 12px; }
+    .trade-row { grid-template-columns: 48px 1fr; }
+    .tr-pnl { grid-column: 1 / -1; text-align: left; padding-top: 6px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .takeaway { flex-direction: column; }
+    .bottom-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="btn-save-html" onclick="saveHTML()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Save HTML
+    </button>
+    <button class="btn-save-img" onclick="saveImage()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Save Image
+    </button>
+    <button class="btn-publish" id="publishBtn" onclick="publish()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      Publish
+    </button>
+  </div>
+
+  <!-- Brand Header -->
+  <div class="brand-header">
+    <div class="brand-mark">
+      <svg width="36" height="40" viewBox="0 0 40 44" fill="none">
+        <path d="M8 14 L12 6 L16 11 L20 3 L24 11 L28 6 L32 14" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="8" y1="14" x2="32" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="14" y="17" width="12" height="16" rx="1" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+        <line x1="20" y1="33" x2="20" y2="41" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="17" x2="20" y2="15" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="brand-text">
+        <div class="brand-name">SireMammat</div>
+        <div class="brand-tag">Free futures education · Al Brooks methodology</div>
+      </div>
+    </div>
+    <div class="session-badge">♛ SM · End of Day Review</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="date">24 <em>/ 04</em></div>
+      <div class="subtitle">
+        <span class="prefix">♛ SM ·</span>
+        Trading Range Day · Breakout → MFR Oscillation · Walk Away Discipline
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="metric">
+        <div class="val positive">+67</div>
+        <div class="lbl">Points (5 trades)</div>
+      </div>
+      <div class="sep"></div>
+      <div class="metric">
+        <div class="val positive">100%</div>
+        <div class="lbl">Win Rate</div>
+      </div>
+      <div class="sep"></div>
+      <div class="metric">
+        <div class="val gold">1 : 7</div>
+        <div class="lbl">Best R:R</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Context -->
+  <div class="context-panel">
+    <div class="context-toggle open" onclick="toggleCtx(this)">
+      <div class="arrow">▸</div>
+      <div class="toggle-label">Market Context &amp; Narrative</div>
+      <div class="toggle-sub">Reading price itself</div>
+    </div>
+    <div class="context-body open" id="ctxBody">
+      <div class="context-inner">
+        <div class="cs">
+          <div class="cs-label"><div class="dot"></div>Open &amp; Structure</div>
+          <p>
+            The day started with a <strong>gap up</strong> and
+            <strong>overlapping bars from Bar 1 to Bar 12</strong>.
+            The <span class="hl-y">Low of Bar 1</span> was a few ticks above the
+            <span class="hl-y">Green TD9</span> — Demark's indication of
+            <strong>price exhaustion from the previous day</strong> — which also served as a
+            good indication of <strong>where support is for the day</strong>.
+          </p>
+          <div class="context-tags">
+            <span class="ctag gold">Gap Up Open</span>
+            <span class="ctag gold">TD9 Exhaustion</span>
+            <span class="ctag dim">Overlapping Bars B1–B12</span>
+          </div>
+        </div>
+        <div class="cs">
+          <div class="cs-label"><div class="dot green"></div>Setup &amp; Breakout</div>
+          <p>
+            Market was in a <strong>trading range behavior</strong> until a breakout occurs,
+            making it a <span class="hl-b">limit order market</span>.
+            <span class="hl-gr">Bar 8/9 formed a High 1</span> and
+            <span class="hl-gr">Bar 13/14 formed an H2</span> —
+            a good indication of markets moving higher.
+            <strong>Bar 15 closes at its high and above the close of Bar 1</strong>,
+            which some consider a <span class="hl-gr">breakout point</span>.
+          </p>
+          <div class="context-tags">
+            <span class="ctag gold">Trading Range</span>
+            <span class="ctag green">Breakout Bar 15</span>
+            <span class="ctag blue">Limit Order Market</span>
+            <span class="ctag dim">High 1 → H2 Progression</span>
+          </div>
+        </div>
+        <div class="cs">
+          <div class="cs-label"><div class="dot"></div>T01 Execution Context</div>
+          <p>
+            Entry was a <strong>Buy 1 tick above Bar 14</strong>, filled at <strong>Bar 16</strong>.
+            Using <span class="hl-gr">Bar 13/14 for a Measured Move up</span>.
+            Exit at <strong>Bar 28</strong> — <span class="hl-gr">1:7 R:R, +30 points</span>.
+            From Bar 28 onwards, bars started overlapping again — an indication of
+            <strong>market moving sideways</strong>, a trading range market behavior.
+            <strong>Bar 28 can be considered a Mother Bar</strong> encapsulating the bars
+            moving up and down, so it was good to
+            <span class="hl-y">walk away with 30 points secured</span>.
+          </p>
+        </div>
+        <div class="cs">
+          <div class="cs-label"><div class="dot blue"></div>T02–T05: MFR Oscillation</div>
+          <p>
+            Four subsequent trades were taken using
+            <span class="hl-b">Modified Fib Retracement (MFR)</span>
+            levels at <strong>.21</strong> and <strong>.79</strong>,
+            alternating buy and sell limit orders within the range.
+            Each captured <strong>9 points</strong>.
+            No trades got filled at .21 MFR after Bar 59 —
+            a good indication that
+            <span class="hl-y">TR behavior either paused or price was moving higher</span>.
+            Best to walk away after <strong>4 good trades</strong>.
+          </p>
+          <div class="context-tags">
+            <span class="ctag blue">MFR .21 / .79 Levels</span>
+            <span class="ctag gold">Walk Away Discipline</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Drop Zone -->
+  <div class="chart-wrap">
+    <div class="chart-header">
+      <div class="ch-title">♛ SM · Intraday Price Action</div>
+      <div class="ch-hint">Paste or drop your chart below</div>
+    </div>
+    <div class="chart-dropzone" id="dropzone">
+      <div class="dropzone-content">
+        <div class="dropzone-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </div>
+        <div class="dropzone-text">
+          <div class="dt-main">Drop chart image here or click to browse</div>
+          <div class="dt-sub">Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste from clipboard</div>
+        </div>
+      </div>
+      <img class="chart-image" id="chartImg" style="display:none;" alt="Trading chart">
+      <input type="file" id="fileInput" accept="image/*" style="display:none;">
+    </div>
+    <div class="chart-actions" id="chartActions">
+      <button onclick="removeChart()">Remove Chart</button>
+    </div>
+  </div>
+
+  <!-- Trades -->
+  <div class="trades-wrap">
+    <div class="trades-title">♛ SM · Trade Log</div>
+    <div class="trade-row featured t-buy">
+      <div class="tr-id">T01 <span class="dir buy">BUY</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry 1 tick above <span class="em">Bar 14</span>, filled at <span class="em">Bar 16</span>.
+          Measured Move up using <span class="em-g">Bar 13/14</span>.
+          Exit at <span class="em">Bar 28</span> — bars started overlapping again,
+          <span class="em-y">Mother Bar</span> formed. Walked away with profit secured.
+        </div>
+        <div class="tr-bars">B14 → B16 (entry) → B28 (exit) · Measured Move</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+30 pts</div>
+        <div class="rr">1 : 7 R:R</div>
+      </div>
+    </div>
+    <div class="trade-row t-buy">
+      <div class="tr-id">T02 <span class="dir buy">BUY</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 34</span>.
+          Exit Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 37</span>.
+        </div>
+        <div class="tr-bars">B34 → B37 · MFR Range Trade</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.21 → .79 MFR</div>
+      </div>
+    </div>
+    <div class="trade-row t-sell">
+      <div class="tr-id">T03 <span class="dir sell">SELL</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 42</span>.
+          Exit Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 47</span>.
+        </div>
+        <div class="tr-bars">B42 → B47 · MFR Range Trade</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.79 → .21 MFR</div>
+      </div>
+    </div>
+    <div class="trade-row t-buy">
+      <div class="tr-id">T04 <span class="dir buy">BUY</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 49</span>.
+          Exit Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 53</span>.
+        </div>
+        <div class="tr-bars">B49 → B53 · MFR Range Trade</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.21 → .79 MFR</div>
+      </div>
+    </div>
+    <div class="trade-row t-sell">
+      <div class="tr-id">T05 <span class="dir sell">SELL</span></div>
+      <div class="tr-details">
+        <div class="tr-context">
+          Entry Sell Limit at <span class="em-b">.79 MFR</span>, filled at <span class="em">Bar 54</span>.
+          Exit Buy Limit at <span class="em-b">.21 MFR</span>, filled at <span class="em">Bar 59</span>.
+          No trades got filled at .21 MFR after Bar 59 —
+          <span class="em-y">TR behavior paused or price moving higher</span>.
+        </div>
+        <div class="tr-bars">B54 → B59 · MFR Range Trade · Final fill</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+9 pts</div>
+        <div class="rr">.79 → .21 MFR</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Takeaway -->
+  <div class="takeaway">
+    <svg class="tk-mark" width="28" height="32" viewBox="0 0 40 44" fill="none">
+      <path d="M8 14 L12 6 L16 11 L20 3 L24 11 L28 6 L32 14" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="8" y1="14" x2="32" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="14" y="17" width="12" height="16" rx="1" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      <line x1="20" y1="33" x2="20" y2="41" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="20" y1="17" x2="20" y2="15" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div class="tk-text">
+      <strong>Discipline takeaway:</strong> After the
+      <span class="em-gr">+30 point T01 measured move</span>,
+      the market returned to a trading range (Mother Bar at B28).
+      Four clean MFR oscillation trades each delivered
+      <span class="em-gr">+9 points</span>. When no fills occurred at .21 MFR after Bar 59,
+      it signaled <span class="em-g">TR exhaustion</span> —
+      best to walk away after <strong>4 good trades</strong>
+      with <strong>67 points secured</strong>.
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar">
+    <div class="bb-left">
+      <svg width="18" height="20" viewBox="0 0 40 44" fill="none">
+        <path d="M8 14 L12 6 L16 11 L20 3 L24 11 L28 6 L32 14" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="8" y1="14" x2="32" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="14" y="17" width="12" height="16" rx="1" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+        <line x1="20" y1="33" x2="20" y2="41" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="17" x2="20" y2="15" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="bb-text">SireMammat · The Crowned Candle · Free Futures Education</span>
+    </div>
+    <div class="bb-right">♛ SM · 24/04</div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Context Toggle ──
+function toggleCtx(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// ── Toast ──
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── Chart Image Handling ──
+const dropzone = document.getElementById('dropzone');
+const chartImg = document.getElementById('chartImg');
+const fileInput = document.getElementById('fileInput');
+const chartActions = document.getElementById('chartActions');
+
+function showImage(src) {
+  chartImg.src = src;
+  chartImg.style.display = 'block';
+  dropzone.classList.add('has-image');
+  chartActions.style.display = 'flex';
+}
+
+function removeChart() {
+  chartImg.src = '';
+  chartImg.style.display = 'none';
+  dropzone.classList.remove('has-image');
+  chartActions.style.display = 'none';
+}
+
+dropzone.addEventListener('click', (e) => {
+  if (dropzone.classList.contains('has-image')) return;
+  fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => showImage(ev.target.result);
+    reader.readAsDataURL(file);
+  }
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.style.borderColor = 'var(--gold)';
+  dropzone.style.background = 'rgba(201,168,76,0.03)';
+});
+
+dropzone.addEventListener('dragleave', () => {
+  dropzone.style.borderColor = '';
+  dropzone.style.background = '';
+});
+
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.style.borderColor = '';
+  dropzone.style.background = '';
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = (ev) => showImage(ev.target.result);
+    reader.readAsDataURL(file);
+  }
+});
+
+document.addEventListener('paste', (e) => {
+  const items = e.clipboardData.items;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      const file = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = (ev) => showImage(ev.target.result);
+      reader.readAsDataURL(file);
+      break;
+    }
+  }
+});
+
+// ── SAVE HTML ──
+// Clones the card, strips the toolbar/dropzone chrome, embeds the chart as base64,
+// and downloads a self-contained HTML file with the image baked in.
+function saveHTML() {
+  const card = document.getElementById('card');
+  const clone = card.cloneNode(true);
+
+  // Remove toolbar from saved version
+  const toolbar = clone.querySelector('.toolbar');
+  if (toolbar) toolbar.remove();
+
+  // Remove dropzone chrome — replace with just the image
+  const dz = clone.querySelector('.chart-dropzone');
+  const img = clone.querySelector('.chart-image');
+  if (dz && img && img.src && img.style.display !== 'none') {
+    const imgClone = document.createElement('img');
+    imgClone.src = img.src;
+    imgClone.style.cssText = 'width:100%;display:block;border-radius:4px;';
+    imgClone.alt = 'Trading chart';
+    dz.replaceWith(imgClone);
+  } else if (dz) {
+    // No chart yet — show placeholder text
+    const placeholder = document.createElement('div');
+    placeholder.style.cssText = 'padding:40px;text-align:center;color:#3a3632;font-family:JetBrains Mono,monospace;font-size:11px;';
+    placeholder.textContent = '[ Chart not embedded — paste into live version ]';
+    dz.replaceWith(placeholder);
+  }
+
+  // Remove chart-actions
+  const actions = clone.querySelector('.chart-actions');
+  if (actions) actions.remove();
+
+  // Remove file input
+  const fi = clone.querySelector('input[type="file"]');
+  if (fi) fi.remove();
+
+  // Remove the toast
+  const toast = clone.querySelector('.toast');
+  if (toast) toast.remove();
+
+  // Serialize to HTML string
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♛ SM · EOD Review — 24 April</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>${document.querySelector('style').textContent}</style>
+</head>
+<body>
+${clone.outerHTML}
+<script>
+function toggleCtx(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'SM-EOD-24-April.html';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast('Saved — chart embedded in HTML file');
+}
+
+// ── SAVE IMAGE ──
+async function saveImage() {
+  const card = document.getElementById('card');
+
+  // Temporarily hide toolbar and chart actions for clean capture
+  const toolbar = card.querySelector('.toolbar');
+  const actions = card.querySelector('.chart-actions');
+  if (toolbar) toolbar.style.display = 'none';
+  if (actions) actions.style.display = 'none';
+
+  try {
+    const canvas = await html2canvas(card, {
+      backgroundColor: '#080808',
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'SM-EOD-24-April.png';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Image saved');
+    }, 'image/png');
+  } catch (err) {
+    showToast('Image export failed — try Save HTML instead');
+    console.error(err);
+  } finally {
+    if (toolbar) toolbar.style.display = '';
+    if (actions && dropzone.classList.contains('has-image')) actions.style.display = 'flex';
+  }
+}
+
+// ── PUBLISH (Print / PDF) ──
+function publish() {
+  // Expand context for print
+  const ctxBody = document.getElementById('ctxBody');
+  const wasOpen = ctxBody.classList.contains('open');
+  ctxBody.classList.add('open');
+
+  showToast('Opening print dialog — save as PDF to publish');
+
+  setTimeout(() => {
+    window.print();
+    // Restore state after print
+    if (!wasOpen) ctxBody.classList.remove('open');
+  }, 300);
+}
+</script>
+
+</body>
+</html>

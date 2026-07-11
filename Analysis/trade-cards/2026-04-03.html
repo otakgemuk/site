@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SireMammat — Trade Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080808;
+    --surface: #111111;
+    --surface-2: #181818;
+    --surface-3: #1f1f1f;
+    --border: #252525;
+    --border-light: #333;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.10);
+    --gold-border: rgba(201,168,76,0.22);
+    --gold-bright: #e2c66a;
+    --gold-dark: #8a7234;
+    --green: #4caf7a;
+    --green-dim: rgba(76,175,122,0.10);
+    --red: #d4545e;
+    --red-dim: rgba(212,84,94,0.10);
+    --text: #e8e4dc;
+    --text-secondary: #9a9590;
+    --text-muted: #5a5550;
+    --text-dim: #3a3632;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 32px 16px 80px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 1060px;
+    animation: enter 0.5s ease both;
+  }
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Brand Header ── */
+  .brand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 0 4px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-mark svg {
+    flex-shrink: 0;
+  }
+
+  .brand-mark .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .brand-mark .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+
+  .brand-mark .brand-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .brand-header .session-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+
+  .hero-left .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-left .date em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-left .subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+
+  .hero-left .subtitle .prefix {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    margin-right: 6px;
+  }
+
+  .hero-right {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .metric {
+    text-align: right;
+  }
+
+  .metric .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .metric .val.positive { color: var(--green); }
+  .metric .val.negative { color: var(--red); }
+  .metric .val.gold { color: var(--gold); }
+  .metric .val.dim { color: var(--text-dim); }
+
+  .metric .lbl {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .sep {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  /* ── Session Strip ── */
+  .session-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .session-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .session-card:hover {
+    border-color: var(--border-light);
+  }
+
+  .session-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .session-card.sc-disciplined::before { background: var(--gold); }
+  .session-card.sc-blueprint::before { background: var(--green); }
+  .session-card.sc-overtrade::before { background: var(--red); }
+
+  .sc-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .sc-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .sc-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+
+  .sc-status.disciplined { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+  .sc-status.blueprint { background: var(--green-dim); color: var(--green); border: 1px solid rgba(76,175,122,0.2); }
+  .sc-status.overtrade { background: var(--red-dim); color: var(--red); border: 1px solid rgba(212,84,94,0.2); }
+
+  .sc-playbook {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .sc-pnl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .sc-pnl.positive { color: var(--green); }
+  .sc-pnl.negative { color: var(--red); }
+
+  /* ── Context Panel ── */
+  .context-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .context-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    border-bottom: 1px solid transparent;
+  }
+
+  .context-toggle:hover { background: var(--surface-2); }
+  .context-toggle.open { border-bottom-color: var(--border); }
+
+  .context-toggle .arrow {
+    font-size: 10px;
+    color: var(--gold);
+    transition: transform 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .context-toggle.open .arrow { transform: rotate(90deg); }
+
+  .context-toggle .toggle-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .context-toggle .toggle-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  .context-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .context-body.open { max-height: 800px; }
+
+  .context-inner {
+    padding: 24px;
+  }
+
+  .cs {
+    margin-bottom: 20px;
+  }
+
+  .cs:last-child { margin-bottom: 0; }
+
+  .cs-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cs-label .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .cs p {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+  }
+
+  .cs p strong { color: var(--text); font-weight: 600; }
+  .cs p .hl-g { color: var(--gold); font-weight: 500; }
+  .cs p .hl-gr { color: var(--green); font-weight: 500; }
+  .cs p .hl-r { color: var(--red); font-weight: 500; }
+
+  .context-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .ctag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  .ctag.gold { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold-border); }
+  .ctag.green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(76,175,122,0.15); }
+  .ctag.red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(212,84,94,0.15); }
+  .ctag.dim { background: rgba(255,255,255,0.02); color: var(--text-muted); border: 1px solid var(--border); }
+
+  /* ── Chart ── */
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .chart-header .ch-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .chart-header .ch-legend {
+    display: flex;
+    gap: 14px;
+  }
+
+  .ch-legend .li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    color: var(--text-muted);
+  }
+
+  .ch-legend .swatch {
+    width: 10px;
+    height: 3px;
+    border-radius: 1px;
+  }
+
+  .sw-g { background: var(--gold); }
+  .sw-gr { background: var(--green); }
+  .sw-r { background: var(--red); }
+  .sw-d { background: var(--text-dim); }
+
+  canvas#chart {
+    width: 100%;
+    display: block;
+    border-radius: 6px;
+  }
+
+  /* ── Trades ── */
+  .trades-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .trades-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .trade-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .trade-row:hover { border-color: var(--border-light); }
+
+  .trade-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+
+  .trade-row.t-buy::before { background: var(--green); }
+  .trade-row.t-sell::before { background: var(--red); }
+  .trade-row.featured { border-color: var(--gold-border); background: rgba(201,168,76,0.03); }
+  .trade-row.featured::before { background: var(--gold); }
+
+  .tr-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .tr-id .dir {
+    display: inline-block;
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 4px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+
+  .dir.buy { background: var(--green-dim); color: var(--green); }
+  .dir.sell { background: var(--red-dim); color: var(--red); }
+
+  .tr-details .tr-context {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .tr-details .tr-context .em { color: var(--text); font-weight: 600; }
+  .tr-details .tr-context .em-g { color: var(--gold); font-weight: 500; }
+  .tr-details .tr-bars {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .tr-pnl { text-align: right; }
+
+  .tr-pnl .amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .tr-pnl .amount.positive { color: var(--green); }
+  .tr-pnl .amount.negative { color: var(--red); }
+
+  .tr-pnl .rr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* ── Philosophy Footer ── */
+  .philosophy {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .philosophy .phi-mark {
+    flex-shrink: 0;
+    opacity: 0.25;
+  }
+
+  .philosophy .phi-text {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .philosophy .phi-text strong { color: var(--gold); font-weight: 600; font-style: normal; }
+  .philosophy .phi-attr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Bottom Bar ── */
+  .bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  .bottom-bar .bb-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bottom-bar .bb-left svg { opacity: 0.3; }
+
+  .bottom-bar .bb-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  .bottom-bar .bb-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 680px) {
+    .hero { flex-direction: column; align-items: flex-start; gap: 20px; padding: 24px; }
+    .hero-right { gap: 16px; }
+    .hero-left .date { font-size: 36px; }
+    .session-strip { grid-template-columns: 1fr; }
+    .metric .val { font-size: 20px; }
+    .context-inner { padding: 16px; }
+    .chart-wrap { padding: 14px 12px; }
+    .trade-row { grid-template-columns: 48px 1fr; }
+    .tr-pnl { grid-column: 1 / -1; text-align: left; padding-top: 6px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .philosophy { flex-direction: column; }
+    .bottom-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Brand Header -->
+  <div class="brand-header">
+    <div class="brand-mark">
+      <svg width="40" height="44" viewBox="0 0 40 44" fill="none">
+        <!-- Crown -->
+        <path d="M8 14 L12 6 L16 11 L20 3 L24 11 L28 6 L32 14" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="8" y1="14" x2="32" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Candle body -->
+        <rect x="14" y="17" width="12" height="16" rx="1" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+        <!-- Wick -->
+        <line x1="20" y1="33" x2="20" y2="41" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="17" x2="20" y2="15" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="brand-text">
+        <div class="brand-name">SireMammat</div>
+        <div class="brand-tag">Free futures education · Al Brooks methodology</div>
+      </div>
+    </div>
+    <div class="session-badge">♛ SM · Session Card</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="date">03 <em>/ 04</em></div>
+      <div class="subtitle">
+        <span class="prefix">♛ SM ·</span>
+        PB-VolumeP Playbook · Disciplined Execution
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="metric">
+        <div class="val positive">+$39.00</div>
+        <div class="lbl">Net P&L</div>
+      </div>
+      <div class="sep"></div>
+      <div class="metric">
+        <div class="val gold">DISCIPLINED</div>
+        <div class="lbl">Status</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session Strip -->
+  <div class="session-strip">
+    <div class="session-card sc-overtrade">
+      <div class="sc-top">
+        <div class="sc-date">04/01/26</div>
+        <div class="sc-status overtrade">Over-Trade</div>
+      </div>
+      <div class="sc-playbook">PB-20P / Tilt</div>
+      <div class="sc-pnl negative">-$3,642.50</div>
+    </div>
+    <div class="session-card sc-blueprint">
+      <div class="sc-top">
+        <div class="sc-date">04/02/26</div>
+        <div class="sc-status blueprint">Blueprint</div>
+      </div>
+      <div class="sc-playbook">PB-SchoolRun</div>
+      <div class="sc-pnl positive">+$741.00</div>
+    </div>
+    <div class="session-card sc-disciplined">
+      <div class="sc-top">
+        <div class="sc-date">04/03/26</div>
+        <div class="sc-status disciplined">Disciplined</div>
+      </div>
+      <div class="sc-playbook">PB-VolumeP</div>
+      <div class="sc-pnl positive">+$39.00</div>
+    </div>
+  </div>
+
+  <!-- Context -->
+  <div class="context-panel">
+    <div class="context-toggle open" onclick="toggleCtx(this)">
+      <div class="arrow">▸</div>
+      <div class="toggle-label">Session Context &amp; Narrative</div>
+      <div class="toggle-sub">3-day arc</div>
+    </div>
+    <div class="context-body open" id="ctxBody">
+      <div class="context-inner">
+
+        <div class="cs">
+          <div class="cs-label"><div class="dot"></div>Session Arc — Recovery Sequence</div>
+          <p>
+            This card captures a <strong>three-session recovery arc</strong>.
+            On <span class="hl-r">04/01</span>, the session resulted in a
+            <strong>-$3,642.50 loss</strong> under the <span class="em-g">PB-20P / Tilt</span> playbook,
+            classified as <strong>OVER-TRADE</strong>. The following day on
+            <span class="hl-gr">04/02</span>, a <strong>+$741.00 win</strong> was achieved under
+            <span class="em-g">PB-SchoolRun</span>, status <strong>BLUEPRINT</strong>.
+            The current session on <span class="hl-g">04/03</span> closed at
+            <strong>+$39.00</strong> under <span class="em-g">PB-VolumeP</span>,
+            status <strong>DISCIPLINED</strong>.
+          </p>
+          <div class="context-tags">
+            <span class="ctag red">-3,642.50 Recovery</span>
+            <span class="ctag green">+741.00 Blueprint</span>
+            <span class="ctag gold">+39.00 Disciplined</span>
+          </div>
+        </div>
+
+        <div class="cs">
+          <div class="cs-label"><div class="dot"></div>Methodology Context</div>
+          <p>
+            All sessions are grounded in <strong>Al Brooks price action methodology</strong>.
+            The brand philosophy — <span class="hl-g">"Teaching the reading of price itself rather than selling signals"</span> —
+            is reflected in the playbook approach: each session runs a named playbook
+            (<span class="em-g">PB-VolumeP</span>, <span class="em-g">PB-SchoolRun</span>,
+            <span class="em-g">PB-20P</span>) with structured entry/exit criteria.
+            The shift from <strong>OVER-TRADE</strong> to <strong>DISCIPLINED</strong>
+            across three days demonstrates the
+            <span class="hl-g">"making complex Al Brooks concepts ownable for anyone"</span>
+            accessibility principle in practice.
+          </p>
+          <div class="context-tags">
+            <span class="ctag dim">Al Brooks Methodology</span>
+            <span class="ctag dim">Purple Cow Framework</span>
+            <span class="ctag dim">Price Action Reading</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-wrap">
+    <div class="chart-header">
+      <div class="ch-title">♛ SM · 3-Session P&L Arc</div>
+      <div class="ch-legend">
+        <div class="li"><div class="swatch sw-r"></div>Loss</div>
+        <div class="li"><div class="swatch sw-gr"></div>Win</div>
+        <div class="li"><div class="swatch sw-g"></div>Cumulative</div>
+      </div>
+    </div>
+    <canvas id="chart" height="260"></canvas>
+  </div>
+
+  <!-- Trades -->
+  <div class="trades-wrap">
+    <div class="trades-title">♛ SM · Session Log</div>
+
+    <div class="trade-row t-sell">
+      <div class="tr-id">S01</div>
+      <div class="tr-details">
+        <div class="tr-context">
+          <span class="em-g">PB-20P / Tilt</span> — Status:
+          <span class="em" style="color:var(--red)">OVER-TRADE</span>.
+          Session resulted in significant drawdown.
+        </div>
+        <div class="tr-bars">04/01/26 · Playbook deviation</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount negative">-$3,642.50</div>
+        <div class="rr">Over-Trade</div>
+      </div>
+    </div>
+
+    <div class="trade-row t-buy">
+      <div class="tr-id">S02</div>
+      <div class="tr-details">
+        <div class="tr-context">
+          <span class="em-g">PB-SchoolRun</span> — Status:
+          <span class="em" style="color:var(--green)">BLUEPRINT</span>.
+          Strong recovery session, executed per plan.
+        </div>
+        <div class="tr-bars">04/02/26 · Blueprint execution</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+$741.00</div>
+        <div class="rr">Blueprint</div>
+      </div>
+    </div>
+
+    <div class="trade-row featured t-buy">
+      <div class="tr-id">S03</div>
+      <div class="tr-details">
+        <div class="tr-context">
+          <span class="em-g">PB-VolumeP</span> — Status:
+          <span class="em" style="color:var(--gold)">DISCIPLINED</span>.
+          Controlled session. Small positive close reinforces process over outcome.
+        </div>
+        <div class="tr-bars">04/03/26 · Current session · Disciplined</div>
+      </div>
+      <div class="tr-pnl">
+        <div class="amount positive">+$39.00</div>
+        <div class="rr">Disciplined</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Philosophy -->
+  <div class="philosophy">
+    <svg class="phi-mark" width="32" height="36" viewBox="0 0 40 44" fill="none">
+      <path d="M8 14 L12 6 L16 11 L20 3 L24 11 L28 6 L32 14" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="8" y1="14" x2="32" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="14" y="17" width="12" height="16" rx="1" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      <line x1="20" y1="33" x2="20" y2="41" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="20" y1="17" x2="20" y2="15" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="phi-text">
+        <strong>Radical act:</strong> Providing premium education for free in a paid-course dominated space.
+        Teaching the reading of <strong>price itself</strong> rather than selling signals.
+        Making complex Al Brooks concepts <strong>ownable for anyone</strong>.
+      </div>
+      <div class="phi-attr">— SireMammat · Purple Cow Methodology (Seth Godin)</div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar">
+    <div class="bb-left">
+      <svg width="20" height="22" viewBox="0 0 40 44" fill="none">
+        <path d="M8 14 L12 6 L16 11 L20 3 L24 11 L28 6 L32 14" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="8" y1="14" x2="32" y2="14" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="14" y="17" width="12" height="16" rx="1" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+        <line x1="20" y1="33" x2="20" y2="41" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="20" y1="17" x2="20" y2="15" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="bb-text">SireMammat · The Crowned Candle · Free Futures Education</span>
+    </div>
+    <div class="bb-right">♛ SM · 04/03/26</div>
+  </div>
+
+</div>
+
+<script>
+function toggleCtx(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// ── Chart: 3-Session P&L Arc ──
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 260 * dpr;
+  ctx.scale(dpr, dpr);
+  draw(rect.width, 260);
+}
+
+function draw(W, H) {
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { top: 20, right: 24, bottom: 40, left: 70 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  // Data
+  const sessions = [
+    { label: '04/01 · PB-20P/Tilt', pnl: -3642.50, status: 'overtrade' },
+    { label: '04/02 · PB-SchoolRun', pnl: 741.00, status: 'blueprint' },
+    { label: '04/03 · PB-VolumeP', pnl: 39.00, status: 'disciplined' },
+  ];
+
+  const cumulative = [];
+  let running = 0;
+  sessions.forEach(s => {
+    running += s.pnl;
+    cumulative.push(running);
+  });
+
+  // Scale
+  const allVals = [...sessions.map(s => s.pnl), ...cumulative];
+  const maxV = Math.max(...allVals, 100);
+  const minV = Math.min(...allVals, -100);
+  const range = maxV - minV || 1;
+
+  function yOf(v) { return pad.top + (1 - (v - minV) / range) * ch; }
+  function xOf(i) { return pad.left + (i / (sessions.length - 1)) * cw; }
+
+  // Zero line
+  const zeroY = yOf(0);
+  ctx.strokeStyle = 'rgba(201,168,76,0.15)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(pad.left, zeroY);
+  ctx.lineTo(W - pad.right, zeroY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = 'rgba(201,168,76,0.3)';
+  ctx.font = '8px JetBrains Mono';
+  ctx.textAlign = 'right';
+  ctx.fillText('$0', pad.left - 8, zeroY + 3);
+
+  // Y-axis labels
+  const ySteps = [-4000, -3000, -2000, -1000, 0, 500, 1000];
+  ySteps.forEach(v => {
+    if (v < minV || v > maxV) return;
+    const y = yOf(v);
+    ctx.fillStyle = '#3a3632';
+    ctx.font = '8px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(v >= 0 ? '+$' + v : '-$' + Math.abs(v), pad.left - 8, y + 3);
+  });
+
+  // Bar chart for individual P&L
+  const barW = Math.min(48, cw / 5);
+  sessions.forEach((s, i) => {
+    const x = xOf(i);
+    const barTop = yOf(Math.max(s.pnl, 0));
+    const barBot = yOf(Math.min(s.pnl, 0));
+    const barH = Math.max(2, barBot - barTop);
+
+    const col = s.pnl >= 0 ? '#4caf7a' : '#d4545e';
+    const dimCol = s.pnl >= 0 ? 'rgba(76,175,122,0.18)' : 'rgba(212,84,94,0.18)';
+
+    ctx.fillStyle = dimCol;
+    ctx.fillRect(x - barW / 2, barTop, barW, barH);
+
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(x - barW / 2, barTop, barW, barH);
+
+    // Value label
+    ctx.fillStyle = col;
+    ctx.font = 'bold 10px JetBrains Mono';
+    ctx.textAlign = 'center';
+    const labelY = s.pnl >= 0 ? barTop - 8 : barBot + 14;
+    const valStr = s.pnl >= 0 ? '+$' + s.pnl.toFixed(0) : '-$' + Math.abs(s.pnl).toFixed(0);
+    ctx.fillText(valStr, x, labelY);
+
+    // Session label
+    ctx.fillStyle = '#5a5550';
+    ctx.font = '8px JetBrains Mono';
+    ctx.fillText(s.label, x, H - pad.bottom + 16);
+  });
+
+  // Cumulative line
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  cumulative.forEach((v, i) => {
+    const x = xOf(i);
+    const y = yOf(v);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Cumulative dots and labels
+  cumulative.forEach((v, i) => {
+    const x = xOf(i);
+    const y = yOf(v);
+
+    ctx.fillStyle = '#c9a84c';
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#080808';
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#c9a84c';
+    ctx.font = '9px JetBrains Mono';
+    ctx.textAlign = 'center';
+    const cumLabelY = v >= 0 ? y - 10 : y + 16;
+    const cumStr = v >= 0 ? '+$' + v.toFixed(0) : '-$' + Math.abs(v).toFixed(0);
+    ctx.fillText(cumStr, x, cumLabelY);
+  });
+
+  // Status badges under bars
+  sessions.forEach((s, i) => {
+    const x = xOf(i);
+    const colors = {
+      overtrade: '#d4545e',
+      blueprint: '#4caf7a',
+      disciplined: '#c9a84c'
+    };
+    const col = colors[s.status];
+    ctx.fillStyle = col;
+    ctx.font = '7px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.status.toUpperCase(), x, H - pad.bottom + 28);
+  });
+}
+
+window.addEventListener('resize', resize);
+resize();
+</script>
+
+</body>
+</html>

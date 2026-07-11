@@ -1,0 +1,28 @@
+March 30 2026 EOD Review
+
+Bar by Bar Analysis
+Premarket - The market was bullish coming into the open
+as price gapped from VWAP and closes above the 20EMA
+Market Opens bearish and price closes below 20EMA at Bar 1
+CVD dropped below the EMA on the Bar 1 and continues trending down
+
+Trade 01
+Bar 1 is a big breakout Bear bar closes below 20EMA and its also an Outside Bar
+Entry Selling 1 tick below Bar 1 and STOP 1 tick above
+Exit Bar 3 gives 310 ticks 
+1:1 Measured move down using Bar 1
+
+The first 6 bars was a strong leg down, consecutive bear bars closing on its low
+Bar 7 is a bullish inside bar, after a strong leg down, high probability of a minor reversal
+CVD was also showing strength but price is still below 20EMA.
+
+Trade 02
+Entry Buy the close of Bar 7 with STOP 1 tick below.
+Exit Bar 8 gives -148 ticks. STOPPED out trade.
+The target was 1:1 off Bar 7, however price pullback and hit the STOP LOSS before it moves higher.
+Reason I put a tight STOP, was price was still below VWAP and 20EMA. I didn't put the STOP lower, 
+an inside bar either break-up or break-down, since this was an Inside Bar play and I wanted to limit 
+the risk as much as I can. The move was a front-run move since I decided to Buy the Close of Bar 7
+instead of putting a Buy STOP 1 tick above. 
+
+Bar 9 and Bar 11 onwards, bars starts to overlap. This indicates a trading range behaviour.

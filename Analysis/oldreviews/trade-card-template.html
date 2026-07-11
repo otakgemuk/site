@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+    :root {
+        --bg: #06080A; --card: #0C1015; --border: #1B2129;
+        --green: #00C896; --gold: #B87333; --red: #F05252;
+        --text: #E4ECF5; --sub: #617080;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding: 20px; }
+    
+    .trade-card {
+        width: 850px; background: var(--card); border: 1px solid var(--border);
+        border-radius: 8px; overflow: hidden; position: relative;
+    }
+    
+    /* Header Section */
+    .header {
+        background: linear-gradient(90deg, #10151B, #0C1015);
+        padding: 20px 30px; border-bottom: 1px solid var(--border);
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand { font-weight: 800; letter-spacing: 2px; color: var(--green); font-size: 14px; }
+    .session-id { font-family: 'JetBrains Mono', monospace; color: var(--sub); font-size: 11px; }
+
+    /* Main Stats */
+    .main-stats { display: flex; border-bottom: 1px solid var(--border); }
+    .stat-box { flex: 1; padding: 25px 30px; border-right: 1px solid var(--border); }
+    .stat-label { font-size: 10px; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .stat-val { font-size: 28px; font-weight: 700; font-family: 'Bebas Neue', sans-serif; }
+
+    /* Performance Breakdown */
+    .details { display: grid; grid-template-columns: 1fr 1fr; padding: 30px; gap: 40px; }
+    .detail-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+    .detail-label { color: var(--sub); }
+    .detail-val { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+
+    /* Footer / Checklist */
+    .footer { background: #090C10; padding: 15px 30px; display: flex; gap: 20px; border-top: 1px solid var(--border); }
+    .tag { font-size: 10px; padding: 4px 10px; border-radius: 4px; background: rgba(0,200,150,0.1); color: var(--green); border: 1px solid rgba(0,200,150,0.2); }
+</style>
+</head>
+<body>
+
+<div class="trade-card">
+    <div class="header">
+        <div class="brand">SIRE TACTICAL <span style="color:var(--text)">// SESSION LOG</span></div>
+        <div class="session-id">REF: EVAL_TPT_DAY_01</div>
+    </div>
+
+    <div class="main-stats">
+        <div class="stat-box">
+            <div class="stat-label">Net Profit/Loss</div>
+            <div class="stat-val" style="color:var(--green);">+$420.00</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Total Ticks</div>
+            <div class="stat-val">420 TICKS</div>
+        </div>
+        <div class="stat-box" style="border-right:none;">
+            <div class="stat-label">Trade Efficiency</div>
+            <div class="stat-val" style="color:var(--gold);">88%</div>
+        </div>
+    </div>
+
+    <div class="details">
+        <div>
+            <div style="color:var(--gold); font-size: 11px; margin-bottom: 15px; letter-spacing: 1px;">METRICS</div>
+            <div class="detail-item"><span class="detail-label">Strategy</span><span class="detail-val">PB-SchoolRun</span></div>
+            <div class="detail-item"><span class="detail-label">Contracts</span><span class="detail-val">2 MNQ</span></div>
+            <div class="detail-item"><span class="detail-label">Win Rate</span><span class="detail-val">100% (1/1)</span></div>
+        </div>
+        <div>
+            <div style="color:var(--gold); font-size: 11px; margin-bottom: 15px; letter-spacing: 1px;">EVALUATION STATUS</div>
+            <div class="detail-item"><span class="detail-label">Evaluation Day</span><span class="detail-val">01 / 05</span></div>
+            <div class="detail-item"><span class="detail-label">Target Remaining</span><span class="detail-val">$8,580.00</span></div>
+            <div class="detail-item"><span class="detail-label">Drawdown Buffer</span><span class="detail-val">$4,500.00</span></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span class="tag">RULE COMPLIANT</span>
+        <span class="tag" style="background:rgba(184,115,51,0.1); color:var(--gold); border-color:rgba(184,115,51,0.2);">PRECISION ENTRY</span>
+    </div>
+</div>
+
+</body>
+</html>

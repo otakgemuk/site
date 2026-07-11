@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Cards — Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:rgba(184,115,51,0.15);
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--green-dim:rgba(74,138,101,0.15);
+  --red:#B04030;--red-dim:rgba(176,64,48,0.15);
+  --blue:#6B8EC4;--orange:#C8854A;
+  --surface:#13100A;--surface2:#1A150D;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--dark);font-family:var(--font-mono),monospace;color:var(--cream);min-height:100vh;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(184,115,51,0.04) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.012) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.012) 40px);
+}
+
+/* ── Layout ── */
+.app{max-width:1400px;margin:0 auto;padding:32px 24px 60px}
+.app-header{text-align:center;margin-bottom:40px}
+.app-header h1{font-family:var(--font-display);font-size:clamp(32px,5vw,52px);letter-spacing:0.06em;color:var(--cream)}
+.app-header h1 span{color:var(--red)}
+.app-header .sub{font-size:11px;color:var(--muted);letter-spacing:0.15em;margin-top:8px;text-transform:uppercase}
+
+.builder{display:grid;grid-template-columns:380px 1fr;gap:32px;align-items:start}
+@media(max-width:900px){.builder{grid-template-columns:1fr}}
+
+/* ── Form Panel ── */
+.form-panel{background:var(--surface);border:1px solid var(--dark4);border-radius:12px;padding:24px;position:sticky;top:24px}
+.form-title{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--dark4)}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.field input,.field select,.field textarea{
+  width:100%;padding:9px 12px;background:var(--dark);border:1px solid var(--dark4);border-radius:6px;
+  color:var(--cream);font-family:var(--font-mono);font-size:12px;outline:none;transition:border-color 0.2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:70px;line-height:1.6}
+.field select option{background:var(--dark);color:var(--cream)}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+.tags-input{display:flex;flex-wrap:wrap;gap:6px;padding:6px;background:var(--dark);border:1px solid var(--dark4);border-radius:6px;min-height:38px}
+.tags-input input{border:none;background:transparent;color:var(--cream);font-family:var(--font-mono);font-size:11px;outline:none;flex:1;min-width:80px;padding:2px 4px}
+.tag-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;letter-spacing:0.08em;padding:3px 8px;border-radius:3px;border:1px solid var(--dark4);color:var(--muted);background:var(--surface2)}
+.tag-pill.hl{border-color:rgba(245,200,66,0.3);color:var(--gold);background:var(--gold-dim)}
+.tag-pill .x{cursor:pointer;opacity:0.6;font-size:11px}.tag-pill .x:hover{opacity:1}
+
+.btn-row{display:flex;gap:8px;margin-top:18px}
+.btn{flex:1;padding:10px;border:none;border-radius:6px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
+.btn-add{background:var(--gold);color:var(--dark)}.btn-add:hover{background:var(--gold-lt)}
+.btn-clear{background:var(--dark3);color:var(--muted);border:1px solid var(--dark4)}.btn-clear:hover{color:var(--cream);border-color:var(--muted)}
+.btn-export{background:var(--green);color:#fff;margin-top:8px;width:100%}.btn-export:hover{opacity:0.85}
+
+/* ── Cards Preview ── */
+.preview-panel{}
+.section-label{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:32px}
+
+.card{background:var(--surface);border:1px solid var(--dark4);border-radius:12px;overflow:hidden;position:relative;animation:cardIn 0.4s ease backwards}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.card.win::before{background:var(--green)}
+.card.loss::before{background:var(--red)}
+.card.be::before{background:var(--gold)}
+
+.card-header{padding:20px 22px 14px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--dark4)}
+.trade-id{font-family:var(--font-display);font-size:34px;letter-spacing:0.05em;line-height:1}
+.card.win .trade-id{color:var(--green)}.card.loss .trade-id{color:var(--red)}.card.be .trade-id{color:var(--gold)}
+.trade-type{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+
+.direction-badge{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:0.15em;padding:3px 9px;border-radius:4px}
+.dir-short{background:var(--red-dim);color:var(--red);border:1px solid rgba(176,64,48,0.3)}
+.dir-long{background:var(--green-dim);color:var(--green);border:1px solid rgba(74,138,101,0.3)}
+.setup-tag{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.1em}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--dark4)}
+.stat{padding:14px 18px;border-right:1px solid var(--dark4)}.stat:last-child{border-right:none}
+.stat-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px}
+.stat-value{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--cream);line-height:1}
+.stat-value.profit{color:var(--green)}.stat-value.loss-val{color:var(--red)}.stat-value.ratio{color:var(--gold)}
+
+.entry-block{padding:16px 22px;border-bottom:1px solid var(--dark4)}
+.block-title{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:10px}
+.entry-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.entry-row:last-child{margin-bottom:0}
+.entry-key{font-size:12px;color:var(--muted);font-weight:300}
+.entry-val{font-family:var(--font-mono);font-size:12px;color:var(--cream)}
+.entry-val.stop{color:var(--red)}.entry-val.target{color:var(--green)}
+
+.price-visual{margin:0 22px;height:6px;border-radius:3px;background:var(--surface2);position:relative;overflow:visible;margin-bottom:16px}
+.price-fill{height:100%;border-radius:3px;position:relative}
+.price-fill.win-fill{background:linear-gradient(90deg,var(--green),#5aaa7a)}.price-fill.loss-fill{background:linear-gradient(90deg,var(--red),#c05545)}
+.price-fill::after{content:attr(data-r);position:absolute;right:0;top:-18px;font-family:var(--font-mono);font-size:9px;color:var(--gold)}
+
+.rationale{padding:14px 22px 16px}
+.rationale p{font-size:12px;line-height:1.7;color:#8a94a6;font-weight:300;font-family:var(--font-body)}
+.rationale strong{color:var(--cream);font-weight:500}
+
+.tags{padding:0 22px 18px;display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--font-mono);font-size:9px;letter-spacing:0.1em;padding:3px 8px;border-radius:3px;border:1px solid var(--dark4);color:var(--muted);background:var(--surface2)}
+.tag.highlight{border-color:rgba(245,200,66,0.3);color:var(--gold);background:var(--gold-dim)}
+
+.card-actions{padding:8px 22px 14px;display:flex;gap:8px}
+.card-btn{font-size:9px;letter-spacing:0.08em;padding:4px 10px;border-radius:4px;border:1px solid var(--dark4);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font-mono);transition:all 0.2s}
+.card-btn:hover{border-color:var(--muted);color:var(--cream)}
+.card-btn.del:hover{border-color:var(--red);color:var(--red)}
+
+/* ── Summary ── */
+.summary-card{background:var(--surface);border:1px solid var(--dark4);border-radius:12px;padding:28px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px}
+.sum-item{text-align:center}
+.sum-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px}
+.sum-value{font-family:var(--font-display);font-size:36px;letter-spacing:0.04em;line-height:1}
+.sum-value.green{color:var(--green)}.sum-value.red{color:var(--red)}.sum-value.gold{color:var(--gold)}.sum-value.white{color:var(--cream)}
+.sum-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;border:1px dashed var(--dark4);border-radius:12px}
+.empty-state .big{font-size:48px;margin-bottom:12px;display:block}
+
+footer{text-align:center;margin-top:36px;font-family:var(--font-mono);font-size:9px;color:#2e3540;letter-spacing:0.2em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <h1>TRADE <span>CARDS</span></h1>
+    <div class="sub">Builder &nbsp;·&nbsp; Key in your trades, see them come alive</div>
+  </header>
+
+  <div class="builder">
+    <!-- FORM -->
+    <div class="form-panel">
+      <div class="form-title">Add Trade</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Session / Date</label>
+          <input type="text" id="fSession" placeholder="e.g. RTH Session · ES Futures">
+        </div>
+        <div class="field">
+          <label>Day Label</label>
+          <input type="text" id="fDay" placeholder="e.g. FRI 20 MAR '26">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Market Condition</label>
+          <input type="text" id="fCondition" placeholder="e.g. BEAR TREND DAY">
+        </div>
+        <div class="field">
+          <label>Author</label>
+          <input type="text" id="fAuthor" placeholder="e.g. SIRE MAMMAT">
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--dark4);margin:16px 0"></div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Direction</label>
+          <select id="fDirection">
+            <option value="SHORT">SHORT ▼</option>
+            <option value="LONG">LONG ▲</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Setup Name</label>
+          <input type="text" id="fSetup" placeholder="e.g. LOW 2 PULLBACK">
+        </div>
+      </div>
+
+      <div class="field-row3">
+        <div class="field">
+          <label>P&L (pts)</label>
+          <input type="number" step="0.5" id="fPnl" placeholder="+19.5">
+        </div>
+        <div class="field">
+          <label>R:R</label>
+          <input type="text" id="fRR" placeholder="1:2.5R">
+        </div>
+        <div class="field">
+          <label>Result</label>
+          <select id="fResult">
+            <option value="WIN">WIN ✓</option>
+            <option value="LOSS">LOSS ✗</option>
+            <option value="BE">B/E</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--dark4);margin:16px 0"></div>
+      <div class="form-title">Execution</div>
+
+      <div class="field">
+        <label>Entry Trigger</label>
+        <input type="text" id="fEntry" placeholder="e.g. Sell STOP 1 tick below Bar 2">
+      </div>
+      <div class="field">
+        <label>Fill Bar</label>
+        <input type="text" id="fFill" placeholder="e.g. Bar 6">
+      </div>
+      <div class="field">
+        <label>Stop Loss</label>
+        <input type="text" id="fStop" placeholder="e.g. 1 tick above Bar 2">
+      </div>
+      <div class="field">
+        <label>Exit</label>
+        <input type="text" id="fExit" placeholder="e.g. Bar 7 (MM down Bars 3–4)">
+      </div>
+
+      <div style="border-top:1px solid var(--dark4);margin:16px 0"></div>
+
+      <div class="field">
+        <label>Rationale</label>
+        <textarea id="fRationale" placeholder="Describe the setup, context, and why you took the trade..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Tags (press Enter to add)</label>
+        <div class="tags-input" id="tagsInput">
+          <input type="text" id="tagField" placeholder="type tag...">
+        </div>
+        <div style="margin-top:4px;font-size:9px;color:var(--muted2)">Shift+Enter = highlight tag</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-add" onclick="addTrade()">+ Add Trade</button>
+        <button class="btn btn-clear" onclick="clearForm()">Clear</button>
+      </div>
+      <button class="btn btn-export" onclick="exportHTML()">↓ Export as HTML</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-panel">
+      <div class="section-label">Live Preview</div>
+      <div id="cardsGrid" class="cards-grid"></div>
+      <div id="summarySection"></div>
+      <div id="emptyState" class="empty-state">
+        <span class="big">📋</span>
+        Fill in the form and click <strong>+ Add Trade</strong> to start building your cards
+      </div>
+    </div>
+  </div>
+
+  <footer>PATIENCE · DISCIPLINE · FEARLESS · EXECUTION</footer>
+</div>
+
+<script>
+let trades = [];
+let tags = [];
+
+// ── Tags input ──
+const tagField = document.getElementById('tagField');
+const tagsInput = document.getElementById('tagsInput');
+
+tagField.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && tagField.value.trim()) {
+    e.preventDefault();
+    const hl = e.shiftKey;
+    tags.push({ text: tagField.value.trim().toUpperCase(), hl });
+    tagField.value = '';
+    renderTagPills();
+  }
+  if (e.key === 'Backspace' && !tagField.value && tags.length) {
+    tags.pop();
+    renderTagPills();
+  }
+});
+
+function renderTagPills() {
+  tagsInput.querySelectorAll('.tag-pill').forEach(p => p.remove());
+  tags.forEach((t, i) => {
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill' + (t.hl ? ' hl' : '');
+    pill.innerHTML = `${t.text} <span class="x" onclick="removeTag(${i})">×</span>`;
+    tagsInput.insertBefore(pill, tagField);
+  });
+}
+
+function removeTag(i) { tags.splice(i, 1); renderTagPills(); }
+
+// ── Add Trade ──
+function addTrade() {
+  const v = id => document.getElementById(id).value.trim();
+  const direction = v('fDirection');
+  const pnl = parseFloat(v('fPnl')) || 0;
+  const result = v('fResult');
+
+  const trade = {
+    session: v('fSession') || 'RTH Session',
+    day: v('fDay') || new Date().toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short',year:'2-digit'}).toUpperCase(),
+    condition: v('fCondition') || 'TREND DAY',
+    author: v('fAuthor') || 'TRADER',
+    direction,
+    setup: v('fSetup') || 'SETUP',
+    pnl,
+    rr: v('fRR') || '—',
+    result,
+    entry: v('fEntry') || '—',
+    fill: v('Fill') || v('fFill') || '—',
+    stop: v('fStop') || '—',
+    exit: v('fExit') || '—',
+    rationale: v('fRationale') || '',
+    tags: [...tags],
+    id: trades.length + 1
+  };
+
+  trades.push(trade);
+  clearForm();
+  render();
+}
+
+function clearForm() {
+  ['fSetup','fPnl','fRR','fEntry','fFill','fStop','fExit','fRationale'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fResult').value = 'WIN';
+  tags = [];
+  renderTagPills();
+}
+
+function removeTrade(i) {
+  trades.splice(i, 1);
+  trades.forEach((t,j) => t.id = j + 1);
+  render();
+}
+
+// ── Render ──
+function render() {
+  const grid = document.getElementById('cardsGrid');
+  const summary = document.getElementById('summarySection');
+  const empty = document.getElementById('emptyState');
+
+  if (!trades.length) {
+    grid.innerHTML = '';
+    summary.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // session info from first trade
+  const s = trades[0];
+
+  grid.innerHTML = trades.map((t, i) => {
+    const resultClass = t.result === 'WIN' ? 'win' : t.result === 'LOSS' ? 'loss' : 'be';
+    const pnlClass = t.pnl > 0 ? 'profit' : t.pnl < 0 ? 'loss-val' : '';
+    const dirClass = t.direction === 'SHORT' ? 'dir-short' : 'dir-long';
+    const dirLabel = t.direction === 'SHORT' ? 'SHORT ▼' : 'LONG ▲';
+    const resultLabel = t.result === 'WIN' ? 'WIN ✓' : t.result === 'LOSS' ? 'LOSS ✗' : 'B/E —';
+    const fillPct = Math.min(95, Math.max(10, Math.abs(t.pnl) * 2.5));
+    const fillClass = t.pnl >= 0 ? 'win-fill' : 'loss-fill';
+    const pnlSign = t.pnl > 0 ? '+' : '';
+
+    return `
+    <div class="card ${resultClass}" style="animation-delay:${i*0.1}s">
+      <div class="card-header">
+        <div class="trade-id">T${String(t.id).padStart(2,'0')}</div>
+        <div class="trade-type">
+          <div class="direction-badge ${dirClass}">${dirLabel}</div>
+          <div class="setup-tag">${esc(t.setup)}</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-label">P&amp;L</div><div class="stat-value ${pnlClass}">${pnlSign}${t.pnl}</div></div>
+        <div class="stat"><div class="stat-label">R:R</div><div class="stat-value ratio">${esc(t.rr)}</div></div>
+        <div class="stat"><div class="stat-label">Result</div><div class="stat-value ${pnlClass}">${resultLabel}</div></div>
+      </div>
+      <div class="entry-block">
+        <div class="block-title">Execution</div>
+        <div class="entry-row"><span class="entry-key">Entry Trigger</span><span class="entry-val">${esc(t.entry)}</span></div>
+        <div class="entry-row"><span class="entry-key">Fill Bar</span><span class="entry-val">${esc(t.fill)}</span></div>
+        <div class="entry-row"><span class="entry-key">Stop Loss</span><span class="entry-val stop">${esc(t.stop)}</span></div>
+        <div class="entry-row"><span class="entry-key">Exit</span><span class="entry-val target">${esc(t.exit)}</span></div>
+      </div>
+      <div class="price-visual"><div class="price-fill ${fillClass}" style="width:${fillPct}%" data-r="${pnlSign}${t.pnl} pts"></div></div>
+      ${t.rationale ? `<div class="rationale"><p>${esc(t.rationale)}</p></div>` : ''}
+      ${t.tags.length ? `<div class="tags">${t.tags.map(g => `<span class="tag${g.hl?' highlight':''}">${esc(g.text)}</span>`).join('')}</div>` : ''}
+      <div class="card-actions">
+        <button class="card-btn del" onclick="removeTrade(${i})">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Summary
+  const totalPnl = trades.reduce((a,t) => a + t.pnl, 0);
+  const wins = trades.filter(t => t.result === 'WIN').length;
+  const losses = trades.filter(t => t.result === 'LOSS').length;
+  const winRate = trades.length ? Math.round(wins / trades.length * 100) : 0;
+
+  summary.innerHTML = `
+  <div class="section-label" style="margin-top:8px">Session Summary</div>
+  <div class="summary-card">
+    <div class="sum-item"><div class="sum-label">Total P&amp;L</div><div class="sum-value ${totalPnl>=0?'green':'red'}">${totalPnl>0?'+':''}${totalPnl}</div><div class="sum-sub">pts captured</div></div>
+    <div class="sum-item"><div class="sum-label">Trades</div><div class="sum-value white">${trades.length}</div><div class="sum-sub">${wins}W / ${losses}L</div></div>
+    <div class="sum-item"><div class="sum-label">Win Rate</div><div class="sum-value ${winRate>=50?'green':'red'}">${winRate}%</div><div class="sum-sub">${wins} / ${trades.length}</div></div>
+    <div class="sum-item"><div class="sum-label">Session</div><div class="sum-value white" style="font-size:22px;padding-top:8px">${esc(s.condition)}</div><div class="sum-sub">${esc(s.day)}</div></div>
+  </div>`;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ── Export ──
+function exportHTML() {
+  if (!trades.length) return alert('Add some trades first!');
+  const s = trades[0];
+  const grid = document.getElementById('cardsGrid').innerHTML;
+  const sum = document.getElementById('summarySection').innerHTML;
+
+  const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Trade Cards — ${s.day}</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>${document.querySelector('style').textContent}
+.card-actions{display:none!important}</style></head>
+<body><div class="app">
+<header class="app-header"><h1>TRADE <span>CARDS</span></h1>
+<div class="sub">${esc(s.session)} &nbsp;·&nbsp; ${esc(s.condition)} &nbsp;·&nbsp; ${esc(s.author)}</div></header>
+<div class="cards-grid">${grid}</div>${sum}
+<footer>PATIENCE · DISCIPLINE · FEARLESS · EXECUTION &nbsp;·&nbsp; ${esc(s.author)}</footer>
+</div></body></html>`;
+
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `trade_cards_${s.day.replace(/[^a-zA-Z0-9]/g,'_')}.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── Init: load session fields from existing card if wanted ──
+render();
+</script>
+</body>
+</html>

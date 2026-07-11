@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Price Action — Al Brooks Method</title>
+<style>
+  :root{
+  --dark:#0E0A04;--dark2:#16100A;--dark3:#1E1508;--dark4:#2C2010;
+  --gold:#B87333;--gold-lt:#E8C46A;--gold-dim:#6B4420;
+  --cream:#F5EDD8;--cream2:#EDE0C4;--muted:#8C7355;--muted2:#5C4A35;
+  --green:#4A8A65;--red:#B04030;--blue:#6B8EC4;--orange:#C8854A;
+  --font-display:'EB Garamond',Georgia,serif;
+  --font-body:'Libre Baskerville',Georgia,serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--font-body);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── GRID LINES ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    width: 0%;
+    z-index: 1000;
+    transition: width 0.1s;
+  }
+
+  /* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(14,10,4,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--dark4);height:64px;display:flex;align-items:center;padding:0 3rem;justify-content:space-between;}
+.nav-back{font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;white-space:nowrap;}
+.nav-back:hover{color:var(--gold-lt);}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-brand-name{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--cream);letter-spacing:0.02em;}
+.nav-brand-sub{font-family:var(--font-mono);font-size:0.55rem;color:var(--gold);letter-spacing:0.12em;text-transform:uppercase;}
+.nav-tag{font-family:var(--font-mono);font-size:0.6rem;background:rgba(184,115,51,0.1);color:var(--gold);border:1px solid rgba(184,115,51,0.25);border-radius:4px;padding:0.25rem 0.7rem;letter-spacing:1px;}
+.nav-logo {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-stat {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--muted2);
+    letter-spacing: 1px;
+  }
+
+  .nav-stat span { color: var(--gold); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 4rem 5rem;
+    overflow: hidden;
+  }
+
+  .hero-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 18vw, 18rem);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.06);
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+    letter-spacing: -4px;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -2px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-title .line2 {
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-desc {
+    max-width: 580px;
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .meta-item {
+    border-left: 2px solid var(--gold);
+    padding-left: 1rem;
+  }
+
+  .meta-val {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold2);
+    line-height: 1;
+  }
+
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    right: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .scroll-hint span {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--muted2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite 1.5s;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .content-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 4rem 6rem;
+  }
+
+  /* ── PHASE HEADER ── */
+  .phase-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 5rem 0 2rem;
+    border-bottom: 1px solid var(--dark4);
+    margin-bottom: 2rem;
+  }
+
+  .phase-number {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(184,115,51,0.2);
+    line-height: 1;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .phase-info {}
+
+  .phase-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .phase-title {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .phase-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    max-width: 600px;
+  }
+
+  .phase-badge {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    border: 1px solid;
+    border-radius: 20px;
+    padding: 0.3rem 0.8rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── TOPIC GRID ── */
+  .topic-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--dark4);
+  }
+
+  .topic-grid.col-2 { grid-template-columns: 1fr 1fr; }
+  .topic-grid.col-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* ── TOPIC CARD ── */
+  .topic-card {
+    background: var(--dark2);
+    padding: 1.8rem 2rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .topic-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .topic-card:hover { background: var(--dark3); }
+  .topic-card:hover::before { opacity: 1; }
+
+  .topic-card.expanded { background: var(--dark3); }
+  .topic-card.expanded::before { opacity: 1; }
+
+  .topic-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .topic-num {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--muted2);
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .topic-name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  .topic-summary {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .topic-toggle {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1px solid rgba(184,115,51,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    color: var(--muted2);
+    transition: all 0.2s;
+    margin-top: 2px;
+  }
+
+  .topic-card.expanded .topic-toggle {
+    border-color: currentColor;
+    color: inherit;
+    transform: rotate(45deg);
+  }
+
+  .topic-body {
+    display: none;
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--dark4);
+  }
+
+  .topic-card.expanded .topic-body { display: block; }
+
+  .topic-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .topic-points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .topic-points li::before {
+    content: '—';
+    color: var(--muted2);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .topic-points li strong { color: var(--cream); font-weight: 700; }
+
+  .brooks-quote {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-left: 2px solid;
+    background: rgba(255,255,255,0.03);
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .difficulty-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .diff-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--muted2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    min-width: 60px;
+  }
+
+  .diff-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .diff-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(184,115,51,0.2);
+  }
+
+  .diff-dot.filled { background: currentColor; }
+
+  /* ── FULL-WIDTH TOPIC ── */
+  .topic-card.wide {
+    grid-column: 1 / -1;
+  }
+
+  /* ── STANDALONE WIDE CARD ── */
+  .wide-card {
+    background: var(--dark2);
+    border: 1px solid var(--dark4);
+    padding: 2.4rem 2.8rem;
+    margin-bottom: 1px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .wide-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .wide-card:hover { background: var(--dark3); }
+  .wide-card:hover::before, .wide-card.expanded::before { opacity: 1; }
+  .wide-card.expanded { background: var(--dark3); }
+
+  .wide-card .topic-body { display: none; }
+  .wide-card.expanded .topic-body { display: block; }
+  .wide-card.expanded .topic-toggle { transform: rotate(45deg); border-color: currentColor; color: inherit; }
+
+  /* ── READING LIST ── */
+  .reading-section {
+    margin-top: 5rem;
+    padding: 3rem;
+    background: var(--dark2);
+    border: 1px solid var(--dark4);
+    border-left: 3px solid var(--gold);
+  }
+
+  .reading-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .reading-sub {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .book-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .book-card {
+    background: var(--dark2);
+    border: 1px solid var(--dark4);
+    padding: 1.4rem;
+  }
+
+  .book-tag {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .book-title {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+
+  .book-author {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .book-desc {
+    font-size: 0.78rem;
+    color: var(--muted2);
+    line-height: 1.55;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--dark4);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .footer-note {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted2);
+    letter-spacing: 1px;
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── TRACKER ── */
+  .tracker-bar {
+    position: sticky;
+    top: 58px;
+    z-index: 400;
+    background: rgba(12,13,15,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--dark4);
+    padding: 0.8rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .tracker-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--muted2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tracker-progress {
+    flex: 1;
+    height: 2px;
+    background: var(--dark4);
+    border-radius: 1px;
+    overflow: hidden;
+    max-width: 300px;
+  }
+
+  .tracker-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 1px;
+    transition: width 0.3s ease;
+  }
+
+  .tracker-count {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .check-btn {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    border: 1px solid rgba(184,115,51,0.2);
+    border-radius: 4px;
+    padding: 0.25rem 0.6rem;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .check-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .topic-card.done { opacity: 0.5; }
+  .topic-card.done .topic-name { text-decoration: line-through; }
+
+  .done-mark {
+    display: none;
+    font-size: 0.7rem;
+    color: var(--green);
+    font-family: var(--font-mono);
+    margin-left: 4px;
+  }
+
+  .topic-card.done .done-mark { display: inline; }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    #hero { padding: 0 1.5rem 4rem; }
+    .content-wrap { padding: 0 1.5rem 4rem; }
+    .topic-grid.col-2, .topic-grid.col-3 { grid-template-columns: 1fr; }
+    .book-grid { grid-template-columns: 1fr; }
+    .phase-header { flex-wrap: wrap; }
+    .tracker-bar { padding: 0.8rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+    .phase-number { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="../index.html" class="nav-back">&#8592; Home</a>
+  <a href="../index.html" class="nav-brand">
+    <svg width="24" height="32" viewBox="0 0 56 72" fill="none"><rect x="12" y="30" width="32" height="38" rx="2" stroke="#B87333" stroke-width="3" fill="none"/><line x1="28" y1="30" x2="28" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="20" x2="15" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="15" y1="26" x2="24" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="24" y1="14" x2="28" y2="22" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="28" y1="22" x2="32" y2="14" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="32" y1="14" x2="41" y2="26" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><line x1="41" y1="26" x2="48" y2="20" stroke="#B87333" stroke-width="2.5" stroke-linecap="round"/><circle cx="8" cy="20" r="3" fill="#B87333"/><circle cx="28" cy="22" r="3" fill="#B87333"/><circle cx="48" cy="20" r="3" fill="#B87333"/></svg>
+    <div><div class="nav-brand-name">SireMammat</div><div class="nav-brand-sub">Free Futures Education</div></div>
+  </a>
+  <span class="nav-tag">Learn</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">PA</div>
+
+  <div class="hero-tag">Al Brooks Method · Complete Curriculum</div>
+
+  <h1 class="hero-title">
+    Learn<br>
+    <span class="line2">Price Action</span>
+  </h1>
+
+  <p class="hero-desc">
+    A structured path through Al Brooks' price action methodology — the most rigorous, bar-by-bar approach to reading markets ever developed. Master the language of price before you trade a single tick.
+  </p>
+
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-val">6</div>
+      <div class="meta-label">Learning Phases</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-val">30</div>
+      <div class="meta-label">Core Topics</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-val">3</div>
+      <div class="meta-label">Essential Books</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-val">∞</div>
+      <div class="meta-label">Chart Hours Required</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- PROGRESS TRACKER -->
+<div class="tracker-bar">
+  <span class="tracker-label">Progress</span>
+  <div class="tracker-progress"><div class="tracker-fill" id="tracker-fill" style="width:0%"></div></div>
+  <span class="tracker-count" id="tracker-count">0 / 30 topics</span>
+  <button class="check-btn" onclick="resetAll()">Reset</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content-wrap">
+
+  <!-- ══════════════════════════════════════════════
+       PHASE 1 — FOUNDATIONS
+  ══════════════════════════════════════════════ -->
+  <div class="phase-header reveal" id="phase1">
+    <div class="phase-number">01</div>
+    <div class="phase-info">
+      <div class="phase-tag" style="color:var(--gold)">Phase One</div>
+      <div class="phase-title">The Foundations of Price Action</div>
+      <div class="phase-desc">Before studying patterns, understand what price action is and how Brooks frames the market. This phase builds the mental model everything else sits on.</div>
+    </div>
+    <div class="phase-badge" style="color:var(--gold);border-color:var(--gold)">Beginner · Start Here</div>
+  </div>
+
+  <div class="topic-grid col-2 reveal">
+
+    <div class="topic-card" style="color:var(--gold)" onclick="toggleTopic(this)" data-id="1">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">01 / 30</div>
+          <div class="topic-name">What is Price Action? <span class="done-mark">✓</span></div>
+          <div class="topic-summary">The belief that all market information is already encoded in price — no indicators needed. Understanding why Brooks rejects lagging tools.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Price reflects everything</strong> — every fundamental, sentiment, and order flow event is already in the bar.</li>
+          <li><strong>Indicators are derivatives</strong> — they are calculated from price; price action reads the source directly.</li>
+          <li><strong>All traders see the same chart</strong> — price action setups work because enough participants act on the same signals.</li>
+          <li><strong>Brooks' core belief:</strong> the market is mostly random but has brief periods of non-randomness that can be traded.</li>
+        </ul>
+        <div class="brooks-quote" style="border-color:var(--gold)">"The market is always in breakout mode or trading range mode, and you need to know which before you place a trade."</div>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--gold)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--gold)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--gold)" onclick="toggleTopic(this)" data-id="2">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">02 / 30</div>
+          <div class="topic-name">Reading Individual Bars <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Every bar tells a story of the battle between buyers and sellers. Brooks analyses each bar as a standalone piece of information before looking at context.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Open, high, low, close</strong> — each component reveals who won control during that period.</li>
+          <li><strong>Bull bar:</strong> close above open. Bear bar: close below open. Doji: indecision.</li>
+          <li><strong>Wick analysis:</strong> large upper wick = sellers rejected high; large lower wick = buyers rejected low.</li>
+          <li><strong>Bar size matters</strong> — a large-bodied bar shows conviction; a small body shows uncertainty.</li>
+          <li><strong>The close is most important</strong> — where price closes within the bar reveals who "won" that bar.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--gold)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--gold)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--gold)" onclick="toggleTopic(this)" data-id="3">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">03 / 30</div>
+          <div class="topic-name">Signal Bars & Follow-Through Bars <span class="done-mark">✓</span></div>
+          <div class="topic-summary">A signal bar sets up a trade; a follow-through bar confirms it. Learning to distinguish good from bad signal bars is foundational.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Strong signal bar:</strong> large body, closes near high (bull) or low (bear), small wicks, opens near opposite end.</li>
+          <li><strong>Weak signal bar:</strong> large wicks, small body, closes in the middle — low confidence setup.</li>
+          <li><strong>Entry bar</strong> = the bar you actually enter on. <strong>Setup bar</strong> = the bar before that confirmed the pattern.</li>
+          <li><strong>Follow-through</strong> — a strong close on the entry bar confirms momentum. Weak follow-through = consider exiting early.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--gold)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--gold)"></div>
+            <div class="diff-dot filled" style="color:var(--gold)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--gold)" onclick="toggleTopic(this)" data-id="4">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">04 / 30</div>
+          <div class="topic-name">Timeframes & Context <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks primarily uses the 5-minute chart for ES futures, but every timeframe fractures the same principles. Higher timeframes set context; lower confirm entry.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Brooks' default: 5-minute ES chart</strong> — most of his examples and rules are calibrated to this.</li>
+          <li><strong>Higher timeframe context is mandatory</strong> — a buy signal on 5-min inside a bear trend on daily is low probability.</li>
+          <li><strong>Every bar on a higher TF = a pattern on a lower TF</strong> — zooming in reveals the internal structure.</li>
+          <li><strong>Do not over-chart</strong> — Brooks recommends mastering one chart before adding more timeframes.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--gold)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--gold)"></div>
+            <div class="diff-dot filled" style="color:var(--gold)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PHASE 2 — MARKET STRUCTURE
+  ══════════════════════════════════════════════ -->
+  <div class="phase-header reveal" id="phase2" style="margin-top:0">
+    <div class="phase-number">02</div>
+    <div class="phase-info">
+      <div class="phase-tag" style="color:var(--blue)">Phase Two</div>
+      <div class="phase-title">Market Structure & Phases</div>
+      <div class="phase-desc">Brooks divides all price action into trends and trading ranges. Knowing which environment you're in determines every subsequent decision.</div>
+    </div>
+    <div class="phase-badge" style="color:var(--blue);border-color:var(--blue)">Foundational</div>
+  </div>
+
+  <div class="topic-grid col-3 reveal">
+
+    <div class="topic-card" style="color:var(--blue)" onclick="toggleTopic(this)" data-id="5">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">05 / 30</div>
+          <div class="topic-name">Trend Days vs Range Days <span class="done-mark">✓</span></div>
+          <div class="topic-summary">The most important daily classification. Trend days favour one direction all session; range days oscillate without committing.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Trend day:</strong> opens near one extreme, closes near the other. Pullbacks are shallow and brief.</li>
+          <li><strong>Range day:</strong> price oscillates between a high and a low with no dominant direction. Fade the extremes.</li>
+          <li><strong>Trading range day strategy:</strong> buy low, sell high. Never chase breakouts on range days until confirmed.</li>
+          <li><strong>Trend day strategy:</strong> buy every pullback, never fade. Exit at measured move targets or EOD.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--blue)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--blue)" onclick="toggleTopic(this)" data-id="6">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">06 / 30</div>
+          <div class="topic-name">Bull & Bear Trends <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks defines a bull trend as a series of higher highs and higher lows with predominantly bull bars. The trend is your primary trading direction.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>HH/HL structure</strong> = bull trend. LL/LH structure = bear trend. Breaking this structure signals reversal.</li>
+          <li><strong>Strong trend:</strong> consecutive bull bars, small pullbacks, bars close near high, little overlap between bars.</li>
+          <li><strong>Weak trend:</strong> overlapping bars, large wicks against trend, deep pullbacks — consider reducing size.</li>
+          <li><strong>Always-in-long/short:</strong> Brooks asks "if forced to be in the market, which way?" — this is your bias.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--blue)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--blue)" onclick="toggleTopic(this)" data-id="7">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">07 / 30</div>
+          <div class="topic-name">Trading Ranges <span class="done-mark">✓</span></div>
+          <div class="topic-summary">The market is in a trading range about 70-80% of the time. Brooks has specific rules for how to trade within them and when to expect breakouts.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Definition:</strong> price oscillates between support and resistance without a clear directional bias.</li>
+          <li><strong>Bull trap / bear trap:</strong> breakouts from ranges fail 80% of the time in the first attempt.</li>
+          <li><strong>Tight trading range (TTR):</strong> bars overlap heavily — extremely low probability for both sides.</li>
+          <li><strong>Strategy:</strong> fade the extremes (buy bottom third, sell top third) and scale out at the midpoint.</li>
+          <li><strong>Wait for the second breakout</strong> — the first attempt out of a range usually fails and reverses back inside.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--blue)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--blue)" onclick="toggleTopic(this)" data-id="8">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">08 / 30</div>
+          <div class="topic-name">Legs & Measured Moves <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Trends and ranges move in legs. Brooks uses measured moves — projecting the size of the first leg to estimate targets for subsequent legs.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Two-legged pullback:</strong> the most reliable pullback structure — market probes lower, bounces, probes again, then resumes trend.</li>
+          <li><strong>Measured move (MM):</strong> project the height of leg 1 from the start of leg 2 to get a target for leg 2.</li>
+          <li><strong>Three pushes:</strong> three legs in the same direction often mark exhaustion — expect reversal or range.</li>
+          <li><strong>Swing size matters:</strong> small legs = tight market; large legs = trending. Match position size to volatility.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--blue)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--blue)" onclick="toggleTopic(this)" data-id="9">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">09 / 30</div>
+          <div class="topic-name">Support & Resistance <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks' approach to S/R is price-action based — swing highs/lows, prior closes, bar bodies. No arbitrary line drawing.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Prior swing high/low</strong> = most reliable S/R. The market has memory at these levels.</li>
+          <li><strong>Prior day high, low, close</strong> — institutional levels that many algorithms reference.</li>
+          <li><strong>S/R becomes opposite</strong> — broken support becomes resistance (and vice versa). Watch for the retest.</li>
+          <li><strong>Exact vs approximate:</strong> Brooks doesn't use precise levels — he uses zones and expects noise around them.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--blue)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--blue)" onclick="toggleTopic(this)" data-id="10">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">10 / 30</div>
+          <div class="topic-name">Trend Lines & Channels <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks draws trend lines using swing highs and lows, and channels by parallel lines. Breakouts of channels are key reversal signals.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Trend line:</strong> drawn through swing lows in an uptrend (or highs in downtrend). A break signals potential reversal.</li>
+          <li><strong>Channel:</strong> parallel line above/below the trend line creates a channel. Price often touches both walls.</li>
+          <li><strong>Micro trend lines:</strong> steep short-term channels during strong momentum phases — breaks signal pauses.</li>
+          <li><strong>Overshoot and reversal:</strong> price often breaks a channel slightly before reversing back inside.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--blue)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot filled" style="color:var(--blue)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PHASE 3 — CORE PATTERNS
+  ══════════════════════════════════════════════ -->
+  <div class="phase-header reveal" id="phase3" style="margin-top:0">
+    <div class="phase-number">03</div>
+    <div class="phase-info">
+      <div class="phase-tag" style="color:var(--teal)">Phase Three</div>
+      <div class="phase-title">Core Price Action Patterns</div>
+      <div class="phase-desc">Brooks identifies specific bar patterns that repeat across all markets and timeframes. These are the alphabet of his price action language.</div>
+    </div>
+    <div class="phase-badge" style="color:var(--teal);border-color:var(--teal)">Intermediate</div>
+  </div>
+
+  <div class="topic-grid col-2 reveal">
+
+    <div class="topic-card" style="color:var(--teal)" onclick="toggleTopic(this)" data-id="11">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">11 / 30</div>
+          <div class="topic-name">Inside Bars <span class="done-mark">✓</span></div>
+          <div class="topic-summary">A bar whose high and low are entirely inside the prior bar. Represents indecision and compression — the breakout direction signals the next move.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Definition:</strong> high ≤ prior high AND low ≥ prior low. The market paused and compressed.</li>
+          <li><strong>Breakout entry:</strong> buy 1 tick above the inside bar high (bull breakout) or sell 1 tick below the low (bear).</li>
+          <li><strong>Context is everything</strong> — inside bar after a strong bull bar = continuation. After a weak bar = neutral.</li>
+          <li><strong>ioi (inside-outside-inside):</strong> a pattern of compression-expansion-compression that often precedes large moves.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--teal)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--teal)" onclick="toggleTopic(this)" data-id="12">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">12 / 30</div>
+          <div class="topic-name">Outside Bars <span class="done-mark">✓</span></div>
+          <div class="topic-summary">A bar that engulfs the prior bar entirely. Shows a surge in volatility — both buyers and sellers were active. Context determines direction.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Definition:</strong> high > prior high AND low < prior low. Both sides tested and lost control at some point.</li>
+          <li><strong>Bull outside bar:</strong> closes near the high — buyers won the battle. Bullish signal in context.</li>
+          <li><strong>Bear outside bar:</strong> closes near the low — sellers dominated. Bearish signal in context.</li>
+          <li><strong>Reversal bar:</strong> outside bar closing opposite to prior trend = strong reversal signal.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--teal)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--teal)" onclick="toggleTopic(this)" data-id="13">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">13 / 30</div>
+          <div class="topic-name">Doji Bars & Ii Patterns <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Doji bars (small body, large wicks) represent the market's uncertainty. Multiple consecutive dojis form a tight trading range — a coil before a breakout.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Doji:</strong> open ≈ close. Neither side won. High probability of continuation of whatever move precedes it.</li>
+          <li><strong>Ii pattern:</strong> two consecutive inside bars — extreme compression. The breakout is often explosive.</li>
+          <li><strong>iii pattern:</strong> three inside bars — even rarer, even more powerful breakout signal when resolved.</li>
+          <li><strong>Avoid trading inside the range</strong> of an Ii or iii setup — wait for the breakout bar to commit first.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--teal)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--teal)" onclick="toggleTopic(this)" data-id="14">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">14 / 30</div>
+          <div class="topic-name">Reversal Bars <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Bars with specific characteristics that suggest the prior move is exhausting. Brooks looks for specific anatomy: strong close, rejection wicks, body placement.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Bull reversal bar:</strong> opens low (ideally below prior low), closes near high, with a long lower wick.</li>
+          <li><strong>Bear reversal bar:</strong> opens high (ideally above prior high), closes near low, with a long upper wick.</li>
+          <li><strong>Key rule:</strong> a reversal bar alone is not a signal — it must appear at a meaningful level (S/R, trend extreme).</li>
+          <li><strong>Exhaustion:</strong> a large spike bar after a long trend often signals climactic exhaustion — watch for reversal.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--teal)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--teal)" onclick="toggleTopic(this)" data-id="15">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">15 / 30</div>
+          <div class="topic-name">Gaps & Opening Patterns <span class="done-mark">✓</span></div>
+          <div class="topic-summary">The open sets the tone for the day. Brooks analyses the gap from prior close to current open as its own price action signal.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Gap up = initial bullish bias</strong> — but watch if the gap fills in the first 30 min. A gap fill = bear strength.</li>
+          <li><strong>Gap bar (first bar of day):</strong> if it's a strong bull bar, buy on a pullback. If bear bar, consider shorts.</li>
+          <li><strong>Opening reversal:</strong> if the first bar reverses strongly (bear outside bar after gap up), a reversal is in play.</li>
+          <li><strong>First-hour range:</strong> often sets the framework for the rest of the day — respect its high and low as key levels.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--teal)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--teal)" onclick="toggleTopic(this)" data-id="16">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">16 / 30</div>
+          <div class="topic-name">Spike & Channel <span class="done-mark">✓</span></div>
+          <div class="topic-summary">One of Brooks' most important structural patterns. A spike is a fast, strong directional move. A channel is the slower continuation that follows. Together they form a complete trend phase.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Spike:</strong> a rapid series of strong trend bars — buyers (or sellers) overwhelm without pause.</li>
+          <li><strong>Channel:</strong> after the spike, the trend continues but in a tighter, more orderly channel with small pullbacks.</li>
+          <li><strong>Expected resolution:</strong> when the channel breaks, expect a pullback to test the base of the channel (around the spike start).</li>
+          <li><strong>Trading the channel:</strong> only take with-trend entries on pullbacks inside the channel. Fading is very high risk.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--teal)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot filled" style="color:var(--teal)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PHASE 4 — KEY SETUPS
+  ══════════════════════════════════════════════ -->
+  <div class="phase-header reveal" id="phase4" style="margin-top:0">
+    <div class="phase-number">04</div>
+    <div class="phase-info">
+      <div class="phase-tag" style="color:var(--orange)">Phase Four</div>
+      <div class="phase-title">Key Trading Setups</div>
+      <div class="phase-desc">The named setups Brooks returns to throughout his work. These are repeatable, high-probability situations that can be systematically identified and traded.</div>
+    </div>
+    <div class="phase-badge" style="color:var(--orange);border-color:var(--orange)">Intermediate–Advanced</div>
+  </div>
+
+  <div class="topic-grid col-3 reveal">
+
+    <div class="topic-card" style="color:var(--orange)" onclick="toggleTopic(this)" data-id="17">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">17 / 30</div>
+          <div class="topic-name">With-Trend Pullbacks <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Buying pullbacks in uptrends (and selling rallies in downtrends) is Brooks' bread-and-butter trade. The setup quality determines the entry.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Two-legged pullback</strong> = highest probability. The market tested the pullback level twice before resuming.</li>
+          <li><strong>Entry:</strong> buy above a bull reversal bar at the end of the pullback, stop below the pullback low.</li>
+          <li><strong>Target:</strong> prior trend high, measured move, or next major resistance.</li>
+          <li><strong>Never chase:</strong> if the pullback entry bar is too large, wait for the next pullback — don't buy into strength.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--orange)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--orange)" onclick="toggleTopic(this)" data-id="18">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">18 / 30</div>
+          <div class="topic-name">Failed Breakouts <span class="done-mark">✓</span></div>
+          <div class="topic-summary">When price breaks a key level but immediately reverses, it traps breakout traders and fuels the counter-move. Brooks calls this a "bull trap" or "bear trap."</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Bull trap:</strong> price breaks above resistance, fails to follow through, closes back below. Shorts trigger as trapped longs exit.</li>
+          <li><strong>Bear trap:</strong> breaks below support, immediately reverses — trapped shorts add fuel to the rally.</li>
+          <li><strong>Entry timing:</strong> enter when price closes back through the broken level, or on the first pullback after reversal.</li>
+          <li><strong>High probability context:</strong> failed breakouts out of trading ranges fail ~80% of the time on the first attempt.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--orange)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--orange)" onclick="toggleTopic(this)" data-id="19">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">19 / 30</div>
+          <div class="topic-name">Breakout Pullbacks <span class="done-mark">✓</span></div>
+          <div class="topic-summary">After a successful breakout, price often pulls back to retest the broken level before continuing. This retest offers a lower-risk entry with trend.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Pattern:</strong> price breaks resistance → pullback to retest that level (now support) → continuation higher.</li>
+          <li><strong>Entry:</strong> buy the first pullback after a genuine breakout. Stop below the new support level.</li>
+          <li><strong>Confirmation:</strong> the pullback should be orderly (bear bars are small, no large bear bars), not panic selling.</li>
+          <li><strong>Target:</strong> measured move (height of the base projected from the breakout point).</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--orange)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--orange)" onclick="toggleTopic(this)" data-id="20">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">20 / 30</div>
+          <div class="topic-name">Trend Reversals <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks is cautious about reversals — most failed trends just pause. True reversals require specific evidence: trend line breaks, lower highs, and confirmation bars.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Step 1:</strong> break of the trend line. Necessary but not sufficient on its own.</li>
+          <li><strong>Step 2:</strong> formation of a lower high (in uptrend) or higher low (in downtrend) — the trend structure is damaged.</li>
+          <li><strong>Step 3:</strong> break below the most recent swing low (uptrend) or above swing high (downtrend).</li>
+          <li><strong>Brooks' warning:</strong> the first reversal attempt fails ~60-70% of the time. Wait for the second signal before committing heavily.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--orange)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--orange)" onclick="toggleTopic(this)" data-id="21">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">21 / 30</div>
+          <div class="topic-name">First & Second Entries <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks distinguishes between the first and second signal in any setup. Second entries are higher probability because they confirm that the first attempt held.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>First entry (1E):</strong> the initial setup signal. Lower probability — the market hasn't yet confirmed the level.</li>
+          <li><strong>Second entry (2E):</strong> the market revisits the setup area and gives a second signal. Much higher probability.</li>
+          <li><strong>Micro double bottom/top:</strong> price tests the same low (or high) twice within a few bars — this is a 2E structure.</li>
+          <li><strong>Two-legged corrections:</strong> the second leg of a pullback often creates the 2E long setup in an uptrend.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--orange)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--orange)" onclick="toggleTopic(this)" data-id="22">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">22 / 30</div>
+          <div class="topic-name">Wedges & Three Pushes <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Three pushes in the same direction (with each push less powerful than the last) form a wedge — a classic exhaustion and reversal pattern in Brooks' work.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Wedge bull flag:</strong> three lower lows, each declining less — buyers are absorbing pressure. Expect upward breakout.</li>
+          <li><strong>Wedge bear flag:</strong> three higher highs, each rising less — sellers absorbing. Expect downward breakout.</li>
+          <li><strong>Expanding wedge:</strong> each push exceeds the prior — volatile, difficult to trade. Often resolves in a range.</li>
+          <li><strong>Target after wedge:</strong> measured move back to the start of the three-push structure.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--orange)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot filled" style="color:var(--orange)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PHASE 5 — ADVANCED CONCEPTS
+  ══════════════════════════════════════════════ -->
+  <div class="phase-header reveal" id="phase5" style="margin-top:0">
+    <div class="phase-number">05</div>
+    <div class="phase-info">
+      <div class="phase-tag" style="color:var(--purple)">Phase Five</div>
+      <div class="phase-title">Advanced Brooks Concepts</div>
+      <div class="phase-desc">The deeper concepts that separate intermediate students from advanced practitioners. These require substantial screen time to internalise.</div>
+    </div>
+    <div class="phase-badge" style="color:var(--purple);border-color:var(--purple)">Advanced</div>
+  </div>
+
+  <div class="topic-grid col-2 reveal">
+
+    <div class="topic-card" style="color:var(--purple)" onclick="toggleTopic(this)" data-id="23">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">23 / 30</div>
+          <div class="topic-name">Probability & Always-In <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks frames every chart decision in terms of probability. The "always-in" concept asks: if forced to hold a position right now, which direction? This determines your bias.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Always-in-long (AIL):</strong> the dominant condition favours longs. Buy every with-trend signal.</li>
+          <li><strong>Always-in-short (AIS):</strong> the dominant condition favours shorts. Sell every with-trend signal.</li>
+          <li><strong>Switching always-in:</strong> requires a strong opposite signal — a large reversal bar, a trend line break, and a structural change.</li>
+          <li><strong>Probability assessment:</strong> Brooks rates setups as ~40%, ~51%, or ~60% probability. Most are ~51% — risk management matters most.</li>
+        </ul>
+        <div class="brooks-quote" style="border-color:var(--purple)">"If you cannot tell which direction you would be if forced to always be in the market, you should not be trading."</div>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--purple)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--purple)" onclick="toggleTopic(this)" data-id="24">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">24 / 30</div>
+          <div class="topic-name">Bull & Bear Flags <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Any pause or pullback in a trend is a "flag." Flags are the continuation patterns that allow with-trend entries at better prices after initial momentum.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Tight bull flag:</strong> a small, orderly pullback (1-5 bars) after a strong bull move. Highest probability continuation.</li>
+          <li><strong>Loose bull flag:</strong> a deeper, messier pullback. Lower probability — may be the start of a trend change.</li>
+          <li><strong>Micro channel as flag:</strong> a tight bear channel within an uptrend is a bull flag — break above = long entry.</li>
+          <li><strong>Entry rule:</strong> buy 1 tick above the highest high of the flag (for bull flags). Stop below the flag low.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--purple)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--purple)" onclick="toggleTopic(this)" data-id="25">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">25 / 30</div>
+          <div class="topic-name">Scalping vs Swing Trading <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks divides trades into scalps (small, quick profits) and swings (larger, held longer). The same setup can be taken as either — position sizing and exits differ.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Scalp target (ES):</strong> typically 1–4 points. Exit quickly, take what the market offers early.</li>
+          <li><strong>Swing target:</strong> measured move, prior S/R, or end-of-day. Hold through normal pullbacks.</li>
+          <li><strong>Split approach:</strong> Brooks often exits half at the scalp target and holds half as a swing — reduces risk while preserving upside.</li>
+          <li><strong>Context determines which:</strong> strong trend = swing. Choppy range = scalp only. Tight range = don't trade.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--purple)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--purple)" onclick="toggleTopic(this)" data-id="26">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">26 / 30</div>
+          <div class="topic-name">Climactic Moves & Exhaustion <span class="done-mark">✓</span></div>
+          <div class="topic-summary">When a trend accelerates rapidly into a vertical spike — often after a channel breaks — it frequently signals exhaustion. These are dangerous to trade but important to recognise.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Parabolic move:</strong> price accelerates dramatically — each bar larger than the last. Often the final act of a trend.</li>
+          <li><strong>Exhaustion gap:</strong> a gap in the direction of trend after a long move — often exhaustion, not continuation.</li>
+          <li><strong>Don't fade a spike:</strong> wait for the reversal signal (a strong bar against the spike) before entering counter-trend.</li>
+          <li><strong>After the spike:</strong> expect a trading range for multiple bars before the next directional move. Patience required.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--purple)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+            <div class="diff-dot filled" style="color:var(--purple)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PHASE 6 — TRADE MANAGEMENT & MINDSET
+  ══════════════════════════════════════════════ -->
+  <div class="phase-header reveal" id="phase6" style="margin-top:0">
+    <div class="phase-number">06</div>
+    <div class="phase-info">
+      <div class="phase-tag" style="color:var(--red)">Phase Six</div>
+      <div class="phase-title">Trade Management & Mindset</div>
+      <div class="phase-desc">The mechanics of managing a live trade — stops, targets, scaling — and the mental framework Brooks insists is required for consistent profitability.</div>
+    </div>
+    <div class="phase-badge" style="color:var(--red);border-color:var(--red)">Critical</div>
+  </div>
+
+  <div class="topic-grid col-3 reveal">
+
+    <div class="topic-card" style="color:var(--red)" onclick="toggleTopic(this)" data-id="27">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">27 / 30</div>
+          <div class="topic-name">Stop Placement <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks places stops at logical price action levels — beyond the signal bar's high or low — not at arbitrary dollar amounts.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Default stop:</strong> 1 tick beyond the signal bar's extreme (high for shorts, low for longs).</li>
+          <li><strong>Wider stop for context:</strong> if the setup bar is large, stop goes beyond the setup bar (not signal bar).</li>
+          <li><strong>Never widen a stop</strong> — if price is moving toward your stop, the trade is wrong. Take the loss.</li>
+          <li><strong>Move stop to breakeven</strong> once a scalp profit is secured on part of the position.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--red)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--red)" onclick="toggleTopic(this)" data-id="28">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">28 / 30</div>
+          <div class="topic-name">Entries & Order Types <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks uses limit orders and stop orders depending on the setup type. Understanding when each is appropriate is critical for consistent execution.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Stop entry:</strong> buy 1 tick above signal bar's high. Used for breakouts — entry only triggers if price moves your way.</li>
+          <li><strong>Limit entry:</strong> buy at or below current price. Used for fading — you're betting on a reversal at a level.</li>
+          <li><strong>With-trend = stop entry.</strong> Counter-trend = limit entry. Never use limit for with-trend (you might be catching a falling knife).</li>
+          <li><strong>Cancel orders</strong> if the signal becomes stale (e.g. 2+ bars pass without triggering). The setup may no longer be valid.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--red)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic-card" style="color:var(--red)" onclick="toggleTopic(this)" data-id="29">
+      <div class="topic-header">
+        <div>
+          <div class="topic-num">29 / 30</div>
+          <div class="topic-name">Risk-Reward & Reward-to-Risk <span class="done-mark">✓</span></div>
+          <div class="topic-summary">Brooks insists that most setups have around a 50% win rate. Profitability comes from having average winners larger than average losers — not from a high win rate.</div>
+        </div>
+        <div class="topic-toggle">+</div>
+      </div>
+      <div class="topic-body">
+        <ul class="topic-points">
+          <li><strong>Minimum R:R = 1:1.</strong> If your stop is 4 pts, your target should be at least 4 pts.</li>
+          <li><strong>Ideal R:R = 2:1 or better.</strong> Take setups where the measured move target is at least twice the stop distance.</li>
+          <li><strong>Avoid 1:2 setups</strong> — risking 4 pts to make 2 pts requires a >67% win rate just to break even.</li>
+          <li><strong>The math of trading:</strong> 50% win rate with 1.5:1 R:R = profitable. 60% win rate with 0.8:1 R:R = unprofitable.</li>
+        </ul>
+        <div class="difficulty-bar">
+          <span class="diff-label" style="color:var(--red)">Difficulty</span>
+          <div class="diff-dots">
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot filled" style="color:var(--red)"></div>
+            <div class="diff-dot"></div><div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Topic 30 — Wide card -->
+  <div class="wide-card reveal" style="color:var(--red)" onclick="toggleWide(this)" data-id="30">
+    <div class="topic-header">
+      <div>
+        <div class="topic-num">30 / 30</div>
+        <div class="topic-name" style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">The Brooks Trading Mindset <span class="done-mark">✓</span></div>
+        <div class="topic-summary" style="font-size:0.9rem;margin-top:0.5rem">The mental framework that underlies all of Brooks' work. You can know every pattern; without the right mindset, execution will fail. This is the hardest topic — and the most important.</div>
+      </div>
+      <div class="topic-toggle" style="width:32px;height:32px">+</div>
+    </div>
+    <div class="topic-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-top:0.5rem">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--sub2);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.8rem">Acceptance</div>
+          <ul class="topic-points">
+            <li><strong>Accept uncertainty</strong> — no setup is guaranteed. You are playing probabilities, not predicting.</li>
+            <li><strong>Accept losses</strong> — they are the cost of doing business. A stopped-out trade executed correctly is a good trade.</li>
+            <li><strong>No prediction</strong> — Brooks does not predict. He reacts to what the market shows him bar by bar.</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--sub2);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.8rem">Consistency</div>
+          <ul class="topic-points">
+            <li><strong>Take every setup</strong> — skipping setups because of recent losses destroys edge. The edge is statistical, not per-trade.</li>
+            <li><strong>Same size</strong> — do not increase size after a win or decrease after a loss. Consistent sizing is professional trading.</li>
+            <li><strong>Daily process</strong> — reading charts daily, even when not trading, builds the pattern recognition that cannot be shortcut.</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--sub2);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.8rem">The Long Road</div>
+          <ul class="topic-points">
+            <li><strong>5 years minimum</strong> — Brooks consistently says it takes 5+ years of serious study to be consistently profitable.</li>
+            <li><strong>Study 5,000+ charts</strong> — there is no substitute for screen time. Pattern recognition is built, not read.</li>
+            <li><strong>Start with simulation</strong> — trade in simulation for at least 6 months before risking real capital.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="brooks-quote" style="border-color:var(--red);margin-top:1.2rem">"Most traders lose money. The ones who win are those who accept that they will be wrong 40–50% of the time and still execute their plan without emotion."</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       READING LIST
+  ══════════════════════════════════════════════ -->
+  <div class="reading-section reveal">
+    <div class="reading-title">Essential Reading</div>
+    <div class="reading-sub">The three books. In this order.</div>
+    <div class="book-grid">
+      <div class="book-card">
+        <div class="book-tag" style="color:var(--gold)">Book 1 — Start Here</div>
+        <div class="book-title">Reading Price Charts Bar by Bar</div>
+        <div class="book-author">Al Brooks · 2009</div>
+        <div class="book-desc">The original. Dense and challenging but the most concentrated source of Brooks' core methodology. Covers all pattern types, trend analysis, and the philosophy behind price action. Read this first, even though it's the hardest.</div>
+      </div>
+      <div class="book-card">
+        <div class="book-tag" style="color:var(--blue)">Book 2 — Trilogy Vol. 1</div>
+        <div class="book-title">Trading Price Action Trends</div>
+        <div class="book-author">Al Brooks · 2011</div>
+        <div class="book-desc">The first of three more accessible books. Covers trend identification, trend day trading, pullbacks, and reversals in depth. More organised than the original and easier to work through systematically.</div>
+      </div>
+      <div class="book-card">
+        <div class="book-tag" style="color:var(--teal)">Book 3 — Trilogy Vol. 2</div>
+        <div class="book-title">Trading Price Action Trading Ranges</div>
+        <div class="book-author">Al Brooks · 2012</div>
+        <div class="book-desc">The companion volume focusing on trading range environments — where the market spends most of its time. Covers flags, channels, breakouts from ranges, and the probability frameworks for range trading.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end content-wrap -->
+
+<footer>
+  <div class="footer-logo">Price Action</div>
+  <div class="footer-note">
+    Based on Al Brooks' price action methodology<br>
+    For educational purposes — all trading involves risk
+  </div>
+  <a href="../index.html" class="nav-back">&#8592; Back to Hub</a>
+</footer>
+
+<script>
+  // ── PROGRESS BAR ON SCROLL ──
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight);
+    document.getElementById('progress-bar').style.width = (scrolled * 100) + '%';
+  });
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── TOPIC TOGGLE ──
+  let completed = JSON.parse(localStorage.getItem('pa_completed') || '[]');
+
+  function toggleTopic(card) {
+    card.classList.toggle('expanded');
+  }
+
+  function toggleWide(card) {
+    card.classList.toggle('expanded');
+  }
+
+  // ── MARK DONE (double-click) ──
+  document.querySelectorAll('[data-id]').forEach(card => {
+    card.addEventListener('dblclick', e => {
+      e.stopPropagation();
+      const id = card.dataset.id;
+      card.classList.toggle('done');
+      if (card.classList.contains('done')) {
+        if (!completed.includes(id)) completed.push(id);
+      } else {
+        completed = completed.filter(c => c !== id);
+      }
+      localStorage.setItem('pa_completed', JSON.stringify(completed));
+      updateTracker();
+    });
+  });
+
+  function updateTracker() {
+    const count = completed.length;
+    const pct = Math.round(count / 30 * 100);
+    document.getElementById('tracker-fill').style.width = pct + '%';
+    document.getElementById('tracker-count').textContent = count + ' / 30 topics';
+    document.getElementById('nav-count').textContent = count;
+  }
+
+  function resetAll() {
+    completed = [];
+    localStorage.removeItem('pa_completed');
+    document.querySelectorAll('[data-id]').forEach(c => c.classList.remove('done'));
+    updateTracker();
+  }
+
+  // Restore on load
+  window.addEventListener('load', () => {
+    completed.forEach(id => {
+      const el = document.querySelector('[data-id="' + id + '"]');
+      if (el) el.classList.add('done');
+    });
+    updateTracker();
+  });
+</script>
+</body>
+</html>
